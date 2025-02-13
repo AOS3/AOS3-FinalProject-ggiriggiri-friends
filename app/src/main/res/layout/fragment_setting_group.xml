@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:transitionGroup="true"
+    tools:context=".ui.fourth.settinggroup.SettingGroupFragment">
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarGroupSetting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:navigationIcon="@drawable/ic_arrow_back_ios"
+        app:title="그룹 설정"
+        app:titleCentered="true"
+        android:theme="@style/CustomToolbarTitle"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="그룹 코드 : "
+            android:textSize="20sp"
+            android:fontFamily="@font/nanumsquareregular" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="내 그룹의 그룹 코드"
+            android:textSize="20sp"
+            android:fontFamily="@font/nanumsquarelight"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:layout_marginTop="150dp"
+        android:text="그룹 비밀번호 변경"
+        android:textSize="20sp"
+        android:fontFamily="@font/nanumsquareregular"
+        android:clickable="true"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:text="그룹명 변경"
+        android:textSize="20sp"
+        android:fontFamily="@font/nanumsquareregular"
+        android:clickable="true"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:text="그룹나가기"
+        android:textSize="20sp"
+        android:fontFamily="@font/nanumsquareregular"
+        android:clickable="true"/>
+
+
+
+
+
+
+</LinearLayout>
