@@ -12,6 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Finalproject_ggiriggiri_friends"
         tools:targetApi="31">
+        <activity android:name=".GroupActivity"
+            android:exported="false"/>
+        <activity android:name=".SocialActivity"
+            android:exported="false"/>
         <activity
             android:name=".LoginActivity"
             android:exported="true">
