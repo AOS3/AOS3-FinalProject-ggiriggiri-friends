@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.Window
 import androidx.core.view.isVisible
+import com.friends.ggiriggiri.databinding.DialogCustomBinding
 
 class CustomDialog(
     context: Context,
