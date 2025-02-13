@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".ui.fourth.mypage.MyPageFragment">
 
     <!-- Toolbar -->
@@ -12,11 +11,14 @@
         android:id="@+id/toolbarMyPage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:title="마이페이지"
         app:titleCentered="true"
-        app:titleTextAppearance="@style/CustomToolbarTitle"
+        android:theme="@style/CustomToolbarTitle"
         />
 
 
@@ -24,10 +26,9 @@
         android:id="@+id/profileImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_default_profile"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?attr/selectableItemBackground"
+        android:src="@drawable/ic_person"
+        app:civ_border_width="3dp"
+        app:civ_border_color="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbarMyPage"/>
@@ -46,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@+id/profileImage" />
 
     <TextView
-        android:id="@+id/myPageGroupTitle"
+        android:id="@+id/myPageGroupSubName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/nanumsquarelight"
@@ -60,7 +61,7 @@
 
     <TextView
         android:id="@+id/myPageGroupName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/nanumsquareregular"
         android:text="그룹이름"
@@ -68,11 +69,9 @@
         android:textSize="20sp"
         android:layout_marginTop="10dp"
         android:clickable="true"
-        android:focusable="true"
-        android:background="?attr/selectableItemBackground"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myPageGroupTitle"/>
+        app:layout_constraintTop_toBottomOf="@+id/myPageGroupSubName"/>
 
 
     <View

@@ -4,19 +4,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".ui.fourth.modifyuserpw.ModifyUserPwFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarModifyGroupPw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:theme="@style/CustomToolbarTitle"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleCentered="true"
-        app:titleTextAppearance="@style/CustomToolbarTitle"
-        />
+        app:navigationIcon="@drawable/ic_arrow_back_ios"
+        app:title="비밀번호 변경"
+        app:titleCentered="true" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/modifyUserPwTextField"
@@ -25,7 +27,6 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="10dp"
         android:hint="현재 비밀번호 입력"
-        app:endIconMode="password_toggle"
         app:errorEnabled="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +38,8 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:inputType="text|textPassword"
-            android:digits="@string/digit_value" />
+            android:digits="@string/digit_value"
+            android:fontFamily="@font/nanumsquarelight"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -47,9 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="30dp"
-        app:endIconMode="password_toggle"
         android:hint="새 비밀번호 입력"
-        app:helperText=" "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/modifyUserPwTextField">
@@ -59,7 +59,8 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:inputType="text|textPassword"
-            android:digits="@string/digit_value" />
+            android:digits="@string/digit_value"
+            android:fontFamily="@font/nanumsquarelight"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -69,9 +70,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        app:endIconMode="password_toggle"
+        android:layout_marginVertical="10dp"
         android:hint="새 비밀번호 재입력"
-        app:helperText=" "
+        app:errorEnabled="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/modifyUserNewPwTextField">
@@ -82,19 +83,19 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:inputType="text|textPassword"
-            android:digits="@string/digit_value" />
+            android:digits="@string/digit_value"
+            android:fontFamily="@font/nanumsquarelight"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
+        style=""
         android:id="@+id/modifyUserPwButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/custom_btn_background"
-        android:enabled="true"
+        android:backgroundTint="@color/mainColor"
         android:text="변경하기"
-        android:textColor="@drawable/custom_btn_text"
+        android:textColor="@color/black"
         app:cornerRadius="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
