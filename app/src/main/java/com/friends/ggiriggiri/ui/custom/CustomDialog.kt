@@ -1,4 +1,4 @@
-package com.friends.ggiriggiri
+package com.friends.ggiriggiri.ui.custom
 
 import android.app.Dialog
 import android.content.Context
