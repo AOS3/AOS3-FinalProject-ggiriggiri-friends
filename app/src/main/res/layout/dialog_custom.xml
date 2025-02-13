@@ -20,7 +20,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginTop="25dp"
-            android:src="@drawable/main_logo_small_size"
+            android:src="@mipmap/ic_launcher"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -40,7 +40,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1.6dp"
-            android:background="#0064C8"
+            android:background="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/layout_dialog_buttons"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -61,12 +61,13 @@
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="10dp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/gray_color"
+                android:backgroundTint="#FDF497"
                 android:gravity="center"
                 android:text="버튼 취소"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                app:cornerRadius="15dp" />
 
             <Button
                 android:id="@+id/button_dialog_positive"
@@ -74,12 +75,13 @@
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="10dp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/main_color"
+                android:backgroundTint="#FDF497"
                 android:gravity="center"
                 android:text="버튼 확인"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                app:cornerRadius="15dp" />
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
