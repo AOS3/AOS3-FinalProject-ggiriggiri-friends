@@ -5,4 +5,16 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/black</item>
     </style>
+
+    <style name="CustomTextRegular" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/nanumsquareregular</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="CustomTextBold" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/nanumsquarebold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

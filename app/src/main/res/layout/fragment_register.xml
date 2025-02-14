@@ -4,36 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.first.login.LoginFragment" >
+    android:background="@color/white"
+    android:transitionGroup="true"
+    tools:context=".ui.first.login.LoginFragment">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/tbRegisterFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/screen_background_light_transparent"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:subtitleCentered="false"
+        app:titleTextAppearance="@style/CustomToolbarTitle"
+        tools:navigationIcon="@drawable/ic_arrow_back_ios"
+        tools:navigationIconTint="@color/black"
+        tools:title="회원가입"
+        tools:titleCentered="true" />
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:id="@+id/scrollViewRegisterFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tbRegisterFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:transitionGroup="true"
-            tools:context=".ui.first.register.RegisterFragment">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/tbRegisterFragment"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:minHeight="?attr/actionBarSize"
-                android:theme="?attr/actionBarTheme"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:subtitleCentered="false"
-                app:titleTextAppearance="@style/CustomToolbarTitle"
-                tools:navigationIcon="@drawable/ic_arrow_back_ios"
-                tools:navigationIconTint="@color/black"
-                tools:title="회원가입"
-                tools:titleCentered="true" />
+            android:background="@color/white">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilRegisterFragmentName"
@@ -50,7 +56,7 @@
                 app:hintTextColor="@color/material_dynamic_neutral60"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tbRegisterFragment">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etRegisterFragmentName"
@@ -66,8 +72,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
-                android:orientation="vertical"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tilRegisterFragmentName">
@@ -97,10 +103,11 @@
                     android:id="@+id/btnRegisterFragmentDuplicationCheck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/background_radius_10_fdf497"
                     android:fontFamily="@font/nanumsquarebold"
-                    android:text=" 아이디 중복 확인 " />
+                    android:text="중복 확인" />
 
             </LinearLayout>
 
@@ -162,8 +169,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:orientation="vertical"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tilRegisterFragmentPw2">
@@ -193,6 +200,7 @@
                     android:id="@+id/btnRegisterFragmentGetCertificationNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/background_radius_10_fdf497"
                     android:fontFamily="@font/nanumsquarebold"
@@ -202,13 +210,14 @@
 
             <LinearLayout
                 android:id="@+id/BOTTOM_END"
+                android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:orientation="vertical"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
@@ -217,13 +226,13 @@
                     android:id="@+id/tilRegisterFragmentCertificationNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="인증번호"
                     android:textColorHint="@color/material_dynamic_neutral60"
                     app:boxStrokeColor="@color/material_dynamic_neutral60"
                     app:cursorColor="@color/black"
-                    app:hintTextColor="@color/material_dynamic_neutral60"
-                    android:layout_weight="1"
-                    android:hint="인증번호"
-                    app:errorEnabled="true">
+                    app:errorEnabled="true"
+                    app:hintTextColor="@color/material_dynamic_neutral60">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etRegisterFragmentCertificationNumber"
@@ -242,6 +251,7 @@
                     android:id="@+id/btnFindPwFragmentConfirmCertificationNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/background_radius_10_fdf497"
                     android:fontFamily="@font/nanumsquarebold"
@@ -252,17 +262,17 @@
                 android:id="@+id/btnRegisterFragmentSignup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/background_radius_10_fdf497"
                 android:fontFamily="@font/nanumsquarebold"
                 android:text="가입하기"
-                app:layout_constraintTop_toBottomOf="@id/BOTTOM_END"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/BOTTOM_END" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,6 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    kotlin("kapt")
+
+    //hilt
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -34,14 +38,12 @@ android {
         jvmTarget = "1.8"
     }
 
-    viewBinding{
+    viewBinding {
         enable = true
     }
 }
 
-
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -50,4 +52,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // 프래그먼트 매니저
+    implementation(libs.androidx.fragment.ktx)
+
+    // Hilt 추가
+    implementation("com.google.dagger:hilt-android:2.51")
+    kapt("com.google.dagger:hilt-android-compiler:2.51")
 }
