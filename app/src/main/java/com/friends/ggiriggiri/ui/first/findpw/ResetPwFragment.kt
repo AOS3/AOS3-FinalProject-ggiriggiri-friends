@@ -5,14 +5,106 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import com.friends.ggiriggiri.LoginActivity
+import com.friends.ggiriggiri.LoginFragmentName
 import com.friends.ggiriggiri.R
+import com.friends.ggiriggiri.databinding.FragmentResetPwBinding
+import com.friends.ggiriggiri.ui.custom.CustomDialog
+import kotlin.math.log
 
 class ResetPwFragment : Fragment() {
+    lateinit var binding: FragmentResetPwBinding
+    lateinit var loginActivity: LoginActivity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_reset_pw, container, false)
+        binding = FragmentResetPwBinding.inflate(inflater,container,false)
+        loginActivity = activity as LoginActivity
+
+        //툴바세팅
+        settingToolbar()
+
+        //버튼 세팅
+        settingButtons()
+
+        return binding.root
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showBackPressedDialog()
+            }
+        })
+    }
+    // 공통으로 사용할 뒤로가기 다이얼로그
+    fun showBackPressedDialog() {
+        val customDialog = CustomDialog(
+            context = loginActivity,
+            onPositiveClick = {
+                loginActivity.removeFragment(LoginFragmentName.FIND_PW_FRAGMENT)
+                loginActivity.removeFragment(LoginFragmentName.RESET_PW_FRAGMENT)
+            },
+            positiveText = "확인",
+            onNegativeClick = {},
+            negativeText = "취소",
+            contentText = "정말 뒤로 가시겠습니까?\n로그인 화면으로 이동합니다",
+            icon = R.drawable.ic_error
+        )
+        customDialog.showCustomDialog()
+    }
+
+
+
+    //툴바세팅
+    fun settingToolbar() {
+        binding.tbResetPwFragment.apply {
+            title = "비밀번호 재설정"
+            isTitleCentered = true
+            setNavigationIcon(R.drawable.ic_arrow_back_ios)
+            setNavigationOnClickListener {
+                val customDialog = CustomDialog(
+                    context = loginActivity,
+                    onPositiveClick = {
+                        loginActivity.removeFragment(LoginFragmentName.FIND_PW_FRAGMENT)
+                        loginActivity.removeFragment(LoginFragmentName.RESET_PW_FRAGMENT)
+                    },
+                    positiveText = "확인",
+                    onNegativeClick = {},
+                    negativeText = "취소",
+                    contentText = "정말 뒤로 가시겠습니까?\n로그인 화면으로 이동합니다",
+                    icon = R.drawable.ic_error
+                )
+
+                customDialog.showCustomDialog()
+            }
+        }
+    }
+
+    //버튼 세팅
+    fun settingButtons() {
+        binding.apply {
+            // 비빌번호 재설정 완료
+            btnResetPwFragmentResetPw.setOnClickListener {
+                val customDialog = CustomDialog(
+                    context = loginActivity,
+                    onPositiveClick = {
+                        loginActivity.removeFragment(LoginFragmentName.FIND_PW_FRAGMENT)
+                        loginActivity.removeFragment(LoginFragmentName.RESET_PW_FRAGMENT)
+                    },
+                    positiveText = "변경하기",
+                    onNegativeClick = {},
+                    negativeText = "취소",
+                    contentText = "비밀번호를 재설정 하시겠습니까?\n로그인 화면으로 이동합니다",
+                    icon = R.drawable.ic_edit
+                )
+
+                customDialog.showCustomDialog()
+            }
+        }
+    }
+
 }

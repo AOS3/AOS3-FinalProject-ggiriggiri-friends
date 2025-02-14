@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
 
         activityLoginBinding = ActivityLoginBinding.inflate(layoutInflater)
 
@@ -37,8 +37,10 @@ class LoginActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        replaceFragment(LoginFragmentName.LOGIN_FRAGMENT,true,true,null)
+        //초기화면 세팅
+        supportFragmentManager.commit {
+            replace(R.id.fcvLoginActivity, LoginFragment())
+        }
     }
 
     // 프래그먼트 교체 함수

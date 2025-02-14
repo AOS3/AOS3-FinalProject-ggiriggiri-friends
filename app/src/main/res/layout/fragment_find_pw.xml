@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:transitionGroup="true"
     tools:context=".ui.first.findpw.FindPwFragment">
 
@@ -32,8 +33,11 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:hint="아이디"
+        android:textColorHint="@color/material_dynamic_neutral60"
         app:boxStrokeColor="@color/material_dynamic_neutral60"
+        app:cursorColor="@color/black"
         app:errorEnabled="true"
+        app:hintTextColor="@color/material_dynamic_neutral60"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tbFindPwFragment">
@@ -53,19 +57,23 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="20dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilFindPwFragmentId">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilFindPwFragmentPhoneNumber"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="휴대폰 번호"
-            app:errorEnabled="true">
+            android:textColorHint="@color/material_dynamic_neutral60"
+            app:boxStrokeColor="@color/material_dynamic_neutral60"
+            app:cursorColor="@color/black"
+            app:errorEnabled="true"
+            app:hintTextColor="@color/material_dynamic_neutral60">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etFindPwFragmentPhoneNumber"
@@ -80,6 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1"
             android:background="@drawable/background_radius_10_fdf497"
             android:fontFamily="@font/nanumsquarebold"
@@ -91,26 +100,31 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilFindPwFragmentCertificationNumber"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="인증번호"
-            app:errorEnabled="true">
+            android:textColorHint="@color/material_dynamic_neutral60"
+            app:boxStrokeColor="@color/material_dynamic_neutral60"
+            app:cursorColor="@color/black"
+            app:errorEnabled="true"
+            app:hintTextColor="@color/material_dynamic_neutral60">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etFindPwFragmentCertificationNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:digits="@string/digit_value_onlyNumber"
                 android:singleLine="true" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -120,6 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1"
             android:background="@drawable/background_radius_10_fdf497"
             android:fontFamily="@font/nanumsquarebold"

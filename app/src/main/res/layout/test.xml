@@ -4,112 +4,82 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.first.login.LoginFragment" >
+    android:background="@color/white"
+    android:transitionGroup="true"
+    tools:context=".ui.first.login.LoginFragment">
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:id="@+id/scrollViewRegisterFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:transitionGroup="true"
-            tools:context=".ui.first.register.RegisterFragment">
+            android:background="@color/white">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/tbRegisterFragment"
-                android:layout_width="0dp"
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:minHeight="?attr/actionBarSize"
-                android:theme="?attr/actionBarTheme"
+                android:layout_marginTop="150dp"
+                android:fontFamily="@font/nanumsquarebold"
+                android:text="끼리끼리"
+                android:textColor="@color/black"
+                android:textSize="40sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:subtitleCentered="false"
-                app:titleTextAppearance="@style/CustomToolbarTitle"
-                tools:navigationIcon="@drawable/ic_arrow_back_ios"
-                tools:navigationIconTint="@color/black"
-                tools:title="회원가입"
-                tools:titleCentered="true" />
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvSubTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/nanumsquareregular"
+                android:text="찐친들의 커뮤니티"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilRegisterFragmentName"
+                android:id="@+id/tilLoginFragmentId"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="100dp"
                 android:layout_marginEnd="20dp"
-                android:hint="이름"
+                android:hint="아이디"
                 android:textColorHint="@color/material_dynamic_neutral60"
                 app:boxStrokeColor="@color/material_dynamic_neutral60"
                 app:cursorColor="@color/black"
-                app:errorEnabled="true"
                 app:hintTextColor="@color/material_dynamic_neutral60"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tbRegisterFragment">
+                app:layout_constraintTop_toBottomOf="@+id/tvSubTitle">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etRegisterFragmentName"
+                    android:id="@+id/etLoginFragmentId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:digits="@string/digit_value"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
-                android:id="@+id/linearLayout"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilLoginFragmentPw"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginEnd="20dp"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tilRegisterFragmentName">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilRegisterFragmentId"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="아이디"
-                    android:textColorHint="@color/material_dynamic_neutral60"
-                    app:boxStrokeColor="@color/material_dynamic_neutral60"
-                    app:cursorColor="@color/black"
-                    app:errorEnabled="true"
-                    app:hintTextColor="@color/material_dynamic_neutral60">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etRegisterFragmentid"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:digits="@string/digit_value"
-                        android:singleLine="true" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <android.widget.Button
-                    android:id="@+id/btnRegisterFragmentDuplicationCheck"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/background_radius_10_fdf497"
-                    android:fontFamily="@font/nanumsquarebold"
-                    android:text=" 아이디 중복 확인 " />
-
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilRegisterFragmentPw1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="30dp"
                 android:layout_marginEnd="20dp"
                 android:hint="비밀번호"
                 android:textColorHint="@color/material_dynamic_neutral60"
@@ -119,152 +89,178 @@
                 app:hintTextColor="@color/material_dynamic_neutral60"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+                app:layout_constraintTop_toBottomOf="@+id/tilLoginFragmentId">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etRegisterFragmentPw1"
+                    android:id="@+id/etLoginFragmentPw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:digits="@string/digit_value"
+                    android:inputType="textPassword"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilRegisterFragmentPw2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="20dp"
-                android:hint="비밀번호 재입력"
-                android:textColorHint="@color/material_dynamic_neutral60"
-                app:boxStrokeColor="@color/material_dynamic_neutral60"
-                app:cursorColor="@color/black"
-                app:endIconMode="password_toggle"
-                app:errorEnabled="true"
-                app:hintTextColor="@color/material_dynamic_neutral60"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tilRegisterFragmentPw1">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etRegisterFragmentPw2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:digits="@string/digit_value"
-                    android:singleLine="true" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tilRegisterFragmentPw2">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilRegisterFragmentPhoneNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="휴대폰 번호"
-                    android:textColorHint="@color/material_dynamic_neutral60"
-                    app:boxStrokeColor="@color/material_dynamic_neutral60"
-                    app:cursorColor="@color/black"
-                    app:errorEnabled="true"
-                    app:hintTextColor="@color/material_dynamic_neutral60">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etRegisterFragmentPhoneNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:digits="@string/digit_value_onlyNumber"
-                        android:inputType="number"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <android.widget.Button
-                    android:id="@+id/btnRegisterFragmentGetCertificationNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/background_radius_10_fdf497"
-                    android:fontFamily="@font/nanumsquarebold"
-                    android:text="인증 요청"
-                    tools:layout_weight="1" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/BOTTOM_END"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilRegisterFragmentCertificationNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColorHint="@color/material_dynamic_neutral60"
-                    app:boxStrokeColor="@color/material_dynamic_neutral60"
-                    app:cursorColor="@color/black"
-                    app:hintTextColor="@color/material_dynamic_neutral60"
-                    android:layout_weight="1"
-                    android:hint="인증번호"
-                    app:errorEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etRegisterFragmentCertificationNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:singleLine="true"
-                        android:textColorHint="@color/material_dynamic_neutral60"
-                        app:boxStrokeColor="@color/material_dynamic_neutral60"
-                        app:cursorColor="@color/black"
-                        app:hintTextColor="@color/material_dynamic_neutral60" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <android.widget.Button
-                    android:id="@+id/btnFindPwFragmentConfirmCertificationNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/background_radius_10_fdf497"
-                    android:fontFamily="@font/nanumsquarebold"
-                    android:text="인증 확인" />
-            </LinearLayout>
 
             <android.widget.Button
-                android:id="@+id/btnRegisterFragmentSignup"
+                android:id="@+id/btnLoginFragmentLogin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="20dp"
                 android:background="@drawable/background_radius_10_fdf497"
                 android:fontFamily="@font/nanumsquarebold"
-                android:text="가입하기"
-                app:layout_constraintTop_toBottomOf="@id/BOTTOM_END"
-                app:layout_constraintStart_toStartOf="parent"
+                android:text="로그인"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tilLoginFragmentPw" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnLoginFragmentLogin">
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nanumsquareregular"
+                    android:text="아직 회원이 아니신가요?"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvLoginFragmentRegister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:autoLink="none"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/nanumsquarebold"
+                    android:linksClickable="false"
+                    android:text="@string/underlined_tvregister"
+                    android:textColor="@color/black"
+                    android:textColorLink="@color/black"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutFind"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnLoginFragmentLogin">
+
+                <TextView
+                    android:id="@+id/tvLoginFragmentFindId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nanumsquarebold"
+                    android:text="@string/underlined_tvfindid"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvLoginFragmentFindPw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nanumsquarebold"
+                    android:text="@string/underlined_tvfindpw"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutSocialLogin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutFind">
+
+                <View
+                    android:id="@+id/divider1"
+                    android:layout_width="40dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="5"
+                    android:background="?android:attr/listDivider" />
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:singleLine="true"
+                    android:text="SNS 계정으로 로그인하기" />
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="40dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="5"
+                    android:background="?android:attr/listDivider" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="50dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutSocialLogin">
+
+                <ImageView
+                    android:id="@+id/ivLoginFragmentKakaoLogin"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/kakao" />
+
+                <ImageView
+                    android:id="@+id/ivLoginFragmentGoogleLogin"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/google" />
+
+                <ImageView
+                    android:id="@+id/ivLoginFragmentNaverLogin"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/naver" />
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -42,7 +42,6 @@ class LoginFragment : Fragment() {
             //아이디찾기
             tvLoginFragmentFindId.setOnClickListener{
                 loginActivity.replaceFragment(LoginFragmentName.FIND_ID_FRAGMENT,true,true,null)
-                Log.d("test","tvLoginFragmentFindId")
             }
             //비밀번호찾기
             tvLoginFragmentFindPw.setOnClickListener {
