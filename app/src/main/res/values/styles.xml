@@ -5,4 +5,11 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/black</item>
     </style>
+
+    <style name="BottomNavStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <!-- 텍스트 색상 상태별로 지정 -->
+        <item name="itemTextColor">@color/mainColor</item>
+        <!-- 아이콘 색상 상태별로 지정 -->
+        <item name="itemIconTint">@color/mainColor</item>
+    </style>
 </resources>
