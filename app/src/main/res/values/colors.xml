@@ -4,6 +4,9 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="mainColor">#FDF497</color>
+    <color name="error_color">#D50000</color>
+    <color name="green">#008000</color>
+    <color name="material_dynamic_neutral60">#909097</color>
 
     <color name="gray_50">#FAFAFA</color>
     <color name="gray_100">#F5F5F5</color>

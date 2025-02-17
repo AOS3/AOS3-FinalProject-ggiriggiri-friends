@@ -6,22 +6,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.viewModels
 import com.friends.ggiriggiri.LoginActivity
 import com.friends.ggiriggiri.LoginFragmentName
 import com.friends.ggiriggiri.R
+import com.friends.ggiriggiri.databinding.FragmentLoginBinding
 import com.friends.ggiriggiri.databinding.FragmentResetPwBinding
 import com.friends.ggiriggiri.ui.custom.CustomDialog
+import com.friends.ggiriggiri.ui.first.login.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.log
 
+@AndroidEntryPoint
 class ResetPwFragment : Fragment() {
-    lateinit var binding: FragmentResetPwBinding
-    lateinit var loginActivity: LoginActivity
+    private var _binding: FragmentResetPwBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var loginActivity: LoginActivity
+    private val resetPwViewModel: ResetPwViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentResetPwBinding.inflate(inflater,container,false)
+        _binding = FragmentResetPwBinding.inflate(inflater,container,false)
         loginActivity = activity as LoginActivity
 
         //툴바세팅
@@ -105,6 +112,11 @@ class ResetPwFragment : Fragment() {
                 customDialog.showCustomDialog()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

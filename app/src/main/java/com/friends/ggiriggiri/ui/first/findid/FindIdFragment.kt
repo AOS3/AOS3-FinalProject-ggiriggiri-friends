@@ -1,27 +1,39 @@
 package com.friends.ggiriggiri.ui.first.findid
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import com.friends.ggiriggiri.LoginActivity
 import com.friends.ggiriggiri.LoginFragmentName
 import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.databinding.FragmentFindIdBinding
+import com.friends.ggiriggiri.databinding.FragmentRegisterBinding
 import com.friends.ggiriggiri.ui.custom.CustomDialog
+import com.friends.ggiriggiri.ui.first.register.RegisterViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.log
 
+@AndroidEntryPoint
 class FindIdFragment : Fragment() {
-    lateinit var fragmentFindIdBinding: FragmentFindIdBinding
-    lateinit var loginActivity: LoginActivity
+
+    private var _binding: FragmentFindIdBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var loginActivity: LoginActivity
+    private val findIdViewModel: FindIdViewModel by viewModels()
+
+    // 아이디 찾기 할수있는지
+    var canWeFindIdResult = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragmentFindIdBinding = FragmentFindIdBinding.inflate(inflater,container,false)
+        _binding = FragmentFindIdBinding.inflate(inflater, container, false)
         loginActivity = activity as LoginActivity
 
         //툴바세팅
@@ -30,12 +42,16 @@ class FindIdFragment : Fragment() {
         //버튼 세팅
         settingButtons()
 
-        return fragmentFindIdBinding.root
+        //뷰모델 관찰
+        observeViewModel()
+
+
+        return binding.root
     }
 
     //툴바세팅
     fun settingToolbar() {
-        fragmentFindIdBinding.tbFindIdFragment.apply {
+        binding.tbFindIdFragment.apply {
             title = "아이디 찾기"
             isTitleCentered = true
             setNavigationIcon(R.drawable.ic_arrow_back_ios)
@@ -45,28 +61,54 @@ class FindIdFragment : Fragment() {
         }
     }
 
+    //뷰모델 관찰
+    private fun observeViewModel() {
+        binding.apply {
+            findIdViewModel.canWeFindId.observe(viewLifecycleOwner) { canWeFindId ->
+                canWeFindIdResult = canWeFindId
+                if (canWeFindIdResult) {
+                    processingFindId()
+                }
+            }
+            findIdViewModel.nameErrorMessage.observe(viewLifecycleOwner) { nameErrorMessage ->
+                tilFindIdFragmentName.error = nameErrorMessage
+
+            }
+            findIdViewModel.phoneNumberErrorMessage.observe(viewLifecycleOwner) { phoneNumberErrorMessage ->
+                tilFindIdFragmentPhoneNumber.error = phoneNumberErrorMessage
+
+            }
+        }
+
+    }
+
+    private fun processingFindId() {
+        binding.apply {
+            val name = etFindIdFragmentName.text?.toString() ?: ""
+            val phoneNumber = etFindIdFragmentPhoneNumber.text?.toString() ?: ""
+
+            findIdViewModel.findId(loginActivity,name,phoneNumber)
+        }
+    }
+
+
     fun settingButtons() {
-        fragmentFindIdBinding.apply {
+        binding.apply {
             // 아이디 찾기 완료
             btnFindIdFragmentFindId.setOnClickListener {
 
-                val customDialog = CustomDialog(
-                    context = loginActivity,
-                    onPositiveClick = {
-                        loginActivity.removeFragment(LoginFragmentName.FIND_ID_FRAGMENT)
-                    },
-                    positiveText = "로그인",
-                    onNegativeClick = {
-                        loginActivity.replaceFragment(LoginFragmentName.FIND_PW_FRAGMENT,false,true,null)
-                    },
-                    negativeText = "비밀번호찾기",
-                    contentText = "채수범님의 아이디는 cssbbb입니다",
-                    icon = R.drawable.ic_check_circle
-                )
+                val name = etFindIdFragmentName.text?.toString() ?: ""
+                val phoneNumber = etFindIdFragmentPhoneNumber.text?.toString() ?: ""
 
-                customDialog.showCustomDialog()
+                findIdViewModel.btnFindIdFragmentFindIdOnClick(name, phoneNumber)
+
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 

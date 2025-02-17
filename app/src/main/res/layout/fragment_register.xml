@@ -84,14 +84,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="아이디"
-                    android:textColorHint="@color/material_dynamic_neutral60"
                     app:boxStrokeColor="@color/material_dynamic_neutral60"
+                    android:textColorHint="@color/material_dynamic_neutral60"
                     app:cursorColor="@color/black"
                     app:errorEnabled="true"
                     app:hintTextColor="@color/material_dynamic_neutral60">
 
+
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etRegisterFragmentid"
+                        android:id="@+id/etRegisterFragmentId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:digits="@string/digit_value"
@@ -103,11 +104,22 @@
                     android:id="@+id/btnRegisterFragmentDuplicationCheck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/background_radius_10_fdf497"
                     android:fontFamily="@font/nanumsquarebold"
                     android:text="중복 확인" />
+
+                <TextView
+                    tools:text = "중복확인 완료"
+                    android:layout_marginTop="10dp"
+                    android:textSize="20sp"
+                    android:id="@+id/tvRegisterFragmentIdValid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nanumsquarebold" />
 
             </LinearLayout>
 
@@ -191,7 +203,6 @@
                         android:id="@+id/etRegisterFragmentPhoneNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:digits="@string/digit_value_onlyNumber"
                         android:inputType="number"
                         android:singleLine="true" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -200,17 +211,27 @@
                     android:id="@+id/btnRegisterFragmentGetCertificationNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/background_radius_10_fdf497"
                     android:fontFamily="@font/nanumsquarebold"
                     android:text="인증 요청"
                     tools:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tvFormattedTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nanumsquarebold"
+                    android:textSize="16sp"
+                    tools:text="04:54" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/BOTTOM_END"
-                android:visibility="gone"
+                android:id="@+id/llRegisterFragmentConfirmCertification"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -251,11 +272,22 @@
                     android:id="@+id/btnRegisterFragmentConfirmCertificationNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/background_radius_10_fdf497"
                     android:fontFamily="@font/nanumsquarebold"
                     android:text="인증 확인" />
+
+                <TextView
+                    android:id="@+id/tvRegisterFragmentCertificationNumberValid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nanumsquarebold"
+                    android:textSize="20sp"
+                    tools:text="인증완료" />
             </LinearLayout>
 
             <android.widget.Button
@@ -272,7 +304,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/BOTTOM_END" />
+                app:layout_constraintTop_toBottomOf="@id/llRegisterFragmentConfirmCertification" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

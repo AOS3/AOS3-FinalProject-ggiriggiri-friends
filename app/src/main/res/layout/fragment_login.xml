@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:transitionGroup="true"
+    android:name="com.friends.ggiriggiri.ui.first.login.LoginFragment"
     tools:context=".ui.first.login.LoginFragment">
 
     <ScrollView
