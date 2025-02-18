@@ -14,10 +14,13 @@ import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.GroupActivity
 import com.friends.ggiriggiri.LoginActivity
 import com.friends.ggiriggiri.LoginFragmentName
+import com.friends.ggiriggiri.R
+import com.friends.ggiriggiri.data.repository.KakaoLoginRepository
+import com.friends.ggiriggiri.data.service.KakaoLoginService
 import com.friends.ggiriggiri.databinding.FragmentLoginBinding
-import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
-import com.friends.ggiriggiri.ui.first.register.UserService
-import com.friends.ggiriggiri.util.UserState
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.KakaoSdk
+import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,6 +48,12 @@ class LoginFragment : Fragment() {
 
         // 버튼 리스너
         settingButtons()
+
+        // 카카오 초기화
+        KakaoSdk.init(requireActivity(), getString(R.string.kakao_native_app_key))
+
+        // 소셜 로그인 버튼들
+        socialLoginButtons()
 
         return binding.root
     }
@@ -107,6 +116,110 @@ class LoginFragment : Fragment() {
             }
         }
     }
+
+    private fun socialLoginButtons(){
+        binding.apply {
+            // 카카오 로그인
+            ivLoginFragmentKakaoLogin.setOnClickListener {
+                loginWithKakao()
+            }
+            // 네이버 로그인
+            ivLoginFragmentNaverLogin.setOnClickListener {
+
+            }
+            // 구글 로그인
+            ivLoginFragmentGoogleLogin.setOnClickListener {
+
+            }
+        }
+    }
+
+    private fun loginWithKakao() {
+        if (UserApiClient.instance.isKakaoTalkLoginAvailable(requireActivity())) {
+            UserApiClient.instance.loginWithKakaoTalk(requireActivity()) { token, error ->
+                if (error != null) {
+                    Log.e("KakaoLogin", "카카오톡 로그인 실패, 계정 로그인 시도", error)
+                    // 카카오톡 로그인 실패 시, 카카오 계정 로그인 실행
+                    UserApiClient.instance.loginWithKakaoAccount(requireActivity()) { token, error ->
+                        handleLoginResult(token, error)
+                    }
+                } else {
+                    handleLoginResult(token, error)
+                }
+            }
+        } else {
+            UserApiClient.instance.loginWithKakaoAccount(requireActivity()) { token, error ->
+                handleLoginResult(token, error)
+            }
+        }
+    }
+
+    private fun handleLoginResult(token: OAuthToken?, error: Throwable?) {
+        if (error != null) {
+            Log.e("KakaoLogin", "로그인 실패", error)
+        } else if (token != null) {
+            Log.d("KakaoLogin", "로그인 성공 ${token.accessToken}")
+
+            // 🚀 로그인 성공 후 유저 정보 가져오기
+            fetchUserInfo()
+        }
+    }
+
+    private fun fetchUserInfo() {
+        lifecycleScope.launch {
+            UserApiClient.instance.me { user, error ->
+                if (error != null) {
+                    Log.e("KakaoUserInfo", "사용자 정보 요청 실패", error)
+                    return@me
+                }
+
+                if (user == null) {
+                    Log.e("KakaoUserInfo", "사용자 정보가 null입니다.")
+                    return@me
+                }
+
+                Log.d("KakaoUserInfo", "사용자 전체 정보: $user")
+
+                val email = user.kakaoAccount?.email ?: "이메일 없음"
+                val nickname = user.kakaoAccount?.profile?.nickname ?: "닉네임 없음"
+                val profileImage = user.kakaoAccount?.profile?.thumbnailImageUrl ?: ""
+
+                // OAuthToken 가져오기
+                UserApiClient.instance.accessTokenInfo { tokenInfo, tokenError ->
+                    if (tokenError != null) {
+                        Log.e("KakaoToken", "OAuthToken 가져오기 실패", tokenError)
+                        return@accessTokenInfo
+                    }
+
+                    val kakaoToken = tokenInfo?.id.toString() // 카카오 OAuthToken 값 사용
+
+                    val kakaoLoginService = KakaoLoginService(KakaoLoginRepository())
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val userModel = kakaoLoginService.handleKakaoLogin(email, nickname, profileImage, kakaoToken)
+
+                        withContext(Dispatchers.Main) {
+                            if (userModel != null) {
+                                Log.d("KakaoUserInfo", "Firestore에서 가져온 유저: ${userModel.userId}")
+
+                                // App 클래스에 로그인 유저 정보 저장
+                                (requireActivity().application as App).loginUserModel = userModel
+
+                                // GroupActivity로 이동
+                                val intent = Intent(requireContext(), GroupActivity::class.java)
+                                startActivity(intent)
+                                requireActivity().finish()
+                            } else {
+                                Log.e("KakaoUserInfo", "Firestore 유저 정보를 가져오는 데 실패함")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

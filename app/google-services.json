@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "124835773021",
+    "project_id": "ggiriggiri-c33b2",
+    "storage_bucket": "ggiriggiri-c33b2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124835773021:android:43378b2068bc3fe683abb4",
+        "android_client_info": {
+          "package_name": "com.friends.ggiriggiri"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5iJtxRJaenNXZYjNFhK8TrU_Cu77qFcQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124835773021:android:82cb6b3a9e6b9ce283abb4",
+        "android_client_info": {
+          "package_name": "com.judamie_user.firebasefunctions"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5iJtxRJaenNXZYjNFhK8TrU_Cu77qFcQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
