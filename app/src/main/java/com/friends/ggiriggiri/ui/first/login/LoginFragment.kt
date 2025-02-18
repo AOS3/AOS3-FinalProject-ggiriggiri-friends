@@ -209,7 +209,7 @@ class LoginFragment : Fragment() {
                                 startActivity(intent)
                                 requireActivity().finish()
                             } else {
-                                Log.e("KakaoUserInfo", "Firestore 유저 정보를 가져오는 데 실패함")
+                                Log.e("KakaoUserInfo", "Firestore 유저 정보를 가져오는 데 실패했음")
                             }
                         }
                     }
