@@ -79,7 +79,7 @@ class LoginViewModel @Inject constructor(
                             Toast.makeText(loginActivity, "탈퇴한 회원입니다", Toast.LENGTH_LONG).show()
                         } else {
                             Toast.makeText(loginActivity, "로그인 완료!", Toast.LENGTH_LONG).show()
-                            val app = App()
+                            val app = loginActivity.application as App
                             app.loginUserModel = user
                             val intent = Intent(loginActivity, GroupActivity::class.java)
                             loginActivity.startActivity(intent)
