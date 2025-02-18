@@ -3,8 +3,11 @@ package com.friends.ggiriggiri.ui.third.request
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class RequestViewModel : ViewModel() {
+@HiltViewModel
+class RequestViewModel @Inject constructor() : ViewModel() {
 
     // 사진 업로드 여부
     private val _isImageUploaded = MutableLiveData(false)

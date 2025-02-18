@@ -19,9 +19,11 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.friends.ggiriggiri.databinding.FragmentRequestBinding
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.IOException
 
+@AndroidEntryPoint
 class RequestFragment : Fragment() {
 
     private lateinit var binding: FragmentRequestBinding
