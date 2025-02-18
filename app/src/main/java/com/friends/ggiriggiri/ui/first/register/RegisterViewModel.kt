@@ -186,7 +186,7 @@ class RegisterViewModel @Inject constructor(
             btnRegisterFragmentGetCertificationNumberText.value = "재인증"
 
             // 1분 타이머 (60초 = 60000ms)
-            val timer = object : CountDownTimer(60000, 1000) {
+            val timer = object : CountDownTimer(120000, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     // 남은 시간을 분:초 형식으로 변환
                     val seconds = (millisUntilFinished / 1000) % 60
@@ -227,16 +227,18 @@ class RegisterViewModel @Inject constructor(
             override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
                 this@RegisterViewModel.verificationId = verificationId  // 인증 ID 저장
                 Toast.makeText(loginActivity, "인증 코드가 전송되었습니다.", Toast.LENGTH_SHORT).show()
+                btnRegisterFragmentConfirmCertificationNumberEnabled.value = true
             }
         }
 
         val formattedPhoneNumber = "+82" + phoneNumber.substring(1)
         val options = PhoneAuthOptions.newBuilder(auth)
             .setPhoneNumber(formattedPhoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
+            .setTimeout(120L, TimeUnit.SECONDS)
             .setActivity(loginActivity)
             .setCallbacks(callbacks)
             .build()
+        btnRegisterFragmentConfirmCertificationNumberEnabled.value = false
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
 

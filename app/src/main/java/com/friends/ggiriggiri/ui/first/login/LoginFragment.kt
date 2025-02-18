@@ -18,6 +18,7 @@ import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.data.repository.KakaoLoginRepository
 import com.friends.ggiriggiri.data.service.KakaoLoginService
 import com.friends.ggiriggiri.databinding.FragmentLoginBinding
+import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.user.UserApiClient
@@ -32,6 +33,7 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var loginActivity: LoginActivity
     private val loginViewModel: LoginViewModel by viewModels()
+    private lateinit var progressDialog: CustomDialogProgressbar
 
     //true면 로그인 진행가능
     private var isLoginSuccessResult: Boolean = false
@@ -42,6 +44,9 @@ class LoginFragment : Fragment() {
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         loginActivity = activity as LoginActivity
+
+        // 다이얼로그 초기화
+        progressDialog = CustomDialogProgressbar(requireContext())
 
         // ViewModel observe
         observeViewModel()
@@ -135,6 +140,8 @@ class LoginFragment : Fragment() {
     }
 
     private fun loginWithKakao() {
+        progressDialog.show()
+
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(requireActivity())) {
             UserApiClient.instance.loginWithKakaoTalk(requireActivity()) { token, error ->
                 if (error != null) {
@@ -157,6 +164,7 @@ class LoginFragment : Fragment() {
     private fun handleLoginResult(token: OAuthToken?, error: Throwable?) {
         if (error != null) {
             Log.e("KakaoLogin", "로그인 실패", error)
+            progressDialog.dismiss()
         } else if (token != null) {
             Log.d("KakaoLogin", "로그인 성공 ${token.accessToken}")
 
@@ -170,11 +178,13 @@ class LoginFragment : Fragment() {
             UserApiClient.instance.me { user, error ->
                 if (error != null) {
                     Log.e("KakaoUserInfo", "사용자 정보 요청 실패", error)
+                    progressDialog.dismiss()
                     return@me
                 }
 
                 if (user == null) {
                     Log.e("KakaoUserInfo", "사용자 정보가 null입니다.")
+                    progressDialog.dismiss()
                     return@me
                 }
 
@@ -188,6 +198,7 @@ class LoginFragment : Fragment() {
                 UserApiClient.instance.accessTokenInfo { tokenInfo, tokenError ->
                     if (tokenError != null) {
                         Log.e("KakaoToken", "OAuthToken 가져오기 실패", tokenError)
+                        progressDialog.dismiss()
                         return@accessTokenInfo
                     }
 
@@ -199,6 +210,7 @@ class LoginFragment : Fragment() {
 
                         withContext(Dispatchers.Main) {
                             if (userModel != null) {
+                                progressDialog.dismiss()
                                 Log.d("KakaoUserInfo", "Firestore에서 가져온 유저: ${userModel.userId}")
 
                                 // App 클래스에 로그인 유저 정보 저장
