@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:transitionGroup="true"
+    android:fitsSystemWindows="true"
     tools:context=".ui.fourth.settinggroup.SettingGroupFragment">
 
     <!-- Toolbar -->
@@ -13,11 +14,8 @@
         android:id="@+id/toolbarGroupSetting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:navigationIcon="@drawable/ic_arrow_back_ios"
-        app:title="그룹 설정"
         app:titleCentered="true"
-        android:theme="@style/CustomToolbarTitle"
+        app:titleTextAppearance="@style/CustomToolbarTitle"
         />
 
     <LinearLayout
@@ -42,33 +40,39 @@
 
 
     <TextView
+        android:id="@+id/modifyGroupPw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="20dp"
-        android:paddingVertical="10dp"
+        android:paddingVertical="20dp"
         android:layout_marginTop="150dp"
         android:text="그룹 비밀번호 변경"
         android:textSize="20sp"
         android:fontFamily="@font/nanumsquareregular"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground"/>
     <TextView
+        android:id="@+id/modifyGroupName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="20dp"
-        android:paddingVertical="10dp"
+        android:paddingVertical="20dp"
         android:text="그룹명 변경"
         android:textSize="20sp"
         android:fontFamily="@font/nanumsquareregular"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground"/>
     <TextView
+        android:id="@+id/modifyGroupExit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="20dp"
-        android:paddingVertical="10dp"
+        android:paddingVertical="20dp"
         android:text="그룹나가기"
         android:textSize="20sp"
         android:fontFamily="@font/nanumsquareregular"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground"/>
 
 
 
