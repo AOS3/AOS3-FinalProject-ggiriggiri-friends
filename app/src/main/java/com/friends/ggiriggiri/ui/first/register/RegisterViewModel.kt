@@ -237,7 +237,6 @@ class RegisterViewModel @Inject constructor(
             .setActivity(loginActivity)
             .setCallbacks(callbacks)
             .build()
-
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
 

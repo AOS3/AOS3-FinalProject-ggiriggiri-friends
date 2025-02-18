@@ -145,6 +145,7 @@
                     android:autoLink="none"
                     android:clickable="true"
                     android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     android:fontFamily="@font/nanumsquarebold"
                     android:linksClickable="false"
                     android:text="@string/underlined_tvregister"
@@ -166,6 +167,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/btnLoginFragmentLogin">
 
                 <TextView
+                    android:foreground="?attr/selectableItemBackground"
                     android:id="@+id/tvLoginFragmentFindId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -176,6 +178,7 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:foreground="?attr/selectableItemBackground"
                     android:id="@+id/tvLoginFragmentFindPw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -234,31 +237,40 @@
                 android:layout_marginEnd="50dp"
                 android:layout_marginBottom="30dp"
                 android:orientation="horizontal"
+                android:gravity="center_horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutSocialLogin">
 
-                <ImageView
+                <android.widget.Button
                     android:id="@+id/ivLoginFragmentKakaoLogin"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/kakao" />
+                    android:foreground="?attr/selectableItemBackground"
+                    android:background="@drawable/kakao" />
 
-                <ImageView
+                <Space
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"/>
+
+                <android.widget.Button
                     android:id="@+id/ivLoginFragmentGoogleLogin"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/google" />
+                    android:foreground="?attr/selectableItemBackground"
+                    android:background="@drawable/google" />
 
-                <ImageView
+                <Space
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"/>
+
+                <android.widget.Button
                     android:id="@+id/ivLoginFragmentNaverLogin"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/naver" />
+                    android:foreground="?attr/selectableItemBackground"
+                    android:background="@drawable/naver" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

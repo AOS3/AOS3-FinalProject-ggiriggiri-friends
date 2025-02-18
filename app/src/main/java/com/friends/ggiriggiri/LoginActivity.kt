@@ -1,6 +1,7 @@
 package com.friends.ggiriggiri
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,6 +16,7 @@ import com.friends.ggiriggiri.ui.first.findpw.ResetPwFragment
 import com.friends.ggiriggiri.ui.first.login.LoginFragment
 import com.friends.ggiriggiri.ui.first.register.RegisterFragment
 import com.google.android.material.transition.MaterialSharedAxis
+import com.kakao.sdk.common.util.Utility
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
