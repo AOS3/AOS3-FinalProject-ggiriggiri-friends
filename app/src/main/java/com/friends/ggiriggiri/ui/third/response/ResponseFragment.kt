@@ -77,10 +77,26 @@ class ResponseFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.setTextEntered(!s.isNullOrEmpty())
+                val currentLength = s?.length ?: 0
+
+                // 현재 입력된 글자 수 / 최대 글자 수 업데이트
+                binding.tvRespondCharCount.text = "$currentLength/100"
+
+                // 텍스트 입력 상태 업데이트
+                viewModel.setTextEntered(currentLength > 0)
+
+                // 글자 수가 100자를 초과하면 경고 메시지 표시 및 입력 제한
+                if (currentLength >= 100) {
+                    Toast.makeText(requireContext(), "최대 100자까지 입력할 수 있습니다.", Toast.LENGTH_SHORT).show()
+                }
             }
 
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+                // 최대 글자 수(100자) 초과 시 추가 입력 방지
+                if (s != null && s.length > 100) {
+                    s.delete(100, s.length)
+                }
+            }
         })
 
         binding.btnRespondSubmit.setOnClickListener {
