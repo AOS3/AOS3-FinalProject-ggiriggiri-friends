@@ -112,7 +112,7 @@ class GoogleLoginRepository@Inject constructor(
                 this.userState = UserState.NORMAL
                 this.userSocialLogin = UserSocialLoginState.GOOGLE
                 this.userAutoLoginToken = UUID.randomUUID().toString()
-                this.userNaverToken = googleToken
+                this.userGoogleToken = googleToken
             }
             createUser(newUser)
             newUser

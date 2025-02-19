@@ -15,10 +15,10 @@ class GoogleLoginService @Inject constructor(
     }
 
     // 네이버 로그인 후 Firestore에서 사용자 정보 가져오기
-    suspend fun handleGoogleLogin(email: String, userName: String, userProfileImage: String, naverToken: String): UserModel? {
+    suspend fun handleGoogleLogin(email: String, userName: String, userProfileImage: String, googleToken: String): UserModel? {
         return try {
             withContext(Dispatchers.IO) {
-                val user = googleLoginRepository.getOrCreateUser(email, userName, userProfileImage, naverToken)
+                val user = googleLoginRepository.getOrCreateUser(email, userName, userProfileImage, googleToken)
                 Log.d("GoogleLoginRepository", "Firestore에서 유저 처리 완료: ${user.userId}")
                 user
             }

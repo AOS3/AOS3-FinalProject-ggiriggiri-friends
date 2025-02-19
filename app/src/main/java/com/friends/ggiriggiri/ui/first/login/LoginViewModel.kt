@@ -112,7 +112,6 @@ class LoginViewModel @Inject constructor(
                 _loginStatus.value = isSuccess
 
                 if (isSuccess) {
-                    // ✅ Firebase 인증이 성공하면 Firestore에서 사용자 정보 가져오기
                     fetchOrCreateUser(email, userName, profileImage, idToken)
                 }
             } catch (e: Exception) {

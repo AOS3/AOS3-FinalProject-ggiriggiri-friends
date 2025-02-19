@@ -61,7 +61,7 @@ class NaverLoginRepository {
                 "userState" to user.userState.num, // 숫자로 저장
                 "userSocialLogin" to user.userSocialLogin.num, // 숫자로 저장
                 "userAutoLoginToken" to user.userAutoLoginToken,
-                "userNaverToken" to user.userKakaoToken,
+                "userNaverToken" to user.userNaverToken,
                 // 기존 필드 유지
                 "userPw" to (existingData["userPw"] ?: ""),
                 "userPhoneNumber" to (existingData["userPhoneNumber"] ?: ""),
