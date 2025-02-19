@@ -251,7 +251,7 @@
                     android:background="@drawable/kakao" />
 
                 <Space
-                    android:layout_width="30dp"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"/>
 
                 <android.widget.Button
@@ -262,7 +262,7 @@
                     android:background="@drawable/google" />
 
                 <Space
-                    android:layout_width="30dp"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"/>
 
                 <android.widget.Button

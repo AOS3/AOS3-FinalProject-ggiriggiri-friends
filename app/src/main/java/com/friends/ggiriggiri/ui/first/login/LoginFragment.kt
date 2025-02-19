@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,16 +17,28 @@ import com.friends.ggiriggiri.LoginActivity
 import com.friends.ggiriggiri.LoginFragmentName
 import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.data.repository.KakaoLoginRepository
+import com.friends.ggiriggiri.data.repository.NaverLoginRepository
 import com.friends.ggiriggiri.data.service.KakaoLoginService
+import com.friends.ggiriggiri.data.service.NaverLoginService
 import com.friends.ggiriggiri.databinding.FragmentLoginBinding
 import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.user.UserApiClient
+import com.navercorp.nid.NaverIdLoginSDK
+import com.navercorp.nid.oauth.OAuthLoginCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.net.URLDecoder
+import kotlin.math.log
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -57,6 +70,17 @@ class LoginFragment : Fragment() {
         // 카카오 초기화
         KakaoSdk.init(requireActivity(), getString(R.string.kakao_native_app_key))
 
+        // 네이버 SDK 초기화
+        NaverIdLoginSDK.initialize(
+            loginActivity,
+            getString(R.string.OAUTH_CLIENT_ID),
+            getString(R.string.OAUTH_CLIENT_SECRET),
+            getString(R.string.OAUTH_CLIENT_NAME)
+        )
+
+        Log.d("NaverLogin", "Naver Client ID: ${NaverIdLoginSDK}")
+
+
         // 소셜 로그인 버튼들
         socialLoginButtons()
 
@@ -80,7 +104,21 @@ class LoginFragment : Fragment() {
                 }
             }
 
+            user_google.observe(viewLifecycleOwner) { user ->
+                if (user != null) {
+                    (requireActivity().application as App).loginUserModel = user
+                    navigateToGroupActivity()
+                }
+            }
+
         }
+    }
+
+    private fun navigateToGroupActivity() {
+        val intent = Intent(requireContext(), GroupActivity::class.java)
+        startActivity(intent)
+        progressDialog.dismiss()
+        requireActivity().finish()
     }
 
     // 로그인 처리
@@ -93,7 +131,6 @@ class LoginFragment : Fragment() {
             loginViewModel.loginUser(loginActivity, id, pw)
         }
     }
-
 
 
     private fun settingButtons() {
@@ -122,7 +159,7 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun socialLoginButtons(){
+    private fun socialLoginButtons() {
         binding.apply {
             // 카카오 로그인
             ivLoginFragmentKakaoLogin.setOnClickListener {
@@ -130,13 +167,34 @@ class LoginFragment : Fragment() {
             }
             // 네이버 로그인
             ivLoginFragmentNaverLogin.setOnClickListener {
-
+                loginWithNaver()
             }
             // 구글 로그인
             ivLoginFragmentGoogleLogin.setOnClickListener {
-
+                requestGoogleLogin()
             }
+
         }
+    }
+
+    private fun loginWithNaver() {
+        NaverIdLoginSDK.authenticate(loginActivity, object : OAuthLoginCallback {
+            override fun onSuccess() {
+                Log.d("NaverLogin", "네이버 로그인 성공")
+                val accessToken = NaverIdLoginSDK.getAccessToken()
+                Log.d("NaverLogin", "Access Token: $accessToken")
+
+                fetchNaverUserInfo()
+            }
+
+            override fun onFailure(httpStatus: Int, message: String) {
+                Log.e("NaverLogin", "네이버 로그인 실패: $message")
+            }
+
+            override fun onError(errorCode: Int, message: String) {
+                Log.e("NaverLogin", "네이버 로그인 오류: $message")
+            }
+        })
     }
 
     private fun loginWithKakao() {
@@ -168,12 +226,12 @@ class LoginFragment : Fragment() {
         } else if (token != null) {
             Log.d("KakaoLogin", "로그인 성공 ${token.accessToken}")
 
-            // 🚀 로그인 성공 후 유저 정보 가져오기
-            fetchUserInfo()
+
+            fetchKakaoUserInfo()
         }
     }
 
-    private fun fetchUserInfo() {
+    private fun fetchKakaoUserInfo() {
         lifecycleScope.launch {
             UserApiClient.instance.me { user, error ->
                 if (error != null) {
@@ -206,7 +264,12 @@ class LoginFragment : Fragment() {
 
                     val kakaoLoginService = KakaoLoginService(KakaoLoginRepository())
                     lifecycleScope.launch(Dispatchers.IO) {
-                        val userModel = kakaoLoginService.handleKakaoLogin(email, nickname, profileImage, kakaoToken)
+                        val userModel = kakaoLoginService.handleKakaoLogin(
+                            email,
+                            nickname,
+                            profileImage,
+                            kakaoToken
+                        )
 
                         withContext(Dispatchers.Main) {
                             if (userModel != null) {
@@ -230,9 +293,117 @@ class LoginFragment : Fragment() {
         }
     }
 
+    private fun fetchNaverUserInfo() {
+        progressDialog.show()
+        val accessToken = NaverIdLoginSDK.getAccessToken() ?: return
+        val url = "https://openapi.naver.com/v1/nid/me"
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val connection = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+                connection.requestMethod = "GET"
+                connection.setRequestProperty("Authorization", "Bearer $accessToken")
+
+                val responseCode = connection.responseCode
+                if (responseCode == 200) {
+                    val responseStream =
+                        connection.inputStream.bufferedReader().use { it.readText() }
+                    Log.d("NaverLogin", "네이버 사용자 정보: $responseStream")
+
+                    // JSON 파싱
+                    val jsonObject = JSONObject(responseStream)
+                    val response = jsonObject.getJSONObject("response")
+
+                    val userId = response.getString("id") // 네이버 고유 ID
+                    val email = response.optString("email", "이메일 없음")
+                    val rawName = response.optString("name", "이름 없음")
+                    val nickname = response.optString("nickname", "닉네임 없음")
+                    val profileImage = response.optString("profile_image", "")
+
+                    // 유니코드(이스케이프된 문자) 디코딩
+                    val name = URLDecoder.decode(rawName, "UTF-8")
+
+                    val naverLoginService = NaverLoginService(NaverLoginRepository())
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        val userModel = naverLoginService.handleNaverLogin(
+                            email,
+                            name,
+                            profileImage,
+                            userId
+                        )
+                        withContext(Dispatchers.Main) {
+                            if (userModel != null) {
+                                progressDialog.dismiss()
+                                Log.d("NaverUserInfo", "Firestore에서 가져온 유저: ${userModel.userId}")
+
+                                // App 클래스에 로그인 유저 정보 저장
+                                (loginActivity.application as App).loginUserModel = userModel
+
+                                // GroupActivity로 이동
+                                val intent = Intent(
+                                    requireContext(),
+                                    GroupActivity::class.java
+                                )
+                                startActivity(intent)
+                                loginActivity.finish()
+                            } else {
+                                Log.e("NaverUserInfo", "Firestore 유저 정보를 가져오는 데 실패했음")
+                            }
+                        }
+                    }
+                } else {
+                    Log.e("NaverLogin", "네이버 사용자 정보 요청 실패: $responseCode")
+                }
+            } catch (e: Exception) {
+                Log.e("NaverLogin", "네이버 사용자 정보 요청 중 오류 발생", e)
+            }
+        }
+    }
+
+
+    private val googleSignInClient: GoogleSignInClient by lazy { getGoogleClient() }
+    private val googleAuthLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+
+        try {
+            val account = task.getResult(ApiException::class.java)
+            val idToken = account.idToken
+
+            if (idToken.isNullOrEmpty()) {
+                progressDialog.dismiss()
+                return@registerForActivityResult
+            }
+            progressDialog.show()
+
+            loginViewModel.requestGiverSignIn(
+                idToken = idToken,
+                email = account.email ?: "",
+                userName = account.displayName ?: "",
+                profileImage = account.photoUrl?.toString() ?: ""
+            )
+
+        } catch (e: ApiException) {
+            Log.e("GoogleLogin", "Google 로그인 실패: ${e.statusCode}", e)
+            progressDialog.dismiss()
+        }
+    }
 
 
 
+    private fun getGoogleClient(): GoogleSignInClient {
+        val googleSignInOption = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.google_login_client_id)) // ID 토큰 요청
+            .requestEmail() // 이메일 요청
+            .build()
+
+        return GoogleSignIn.getClient(requireActivity(), googleSignInOption)
+    }
+
+    private fun requestGoogleLogin() {
+        progressDialog.show()
+        val signInIntent = googleSignInClient.signInIntent
+        googleAuthLauncher.launch(signInIntent)
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

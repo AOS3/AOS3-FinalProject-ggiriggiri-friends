@@ -1,5 +1,7 @@
 package com.friends.ggiriggiri.ui.first.register
 
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Singleton

@@ -3,13 +3,16 @@ package com.friends.ggiriggiri.ui.first.login
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.GroupActivity
 import com.friends.ggiriggiri.LoginActivity
+import com.friends.ggiriggiri.data.service.GoogleLoginService
 import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
+import com.friends.ggiriggiri.ui.first.register.UserModel
 import com.friends.ggiriggiri.ui.first.register.UserService
 import com.friends.ggiriggiri.util.UserState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val service: UserService
+    private val service: UserService,
+    private val googleLoginService: GoogleLoginService
 ): ViewModel() {
 
     // 아이디 에러 메시지
@@ -97,5 +101,37 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
+    private val _loginStatus = MutableLiveData<Boolean>()
+    val loginStatus: LiveData<Boolean> get() = _loginStatus
+
+    fun requestGiverSignIn(idToken: String, email: String, userName: String, profileImage: String) {
+        viewModelScope.launch {
+            try {
+                val isSuccess = googleLoginService.signInWithGoogle(idToken)
+                _loginStatus.value = isSuccess
+
+                if (isSuccess) {
+                    // ✅ Firebase 인증이 성공하면 Firestore에서 사용자 정보 가져오기
+                    fetchOrCreateUser(email, userName, profileImage, idToken)
+                }
+            } catch (e: Exception) {
+                Log.e("LoginViewModel", "Google 로그인 실패", e)
+                _loginStatus.value = false
+            }
+        }
+    }
+
+
+    private val _user_google = MutableLiveData<UserModel?>()
+    val user_google: LiveData<UserModel?> get() = _user_google
+
+    fun fetchOrCreateUser(email: String, userName: String, profileImage: String, googleToken: String) {
+        viewModelScope.launch {
+            val userData = googleLoginService.handleGoogleLogin(email, userName, profileImage, googleToken)
+            _user_google.postValue(userData) // LiveData에 값 설정
+        }
+    }
+
 }
 

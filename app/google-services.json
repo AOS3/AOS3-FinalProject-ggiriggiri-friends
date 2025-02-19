@@ -12,7 +12,36 @@
           "package_name": "com.friends.ggiriggiri"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "124835773021-9r52gbd0fj708hmvviu4q0jt7cm1ivnm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.friends.ggiriggiri",
+            "certificate_hash": "09308f6a8138c8f4f58e96e56d1a3bd12647504d"
+          }
+        },
+        {
+          "client_id": "124835773021-n9g000ujlgo2bkd7ms40gqqo9smrfrec.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.friends.ggiriggiri",
+            "certificate_hash": "e9177fd42b5de3b4add630e671c06fbcc04f8e8c"
+          }
+        },
+        {
+          "client_id": "124835773021-tmfi6glavo2sjq7fg6kltl41shgaadde.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.friends.ggiriggiri",
+            "certificate_hash": "37730a0f32964d72369c063ce27141e58fee890f"
+          }
+        },
+        {
+          "client_id": "124835773021-v87hbvkaagmsumnd9ga78bnjqgs9u8vr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC5iJtxRJaenNXZYjNFhK8TrU_Cu77qFcQ"
@@ -20,7 +49,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "124835773021-v87hbvkaagmsumnd9ga78bnjqgs9u8vr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     },
@@ -31,7 +65,20 @@
           "package_name": "com.judamie_user.firebasefunctions"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "124835773021-539ljos0rk63dr516d6rkd3f7gb5u7og.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.judamie_user.firebasefunctions",
+            "certificate_hash": "37730a0f32964d72369c063ce27141e58fee890f"
+          }
+        },
+        {
+          "client_id": "124835773021-v87hbvkaagmsumnd9ga78bnjqgs9u8vr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC5iJtxRJaenNXZYjNFhK8TrU_Cu77qFcQ"
@@ -39,7 +86,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "124835773021-v87hbvkaagmsumnd9ga78bnjqgs9u8vr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

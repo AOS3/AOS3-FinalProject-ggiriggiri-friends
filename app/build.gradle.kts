@@ -105,4 +105,10 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")
+
+    // Google Play services
+    implementation ("com.google.gms:google-services:4.3.15")
+    implementation ("com.google.firebase:firebase-auth:22.0.0")
+    implementation ("com.google.firebase:firebase-bom:32.0.0")
+    implementation ("com.google.android.gms:play-services-auth:20.5.0")
 }
