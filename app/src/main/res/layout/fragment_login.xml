@@ -249,6 +249,16 @@
                     android:layout_height="40dp"
                     android:foreground="?attr/selectableItemBackground"
                     android:background="@drawable/kakao" />
+                <Space
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"/>
+
+                <android.widget.Button
+                    android:id="@+id/ivLoginFragmentNaverLogin"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:background="@drawable/naver" />
 
                 <Space
                     android:layout_width="40dp"
@@ -260,17 +270,6 @@
                     android:layout_height="40dp"
                     android:foreground="?attr/selectableItemBackground"
                     android:background="@drawable/google" />
-
-                <Space
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"/>
-
-                <android.widget.Button
-                    android:id="@+id/ivLoginFragmentNaverLogin"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:background="@drawable/naver" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
