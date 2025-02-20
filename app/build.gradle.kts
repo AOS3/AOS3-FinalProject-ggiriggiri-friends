@@ -89,6 +89,9 @@ dependencies {
     // 원형 프로필
     implementation ("de.hdodenhof:circleimageview:3.1.0")
 
+    // 줌아웃 기능
+    implementation ("com.github.chrisbanes:PhotoView:2.3.0")
+
     // 네이버
     implementation(files("libs/oauth-5.10.0.aar"))
 
