@@ -1,25 +1,38 @@
 package com.friends.ggiriggiri.ui.second.makegroup
 
-import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.R
+import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.databinding.FragmentMakeGroupBinding
 import com.friends.ggiriggiri.ui.custom.CustomDialog
+import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MakeGroupFragment : Fragment() {
 
     private lateinit var fragmentMakeGroupBinding: FragmentMakeGroupBinding
 
+    private val makeGroupViewModel: MakeGroupViewModel by viewModels()
+    private lateinit var progressDialog: CustomDialogProgressbar
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         fragmentMakeGroupBinding = FragmentMakeGroupBinding.inflate(inflater, container, false)
-        // Inflate the layout for this fragment
+
+        progressDialog = CustomDialogProgressbar(requireContext())
+
         checkGroupCode()
 
         makeGroup()
@@ -28,57 +41,81 @@ class MakeGroupFragment : Fragment() {
     }
 
     // 중복확인 버튼 메서드
-    private fun checkGroupCode(){
-        fragmentMakeGroupBinding.apply {
-            btnMakeGroupCheckCode.setOnClickListener {
+    private fun checkGroupCode() {
+        fragmentMakeGroupBinding.btnMakeGroupCheckCode.setOnClickListener {
+            val groupCode = fragmentMakeGroupBinding.tfMakeGroupGroupCode.editText?.text.toString().trim()
 
-                // 일단 예시로 성공
-                showCheckCodeDialog()
+            if (groupCode.isEmpty()) {
+                fragmentMakeGroupBinding.tfMakeGroupGroupCode.error = "그룹 코드를 입력해주세요."
+                return@setOnClickListener
+            }
+
+            makeGroupViewModel.checkGroupCode(groupCode) { isAvailable ->
+                if (isAvailable) {
+                    showCheckCodeDialog()
+                } else {
+                    usedGroupCodeDialog()
+                }
             }
         }
     }
 
-    // 그룹 만들기 버튼 눌렀을 때
-    private fun makeGroup(){
-        fragmentMakeGroupBinding.apply {
-            btnMakeGroupMakeGroup.setOnClickListener {
-                // 유효성 검사
+    // 그룹 생성 버튼
+    private fun makeGroup() {
+        fragmentMakeGroupBinding.btnMakeGroupMakeGroup.setOnClickListener {
+            val userId = (requireActivity().application as App).loginUserModel.userId
+            val groupName = fragmentMakeGroupBinding.tfMakeGroupGroupName.editText?.text.toString().trim()
+            val groupCode = fragmentMakeGroupBinding.tfMakeGroupGroupCode.editText?.text.toString().trim()
+            val groupPw = fragmentMakeGroupBinding.tfMakeGroupPassword1.editText?.text.toString().trim()
+            val confirmPw = fragmentMakeGroupBinding.tfMakeGroupPassword2.editText?.text.toString().trim()
 
-                // 그룹 명이 비어있으면
-                if(tfMakeGroupGroupName.editText?.text.toString().isEmpty()){
-                    tfMakeGroupGroupName.error = "그룹 명을 입력해주세요."
-                    return@setOnClickListener
+            // 유효성 검사
+            if (groupName.isEmpty()) {
+                fragmentMakeGroupBinding.tfMakeGroupGroupName.error = "그룹 명을 입력해주세요."
+                return@setOnClickListener
+            } else {
+                fragmentMakeGroupBinding.tfMakeGroupGroupName.helperText = " "
+            }
+
+            if (groupCode.isEmpty()) {
+                fragmentMakeGroupBinding.tfMakeGroupGroupCode.error = "그룹 코드를 입력해주세요."
+                return@setOnClickListener
+            } else {
+                fragmentMakeGroupBinding.tfMakeGroupGroupCode.helperText = " "
+            }
+
+            if (groupPw.length < 6) {
+                fragmentMakeGroupBinding.tfMakeGroupPassword1.error = "비밀번호는 6자리 이상이어야 합니다."
+                return@setOnClickListener
+            } else {
+                fragmentMakeGroupBinding.tfMakeGroupPassword1.helperText = " "
+            }
+
+            if (groupPw != confirmPw) {
+                fragmentMakeGroupBinding.tfMakeGroupPassword2.error = "비밀번호가 일치하지 않습니다."
+                return@setOnClickListener
+            } else {
+                fragmentMakeGroupBinding.tfMakeGroupPassword2.helperText = " "
+            }
+
+            if (!makeGroupViewModel.isGroupCodeAvailable) {
+                fragmentMakeGroupBinding.tfMakeGroupGroupCode.error = "중복 확인을 해주세요."
+                return@setOnClickListener
+            } else {
+                fragmentMakeGroupBinding.tfMakeGroupGroupCode.helperText = " "
+            }
+
+            progressDialog.show()
+
+            // Firestore에 그룹 생성 요청
+            makeGroupViewModel.createGroup(userId, groupName, groupCode, groupPw) { isSuccess ->
+                progressDialog.dismiss()
+
+                if (isSuccess) {
+                    makeGroupSuccessDialog()
                 } else {
-                    tfMakeGroupGroupName.helperText = " "
+                    Toast.makeText(requireContext(), "그룹 생성 실패! 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
                 }
-
-                // 비밀번호가 6자리 이상인지
-                if(tfMakeGroupPassword1.editText?.text.toString().length < 6){
-                    tfMakeGroupPassword1.error = "비밀번호는 6자리 이상이어야 합니다."
-                    return@setOnClickListener
-                } else {
-                    tfMakeGroupPassword1.helperText = " "
-                }
-
-                // 비밀번호가 일치하는지
-                if(tfMakeGroupPassword1.editText?.text.toString() != tfMakeGroupPassword2.editText?.text.toString()){
-                    tfMakeGroupPassword2.error = "비밀번호가 일치하지 않습니다."
-                    return@setOnClickListener
-                } else{
-                    tfMakeGroupPassword2.helperText = " "
-                }
-
-
-                // 그룹코드가 enabled = false 가 아닐때
-                if(fragmentMakeGroupBinding.btnMakeGroupCheckCode.isEnabled){
-                    tfMakeGroupGroupCode.error = "중복확인을 해주세요."
-                    return@setOnClickListener
-                } else {
-                    tfMakeGroupGroupCode.helperText = " "
-                }
-
-                // 일단 예시로 성공
-                makeGroupSuccessDialog()
             }
         }
     }
@@ -105,16 +142,43 @@ class MakeGroupFragment : Fragment() {
     }
 
     // 그룹이 생성 되었을때 다이얼로그
-    private fun makeGroupSuccessDialog(){
+    private fun makeGroupSuccessDialog() {
         val dialog = CustomDialog(
             context = requireContext(),
             contentText = "그룹이 생성되었습니다.",
             icon = R.drawable.ic_check_circle, // 아이콘 리소스
             positiveText = "확인",
             onPositiveClick = {
-                // 확인 누를시 작동
-            },
+                val app = requireActivity().application as App
+
+                // `loginUserModel` 업데이트 (여기서 업데이트 안 하면 `GroupActivity`에서 확인할 때 반영 안 됨)
+                makeGroupViewModel.getUserGroupDocumentID(app.loginUserModel.userId) { userGroupDocumentID ->
+                    app.loginUserModel.userGroupDocumentID = userGroupDocumentID ?: ""
+
+                    Log.d("MakeGroupFragment", "🔍 Firestore에서 가져온 userGroupDocumentID: $userGroupDocumentID")
+                }
+
+                val intent = Intent(requireContext(), SocialActivity::class.java)
+                startActivity(intent)
+                requireActivity().finish()
+            }
         )
+
         dialog.showCustomDialog()
     }
+
+    // 중복된 그룹코드가 있으면 나오는 다이얼로그
+    private fun usedGroupCodeDialog() {
+        val dialog = CustomDialog(
+            context = requireContext(),
+            contentText = "사용 불가능한 그룹 코드입니다",
+            icon = R.drawable.ic_error, // 아이콘 리소스
+            positiveText = "확인",
+            onPositiveClick = {
+            }
+        )
+
+        dialog.showCustomDialog()
+    }
+
 }
