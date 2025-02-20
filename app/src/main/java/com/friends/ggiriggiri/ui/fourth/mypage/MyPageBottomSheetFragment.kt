@@ -2,14 +2,13 @@ package com.friends.ggiriggiri.ui.fourth.mypage
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.databinding.FragmentMyPageBottomSheetBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -34,11 +33,15 @@ class MyPageBottomSheetFragment : BottomSheetDialogFragment() {
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
                 val imageUri = result.data?.data
                 if (imageUri != null) {
-                    // 선택한 이미지를 프로필 이미지로 설정
+                    // 부모 Fragment에 선택한 이미지 전달
+                    val parentFragment = parentFragment as? MyPageFragment
+                    parentFragment?.updateProfileImage(imageUri)
+                    dismiss() // BottomSheet 닫기
                 }
             }
         }
 
+        profileViewClick()
         profileModifyClick()
 
         return fragmentMyPageBottomSheetBinding.root
@@ -48,13 +51,22 @@ class MyPageBottomSheetFragment : BottomSheetDialogFragment() {
     private fun profileViewClick() {
         fragmentMyPageBottomSheetBinding.apply {
             profileView.setOnClickListener {
-                // 다이얼 로그로 이동
+                val parentFragment = parentFragment as? MyPageFragment
+                val imageUri = parentFragment?.getProfileImageUri() // 부모 Fragment에서 URI 가져오기
+
+                if (imageUri != null) {
+                    // FullScreenImageDialogFragment 호출
+                    val dialog = FullScreenImageDialogFragment.newInstance(imageUri)
+                    dialog.show(parentFragmentManager, "FullScreenImageDialog")
+                } else {
+                    Toast.makeText(context, "프로필 이미지를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
     // 프로필 사진 변경
-    private fun profileModifyClick(){
+    private fun profileModifyClick() {
         fragmentMyPageBottomSheetBinding.apply {
             profileModify.setOnClickListener {
                 // 앨범 연결
