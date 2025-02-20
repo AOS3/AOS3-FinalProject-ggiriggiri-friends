@@ -53,6 +53,7 @@ class MakeGroupFragment : Fragment() {
             makeGroupViewModel.checkGroupCode(groupCode) { isAvailable ->
                 if (isAvailable) {
                     showCheckCodeDialog()
+                    fragmentMakeGroupBinding.tfMakeGroupGroupCode.helperText = " "
                 } else {
                     usedGroupCodeDialog()
                 }
@@ -96,6 +97,13 @@ class MakeGroupFragment : Fragment() {
                 return@setOnClickListener
             } else {
                 fragmentMakeGroupBinding.tfMakeGroupPassword2.helperText = " "
+            }
+
+            if (fragmentMakeGroupBinding.btnMakeGroupCheckCode.isEnabled) {
+                fragmentMakeGroupBinding.tfMakeGroupGroupCode.error = "중복 확인을 해주세요"
+                return@setOnClickListener
+            } else {
+                fragmentMakeGroupBinding.tfMakeGroupGroupCode.helperText = " "
             }
 
             if (!makeGroupViewModel.isGroupCodeAvailable) {
@@ -146,21 +154,22 @@ class MakeGroupFragment : Fragment() {
         val dialog = CustomDialog(
             context = requireContext(),
             contentText = "그룹이 생성되었습니다.",
-            icon = R.drawable.ic_check_circle, // 아이콘 리소스
+            icon = R.drawable.ic_check_circle,
             positiveText = "확인",
             onPositiveClick = {
                 val app = requireActivity().application as App
 
-                // `loginUserModel` 업데이트 (여기서 업데이트 안 하면 `GroupActivity`에서 확인할 때 반영 안 됨)
+                // Firestore에서 최신 값 가져와 `loginUserModel` 업데이트
                 makeGroupViewModel.getUserGroupDocumentID(app.loginUserModel.userId) { userGroupDocumentID ->
                     app.loginUserModel.userGroupDocumentID = userGroupDocumentID ?: ""
 
-                    Log.d("MakeGroupFragment", "🔍 Firestore에서 가져온 userGroupDocumentID: $userGroupDocumentID")
-                }
+                    Log.d("MakeGroupFragment", "✅ 업데이트된 userGroupDocumentID: ${app.loginUserModel.userGroupDocumentID}")
 
-                val intent = Intent(requireContext(), SocialActivity::class.java)
-                startActivity(intent)
-                requireActivity().finish()
+                    // 값이 정상적으로 반영된 후 `SocialActivity`로 이동
+                    val intent = Intent(requireContext(), SocialActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+                }
             }
         )
 

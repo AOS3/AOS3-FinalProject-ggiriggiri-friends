@@ -95,5 +95,15 @@ class JoinGroupRepository @Inject constructor(
         }
     }
 
+    suspend fun getUserGroupDocumentID(userDocumentID: String): String? {
+        return try {
+            val userRef = firestore.collection("UserData").document(userDocumentID).get().await()
+            userRef.getString("userGroupDocumentID")
+        } catch (e: Exception) {
+            Log.e("JoinGroupRepository", "userGroupDocumentID 가져오기 실패: ${e.message}")
+            null
+        }
+    }
+
 
 }

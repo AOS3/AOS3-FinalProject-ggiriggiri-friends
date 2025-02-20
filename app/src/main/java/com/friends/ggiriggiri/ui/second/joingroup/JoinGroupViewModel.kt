@@ -41,4 +41,15 @@ class JoinGroupViewModel @Inject constructor(
             }
         }
     }
+
+    fun getUserGroupDocumentID(userDocumentID: String, onResult: (String?) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val userGroupDocumentID = joinGroupService.getUserGroupDocumentID(userDocumentID)
+
+            withContext(Dispatchers.Main) {
+                Log.d("JoinGroupViewModel", "✅ 가져온 userGroupDocumentID: $userGroupDocumentID")
+                onResult(userGroupDocumentID)
+            }
+        }
+    }
 }
