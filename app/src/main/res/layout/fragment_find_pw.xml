@@ -95,9 +95,20 @@
             android:fontFamily="@font/nanumsquarebold"
             android:text="인증 요청"
             tools:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvFindPwFormattedTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/nanumsquarebold"
+            android:textSize="16sp"
+            tools:text="04:54" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/llFindPwFragmentConfirmCertification"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -140,6 +151,16 @@
             android:background="@drawable/background_radius_10_fdf497"
             android:fontFamily="@font/nanumsquarebold"
             android:text="인증 확인" />
+
+        <TextView
+            android:id="@+id/tvFindPwFragmentCertificationNumberValid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/nanumsquarebold"
+            android:textSize="20sp"
+            tools:text="인증완료" />
     </LinearLayout>
 
     <android.widget.Button

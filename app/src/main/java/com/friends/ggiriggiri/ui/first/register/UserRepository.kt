@@ -1,5 +1,6 @@
 package com.friends.ggiriggiri.ui.first.register
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
@@ -102,7 +103,18 @@ class UserRepository() {
             }
         }
 
-
+        //비밀번호 재설정
+        fun resetUserPw(userDocumentId: String, pw: String) {
+            val db = FirebaseFirestore.getInstance()
+            val userRef = db.collection("UserData").document(userDocumentId)
+            userRef.update("userPw", pw)
+                .addOnSuccessListener {
+                    Log.d("ResetPw", "비밀번호 변경 성공")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("ResetPw", "비밀번호 변경 실패: ${e.message}")
+                }
+        }
 
 
 
