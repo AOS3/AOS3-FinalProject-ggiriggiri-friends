@@ -23,4 +23,8 @@ class JoinGroupService @Inject constructor(
         Log.d("JoinGroupService", "🔥 유저 DocumentID: $userDocumentID / 그룹 DocumentID: $groupDocumentID")
         return joinGroupRepository.updateUserGroupDocumentID(userDocumentID, groupDocumentID)
     }
+
+    suspend fun getUserGroupDocumentID(userDocumentID: String): String? {
+        return joinGroupRepository.getUserGroupDocumentID(userDocumentID)
+    }
 }

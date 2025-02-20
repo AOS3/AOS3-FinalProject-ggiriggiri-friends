@@ -2,6 +2,7 @@ package com.friends.ggiriggiri.ui.second.joingroup
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -58,9 +59,16 @@ class JoinGroupFragment : Fragment() {
                 joinGroupViewModel.joinGroup(userEmail, groupCode, groupPw) { isSuccess ->
                     progressDialog.dismiss()
                     if (isSuccess) {
-                        val intent = Intent(requireContext(), SocialActivity::class.java)
-                        startActivity(intent)
-                        requireActivity().finish()
+                        val app = requireActivity().application as App
+                        joinGroupViewModel.getUserGroupDocumentID(app.loginUserModel.userDocumentId) { userGroupDocumentID ->
+                            app.loginUserModel.userGroupDocumentID = userGroupDocumentID ?: ""
+
+                            Log.d("JoinGroupFragment", "업데이트된 userGroupDocumentID: ${app.loginUserModel.userGroupDocumentID}")
+
+                            val intent = Intent(requireContext(), SocialActivity::class.java)
+                            startActivity(intent)
+                            requireActivity().finish()
+                        }
                     } else {
                         noInfoGroupDialog()
                     }
