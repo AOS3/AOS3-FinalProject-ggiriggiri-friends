@@ -39,6 +39,7 @@ class SocialActivity : AppCompatActivity() {
         Log.d("SocialActivity", "유저 상태: ${loginUser.userState.num}")
         Log.d("SocialActivity", "소셜 로그인 타입: ${loginUser.userSocialLogin.num}")
         Log.d("SocialActivity", "자동 로그인 토큰: ${loginUser.userAutoLoginToken}")
+        Log.d("SocialActivity", "그룹: ${loginUser.userGroupDocumentID}")
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
