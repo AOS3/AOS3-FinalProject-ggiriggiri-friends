@@ -18,6 +18,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.commit
+import androidx.fragment.app.viewModels
 import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.databinding.FragmentMyPageBinding
@@ -32,6 +33,7 @@ class MyPageFragment : Fragment() {
     private lateinit var fragmentMyPageBinding: FragmentMyPageBinding
     private lateinit var socialActivity: SocialActivity
 
+    private val myPageViewModel: MyPageViewModel by viewModels()
     private var profileImageUri: Uri? = null // 프로필 이미지 URI 저장
 
 
@@ -64,6 +66,7 @@ class MyPageFragment : Fragment() {
 
         settingToolbar()
 
+        setupObservers()
         settingProfile()
 
         setupMyPageOptions()
@@ -78,27 +81,32 @@ class MyPageFragment : Fragment() {
         }
     }
 
+    private fun setupObservers() {
+        myPageViewModel.profileImageUri.observe(viewLifecycleOwner) { uri ->
+            // 프로필 이미지가 변경되면 UI 업데이트
+            fragmentMyPageBinding.profileImage.setImageURI(uri)
+        }
+    }
+
+    fun getProfileImageUri(): Uri? {
+        return myPageViewModel.profileImageUri.value
+    }
+
     // Profile 클릭시
     private fun settingProfile() {
         fragmentMyPageBinding.apply {
             profileImage.setOnClickListener {
                 val myPageBottomSheetFragment = MyPageBottomSheetFragment()
                 myPageBottomSheetFragment.show(
-                    childFragmentManager,
-                    "MyPageBottomSheet"
+                    childFragmentManager, "MyPageBottomSheet"
                 )
             }
         }
     }
-    // 프로필 사진 업데이트 함수
-    fun updateProfileImage(imageUri: Uri) {
-        profileImageUri = imageUri // 새 이미지 URI 저장
-        fragmentMyPageBinding.profileImage.setImageURI(imageUri) // UI 업데이트
-    }
 
-    // 현재 프로필 이미지 URI 반환 함수
-    fun getProfileImageUri(): Uri? {
-        return profileImageUri
+    // BottomSheet에서 선택한 이미지 URI를 ViewModel에 전달
+    fun updateProfileImage(imageUri: Uri) {
+        myPageViewModel.setProfileImageUri(imageUri)
     }
 
 
