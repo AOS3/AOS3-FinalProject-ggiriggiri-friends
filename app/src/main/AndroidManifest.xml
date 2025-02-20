@@ -34,8 +34,6 @@
             android:windowSoftInputMode="adjustPan"/>
 
 
-        <!--GroupActivity-->
-        <!--SocialActivity-->
         <activity
             android:name=".LoginActivity"
             android:exported="true"
