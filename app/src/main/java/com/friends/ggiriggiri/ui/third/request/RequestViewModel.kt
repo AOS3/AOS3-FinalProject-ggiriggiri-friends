@@ -1,13 +1,18 @@
-package com.friends.ggiriggiri.ui.third.response
+package com.friends.ggiriggiri.ui.third.request
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.friends.ggiriggiri.data.service.RequestService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ResponseViewModel  @Inject constructor() : ViewModel() {
+class RequestViewModel @Inject constructor(
+    private val requestService: RequestService
+) : ViewModel() {
 
     // 사진 업로드 여부
     private val _isImageUploaded = MutableLiveData(false)
@@ -17,7 +22,7 @@ class ResponseViewModel  @Inject constructor() : ViewModel() {
     private val _isTextEntered = MutableLiveData(false)
     val isTextEntered: LiveData<Boolean> = _isTextEntered
 
-    // 응답 버튼 활성화 여부
+    // 요청 버튼 활성화 여부
     private val _isSubmitEnabled = MutableLiveData(false)
     val isSubmitEnabled: LiveData<Boolean> = _isSubmitEnabled
 
@@ -33,8 +38,26 @@ class ResponseViewModel  @Inject constructor() : ViewModel() {
         updateSubmitButtonState()
     }
 
-    // 응답 버튼 활성화 상태 업데이트
+    // 요청 버튼 활성화 상태 업데이트
     private fun updateSubmitButtonState() {
         _isSubmitEnabled.value = _isImageUploaded.value == true && _isTextEntered.value == true
+    }
+
+    fun saveRequest(
+        userDocumentId: String,
+        requestMessage: String,
+        requestImage: String,
+        groupDocumentId: String,
+        onSuccess: (String) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        viewModelScope.launch {
+            val requestId = requestService.createRequest(userDocumentId, requestMessage, requestImage, groupDocumentId)
+            if (requestId != null) {
+                onSuccess(requestId) // 저장된 `requestId` 콜백 전달
+            } else {
+                onFailure()
+            }
+        }
     }
 }

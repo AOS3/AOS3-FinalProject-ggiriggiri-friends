@@ -28,6 +28,19 @@ class SocialActivity : AppCompatActivity() {
 //            insets
 //        }
 
+        val loginUser = (application as App).loginUserModel
+
+        Log.d("SocialActivity", "로그인한 유저 정보")
+        Log.d("SocialActivity", "이메일: ${loginUser.userId}")
+        Log.d("SocialActivity", "문서아이디: ${loginUser.userDocumentId}")
+        Log.d("SocialActivity", "닉네임: ${loginUser.userName}")
+        Log.d("SocialActivity", "프로필 사진 URL: ${loginUser.userProfileImage}")
+        Log.d("SocialActivity", "가입 날짜: ${loginUser.userJoinTime}")
+        Log.d("SocialActivity", "유저 상태: ${loginUser.userState.num}")
+        Log.d("SocialActivity", "소셜 로그인 타입: ${loginUser.userSocialLogin.num}")
+        Log.d("SocialActivity", "자동 로그인 토큰: ${loginUser.userAutoLoginToken}")
+        Log.d("SocialActivity", "그룹: ${loginUser.userGroupDocumentID}")
+
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerViewSocialMain, SocialFragment())
