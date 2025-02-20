@@ -1,5 +1,8 @@
 package com.friends.ggiriggiri.ui.first.register
 
+import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Singleton
@@ -75,6 +78,42 @@ class UserRepository() {
                 // 첫 번째 결과의 userId 필드 반환
                 result.documents[0].getString("userId") ?: ""
             }
+        }
+
+        // 아이디와 전화번호로 해당유저가 있는지 검색하기(FindPwFragment)
+        suspend fun findUserByIdAndPhoneNumber(userId: String, userPhoneNumber: String): Map<String, UserVO?>? {
+            val firestore = FirebaseFirestore.getInstance()
+            val collectionReference = firestore.collection("UserData")
+
+            val result = collectionReference
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("userPhoneNumber", userPhoneNumber)
+                .get()
+                .await()
+
+            if (result.isEmpty) {
+                // 해당 아이디와 번호로 사용자를 찾을 수 없음
+                return null
+            } else {
+                val document = result.documents.first()
+                val user = document.toObject(UserVO::class.java)
+                val documentId = document.id
+
+                return mapOf(documentId to user)
+            }
+        }
+
+        //비밀번호 재설정
+        fun resetUserPw(userDocumentId: String, pw: String) {
+            val db = FirebaseFirestore.getInstance()
+            val userRef = db.collection("UserData").document(userDocumentId)
+            userRef.update("userPw", pw)
+                .addOnSuccessListener {
+                    Log.d("ResetPw", "비밀번호 변경 성공")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("ResetPw", "비밀번호 변경 실패: ${e.message}")
+                }
         }
 
 

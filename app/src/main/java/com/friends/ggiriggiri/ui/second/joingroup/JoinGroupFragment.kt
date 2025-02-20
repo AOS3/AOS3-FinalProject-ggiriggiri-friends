@@ -6,17 +6,26 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.databinding.FragmentJoinGroupBinding
 import com.friends.ggiriggiri.ui.custom.CustomDialog
+import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class JoinGroupFragment : Fragment() {
 
     lateinit var fragmentJoinGroupBinding: FragmentJoinGroupBinding
+    private val joinGroupViewModel: JoinGroupViewModel by viewModels()
+    private lateinit var progressDialog: CustomDialogProgressbar
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         fragmentJoinGroupBinding = FragmentJoinGroupBinding.inflate(inflater, container, false)
+
+        progressDialog = CustomDialogProgressbar(requireContext())
 
         enterGroup()
         // Inflate the layout for this fragment
@@ -26,29 +35,36 @@ class JoinGroupFragment : Fragment() {
     private fun enterGroup(){
         fragmentJoinGroupBinding.apply {
             btnJoinGroupJoin.setOnClickListener {
-                // 유효성 검사
+                val userEmail = (requireActivity().application as App).loginUserModel.userId
+                val groupCode = tfJoinGroupCode.editText?.text.toString().trim()
+                val groupPw = tfJoinGroupPassword.editText?.text.toString().trim()
 
-                // 그룹 코드가 비어있으면
-                if(tfJoinGroupCode.editText?.text.toString().isEmpty()){
+                if (groupCode.isEmpty()) {
                     tfJoinGroupCode.error = "그룹 코드를 입력해주세요."
                     return@setOnClickListener
                 } else {
                     tfJoinGroupCode.helperText = " "
                 }
 
-                // 비밀번호가 비어있으면
-                if(tfJoinGroupPassword.editText?.text.toString().isEmpty()){
+                if (groupPw.isEmpty()) {
                     tfJoinGroupPassword.error = "비밀번호를 입력해주세요."
                     return@setOnClickListener
                 } else {
                     tfJoinGroupPassword.helperText = " "
                 }
 
-                // 일단 들어가게 하기
-                val intent = Intent(requireContext(), SocialActivity::class.java)
-                startActivity(intent)
+                progressDialog.show()
 
-                //noInfoGroupDialog()
+                joinGroupViewModel.joinGroup(userEmail, groupCode, groupPw) { isSuccess ->
+                    progressDialog.dismiss()
+                    if (isSuccess) {
+                        val intent = Intent(requireContext(), SocialActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    } else {
+                        noInfoGroupDialog()
+                    }
+                }
             }
         }
     }

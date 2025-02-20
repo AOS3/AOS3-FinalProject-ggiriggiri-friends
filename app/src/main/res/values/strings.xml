@@ -15,5 +15,9 @@
     <string name="underlined_tvfindpw"><u>비밀번호찾기</u></string>
 
     <string name="kakao_native_app_key">9b56cf2a46f31844633c56522029525c</string>
+    <string name="OAUTH_CLIENT_ID">Zi2CYp2RLR3OU1LNGJtU</string>
+    <string name="OAUTH_CLIENT_SECRET">qp4J10vQXc</string>
+    <string name="OAUTH_CLIENT_NAME">끼리끼리</string>
+    <string name="google_login_client_id">124835773021-v87hbvkaagmsumnd9ga78bnjqgs9u8vr.apps.googleusercontent.com</string>
 
 </resources>

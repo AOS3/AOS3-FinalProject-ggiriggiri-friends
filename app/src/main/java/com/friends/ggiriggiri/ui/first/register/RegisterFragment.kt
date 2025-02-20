@@ -171,7 +171,7 @@ class RegisterFragment : Fragment() {
                 binding.etRegisterFragmentPhoneNumber.isEnabled = enabled
             }
 
-            //인증번호
+            //인증번호 에러메세지
             certificationNumberErrorMessage.observe(viewLifecycleOwner) { errorMessage ->
                 binding.apply {
                     tilRegisterFragmentCertificationNumber.error = errorMessage
@@ -218,6 +218,7 @@ class RegisterFragment : Fragment() {
                 binding.etRegisterFragmentCertificationNumber.isEnabled = boolean
             }
 
+            // 인증 성공시 인증확인버튼 비활성화
             btnRegisterFragmentConfirmCertificationNumberEnabled.observe(viewLifecycleOwner){ boolean ->
                 binding.btnRegisterFragmentConfirmCertificationNumber.isEnabled = boolean
             }
@@ -402,7 +403,7 @@ class RegisterFragment : Fragment() {
                         },
                         negativeText = "취소",
                         contentText = "해당 번호로 인증을 진행하시겠습니까?\n" +
-                                "진행하시면 5분간 다른 번호로 바꿀 수 없습니다.\n" +
+                                "진행하시면 2분간 다른 번호로 바꿀 수 없습니다.\n" +
                                 "${first}-${second}-${third}",
                         icon = R.drawable.ic_error
                     )
@@ -413,8 +414,10 @@ class RegisterFragment : Fragment() {
 
             //인증번호 확인
             btnRegisterFragmentConfirmCertificationNumber.setOnClickListener {
-                val certificationNumber = etRegisterFragmentCertificationNumber.text?.toString() ?: ""
-                registerViewModel.btnRegisterFragmentConfirmCertificationNumberOnclick(certificationNumber)
+                if(etRegisterFragmentCertificationNumber.text?.isNotEmpty() == true){
+                    val certificationNumber = etRegisterFragmentCertificationNumber.text?.toString() ?: ""
+                    registerViewModel.btnRegisterFragmentConfirmCertificationNumberOnclick(certificationNumber)
+                }
             }
         }
     }

@@ -33,4 +33,23 @@ class UserService @Inject constructor() {
         return result
     }
 
+    // 아이디와 전화번호로 해당유저가 있는지 검색하기(FindPwFragment)
+    suspend fun findUserByIdAndPhoneNumber(userId: String, userPhoneNumber: String): UserModel? {
+        val result = UserRepository.findUserByIdAndPhoneNumber(userId, userPhoneNumber)
+
+        return if (!result.isNullOrEmpty()) {
+            val document = result.entries.first()
+            val userVO = document.value
+            userVO?.toUserModel(document.key)
+        } else {
+            null
+        }
+    }
+
+    // 비밀번호 변경
+    fun resetUserPw(userDocumentId: String, pw: String) {
+        UserRepository.resetUserPw(userDocumentId,pw)
+    }
+
+
 }
