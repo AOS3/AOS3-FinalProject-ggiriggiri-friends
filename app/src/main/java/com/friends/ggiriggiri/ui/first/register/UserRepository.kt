@@ -79,6 +79,31 @@ class UserRepository() {
             }
         }
 
+        // 아이디와 전화번호로 해당유저가 있는지 검색하기(FindPwFragment)
+        suspend fun findUserByIdAndPhoneNumber(userId: String, userPhoneNumber: String): Map<String, UserVO?>? {
+            val firestore = FirebaseFirestore.getInstance()
+            val collectionReference = firestore.collection("UserData")
+
+            val result = collectionReference
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("userPhoneNumber", userPhoneNumber)
+                .get()
+                .await()
+
+            if (result.isEmpty) {
+                // 해당 아이디와 번호로 사용자를 찾을 수 없음
+                return null
+            } else {
+                val document = result.documents.first()
+                val user = document.toObject(UserVO::class.java)
+                val documentId = document.id
+
+                return mapOf(documentId to user)
+            }
+        }
+
+
+
 
 
     }

@@ -182,7 +182,7 @@ class RegisterViewModel @Inject constructor(
             // 인증번호 입력창 보이게
             llRegisterFragmentConfirmCertificationIsVisible.value = View.VISIBLE
 
-            // 버튼이름 바꾸기
+            // 버튼 이름 바꾸기
             btnRegisterFragmentGetCertificationNumberText.value = "재인증"
 
             // 1분 타이머 (60초 = 60000ms)
@@ -242,30 +242,6 @@ class RegisterViewModel @Inject constructor(
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
-    // 인증 코드 확인 메서드
-    fun signInWithPhoneAuthCredential(loginActivity: LoginActivity, credential: PhoneAuthCredential) {
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(loginActivity) { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(loginActivity, "인증 성공", Toast.LENGTH_SHORT).show()
-
-                    // 인증 성공 시 LiveData 업데이트
-                    isCertificationNumberValid.value = true
-
-                    // 인증 입력창 비활성화
-                    etRegisterFragmentCertificationNumberIsEnabled.value = false
-                    etRegisterFragmentPhoneNumberIsEnabled.value = false
-                    btnRegisterFragmentGetCertificationNumberEnabled.value = false
-
-                    // 인증 성공 시 btnRegisterFragmentConfirmCertificationNumberOnclick 호출
-                    btnRegisterFragmentConfirmCertificationNumberOnclick("")
-                } else {
-                    Toast.makeText(loginActivity, "인증코드가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
-                    isCertificationNumberValid.value = false
-                }
-            }
-    }
-
 
 
 
@@ -314,6 +290,7 @@ class RegisterViewModel @Inject constructor(
 
     // 비밀번호가 유효성검사를 통과하고 동일한지
     fun isPw12Equal(){
+        isPwValid = false
         if (pw1ErrorMessage.value == null && pw2ErrorMessage.value == null && pw1String == pw2String){
             isPwValid = true
         }

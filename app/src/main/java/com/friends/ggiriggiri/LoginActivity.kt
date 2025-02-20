@@ -16,7 +16,6 @@ import com.friends.ggiriggiri.ui.first.findpw.ResetPwFragment
 import com.friends.ggiriggiri.ui.first.login.LoginFragment
 import com.friends.ggiriggiri.ui.first.register.RegisterFragment
 import com.google.android.material.transition.MaterialSharedAxis
-import com.kakao.sdk.common.util.Utility
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
