@@ -13,6 +13,7 @@ import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.databinding.FragmentHomeBinding
 import com.friends.ggiriggiri.ui.notification.NotificationFragment
 import com.friends.ggiriggiri.ui.third.answer.AnswerFragment
+import com.friends.ggiriggiri.ui.third.request.RequestFragment
 import com.friends.ggiriggiri.ui.third.response.ResponseFragment
 import com.github.penfeizhou.animation.apng.APNGDrawable
 import com.github.penfeizhou.animation.loader.ByteBufferLoader
@@ -78,7 +79,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnHomeRespond.setOnClickListener {
-            socialActivity.replaceFragment(ResponseFragment())
+            socialActivity.replaceFragment(RequestFragment())
         }
 
         binding.tvHomeProfileSeeAll.setOnClickListener {
