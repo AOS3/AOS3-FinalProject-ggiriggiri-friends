@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.firebase.messaging.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -106,6 +107,10 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")
+
+    //파이어베이스 functions & messaging
+    implementation ("com.google.firebase:firebase-functions:20.4.0")
+    implementation ("com.google.firebase:firebase-messaging:23.3.1")
 
     // Google Play services
     implementation ("com.google.gms:google-services:4.3.15")

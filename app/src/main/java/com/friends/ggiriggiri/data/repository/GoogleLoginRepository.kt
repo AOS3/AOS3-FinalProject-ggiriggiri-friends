@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 import javax.inject.Inject
@@ -89,6 +90,10 @@ class GoogleLoginRepository@Inject constructor(
         return if (existingUserVO != null) {
             Log.d("GoogleLoginRepository", "기존 사용자 Firestore에서 불러옴: ${existingUserVO.userId}")
             val documentId = db.collection("UserData").whereEqualTo("userId", email).limit(1).get().await().documents.firstOrNull()?.id ?: ""
+
+            // 기존 사용자가 있으면 FCM 토큰을 업데이트
+            updateFcmToken(documentId)
+
             existingUserVO.toUserModel(documentId)
         } else {
             val newUser = UserModel().apply {
@@ -106,8 +111,42 @@ class GoogleLoginRepository@Inject constructor(
             // Firestore에서 생성된 Document ID를 가져와 모델에 설정
             val createdUserDoc = db.collection("UserData").whereEqualTo("userId", email).limit(1).get().await().documents.firstOrNull()
             val documentId = createdUserDoc?.id ?: ""
+
+            // 새 유저일 경우에도 FCM 토큰 추가
+            updateFcmToken(documentId)
+
             createdUserDoc?.toObject(UserVO::class.java)?.toUserModel(documentId) ?: newUser
         }
     }
+
+    suspend fun updateFcmToken(userDocumentId: String) {
+        try {
+            val userRef = db.collection("UserData").document(userDocumentId)
+
+            // 현재 기기의 FCM 토큰 가져오기
+            val newFcmToken = FirebaseMessaging.getInstance().token.await()
+
+            if (newFcmToken.isNotEmpty()) {
+                // 기존 FCM 토큰 리스트 가져오기
+                val documentSnapshot = userRef.get().await()
+                val existingData = documentSnapshot.toObject(UserVO::class.java)
+
+                val existingFcmTokens = existingData?.userFcmCode ?: mutableListOf()
+
+                // 새로운 토큰이 기존 리스트에 없으면 추가
+                if (!existingFcmTokens.contains(newFcmToken)) {
+                    existingFcmTokens.add(newFcmToken)
+                    userRef.update("userFcmCode", existingFcmTokens).await()
+                    Log.d("GoogleLoginRepository", "FCM 토큰 업데이트 성공: $newFcmToken")
+                } else {
+                    Log.d("GoogleLoginRepository", "이미 등록된 FCM 토큰: $newFcmToken")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("GoogleLoginRepository", "FCM 토큰 업데이트 실패", e)
+        }
+    }
+
+
 
 }

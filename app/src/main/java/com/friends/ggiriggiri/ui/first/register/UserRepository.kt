@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.tasks.await
 import javax.inject.Singleton
 
@@ -33,11 +34,39 @@ class UserRepository() {
             }
 
             val userVoList = result.toObjects(UserVO::class.java)
+            val documentId = result.documents[0].id
+            val userVO = userVoList[0]
+
+            // ✅ 로그인 성공 시 FCM 토큰 추가
+            try {
+                val userRef = firestore.collection("UserData").document(documentId)
+
+                // 현재 기기의 FCM 토큰 가져오기
+                val newFcmToken = FirebaseMessaging.getInstance().token.await()
+
+                if (newFcmToken.isNotEmpty()) {
+                    // 기존 FCM 토큰 리스트 가져오기
+                    val existingFcmTokens = userVO.userFcmCode.toMutableList()
+
+                    // 새로운 토큰이 기존 리스트에 없으면 추가
+                    if (!existingFcmTokens.contains(newFcmToken)) {
+                        existingFcmTokens.add(newFcmToken)
+                        userRef.update("userFcmCode", existingFcmTokens).await()
+                        Log.d("UserRepository", "FCM 토큰 업데이트 성공: $newFcmToken")
+                    } else {
+                        Log.d("UserRepository", "이미 등록된 FCM 토큰: $newFcmToken")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("UserRepository", "FCM 토큰 업데이트 실패", e)
+            }
+
             return mutableMapOf(
-                "user_document_id" to result.documents[0].id,
-                "user_vo" to userVoList[0]
+                "user_document_id" to documentId,
+                "user_vo" to userVO
             )
         }
+
 
         // 아이디 중복체크(true: 사용가능,false: 사용불가능)
         suspend fun duplicationCheckUserId(userId:String):Boolean{
