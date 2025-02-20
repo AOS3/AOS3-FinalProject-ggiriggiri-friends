@@ -18,6 +18,26 @@ class MyPageBottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        pickImageLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                val imageUri = result.data?.data // 선택된 이미지 URI 가져오기
+
+                if (imageUri != null) {
+                    // 부모 Fragment(MyPageFragment)에 선택한 이미지 전달 및 업데이트 요청
+                    val parentFragment = parentFragment as? MyPageFragment
+                    parentFragment?.updateProfileImage(imageUri)
+                    dismiss() // BottomSheet 닫기
+                }
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -26,23 +46,14 @@ class MyPageBottomSheetFragment : BottomSheetDialogFragment() {
 
         fragmentMyPageBottomSheetBinding = FragmentMyPageBottomSheetBinding.inflate(layoutInflater)
 
-        // ActivityResultLauncher 초기화
-        pickImageLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == AppCompatActivity.RESULT_OK) {
-                val imageUri = result.data?.data
-                if (imageUri != null) {
-                    // 부모 Fragment에 선택한 이미지 전달
-                    val parentFragment = parentFragment as? MyPageFragment
-                    parentFragment?.updateProfileImage(imageUri)
-                    dismiss() // BottomSheet 닫기
-                }
-            }
+        fragmentMyPageBottomSheetBinding.profileModify.setOnClickListener {
+            // 갤러리 Intent 생성 및 실행
+            val intent = Intent(Intent.ACTION_PICK).apply { type = "image/*" }
+            pickImageLauncher.launch(intent)
         }
 
+
         profileViewClick()
-        profileModifyClick()
 
         return fragmentMyPageBottomSheetBinding.root
     }
@@ -65,18 +76,4 @@ class MyPageBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    // 프로필 사진 변경
-    private fun profileModifyClick() {
-        fragmentMyPageBottomSheetBinding.apply {
-            profileModify.setOnClickListener {
-                // 앨범 연결
-                // 갤러리 Intent 생성
-                val intent = Intent(Intent.ACTION_PICK).apply {
-                    type = "image/*"
-                }
-                // ActivityResultLauncher로 Intent 실행
-                pickImageLauncher.launch(intent)
-            }
-        }
-    }
 }
