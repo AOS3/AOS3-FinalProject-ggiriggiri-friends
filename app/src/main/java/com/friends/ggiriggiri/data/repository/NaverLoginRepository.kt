@@ -2,6 +2,7 @@ package com.friends.ggiriggiri.data.repository
 
 import android.util.Log
 import com.friends.ggiriggiri.ui.first.register.UserModel
+import com.friends.ggiriggiri.ui.first.register.UserVO
 import com.friends.ggiriggiri.util.UserSocialLoginState
 import com.friends.ggiriggiri.util.UserState
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,7 +14,7 @@ class NaverLoginRepository {
     private val db = FirebaseFirestore.getInstance()
 
     // Firestore에서 이메일 기반으로 사용자 데이터 조회
-    suspend fun getUserByEmail(email: String): UserModel? {
+    suspend fun getUserByEmail(email: String): UserVO? {
         return try {
             val querySnapshot = db.collection("UserData")
                 .whereEqualTo("userId", email) // userId 기준 검색 (이메일)
@@ -21,7 +22,7 @@ class NaverLoginRepository {
                 .get().await()
 
             if (!querySnapshot.isEmpty) {
-                querySnapshot.documents[0].toObject(UserModel::class.java)
+                querySnapshot.documents[0].toObject(UserVO::class.java)
             } else {
                 null
             }
@@ -52,27 +53,12 @@ class NaverLoginRepository {
             // 기존 데이터에 userJoinTime이 있으면 유지, 없으면 현재 시간 저장
             val joinTime = existingData["userJoinTime"] as? Long ?: System.currentTimeMillis()
 
-            // 새로운 데이터 추가
-            val userMap = mutableMapOf(
-                "userId" to user.userId,
-                "userName" to user.userName,
-                "userProfileImage" to user.userProfileImage,
-                "userJoinTime" to joinTime, // 기존 값 유지
-                "userState" to user.userState.num, // 숫자로 저장
-                "userSocialLogin" to user.userSocialLogin.num, // 숫자로 저장
-                "userAutoLoginToken" to user.userAutoLoginToken,
-                "userNaverToken" to user.userNaverToken,
-                // 기존 필드 유지
-                "userPw" to (existingData["userPw"] ?: ""),
-                "userPhoneNumber" to (existingData["userPhoneNumber"] ?: ""),
-                "userGroupDocumentID" to (existingData["userGroupDocumentID"] ?: ""),
-                "userGoogleToken" to (existingData["userGoogleToken"] ?: ""),
-                "userKakaoToken" to (existingData["userKakaoToken"] ?: ""),
-                "userFcmCode" to (existingData["userFcmCode"] ?: mutableListOf<String>())
-            )
+            // UserModel을 UserVO로 변환
+            val userVO = user.toUserVO()
+            userVO.userJoinTime = joinTime // 기존 값 유지
 
             // Firestore에 기존 데이터 유지 + 새로운 데이터 추가 (`merge = true` 사용)
-            userRef.set(userMap, SetOptions.merge()).await()
+            userRef.set(userVO, SetOptions.merge()).await()
             Log.d("NaverLoginRepository", "Firestore 저장 성공 (Document ID: ${userRef.id})")
 
         } catch (e: Exception) {
@@ -80,12 +66,14 @@ class NaverLoginRepository {
         }
     }
 
+
     // Firestore에서 사용자 조회 후 없으면 자동 회원가입
     suspend fun getOrCreateUser(email: String, userName: String, userProfileImage: String, naverToken: String): UserModel {
-        val existingUser = getUserByEmail(email)
-        return if (existingUser != null) {
-            Log.d("NaverLoginRepository", "기존 사용자 Firestore에서 불러옴: ${existingUser.userId}")
-            existingUser
+        val existingUserVO = getUserByEmail(email)
+        return if (existingUserVO != null) {
+            Log.d("NaverLoginRepository", "기존 사용자 Firestore에서 불러옴: ${existingUserVO.userId}")
+            val documentId = db.collection("UserData").whereEqualTo("userId", email).limit(1).get().await().documents.firstOrNull()?.id ?: ""
+            existingUserVO.toUserModel(documentId)
         } else {
             val newUser = UserModel().apply {
                 this.userId = email
@@ -98,7 +86,11 @@ class NaverLoginRepository {
                 this.userNaverToken = naverToken
             }
             createUser(newUser)
-            newUser
+
+            // Firestore에서 생성된 Document ID를 가져와 모델에 설정
+            val createdUserDoc = db.collection("UserData").whereEqualTo("userId", email).limit(1).get().await().documents.firstOrNull()
+            val documentId = createdUserDoc?.id ?: ""
+            createdUserDoc?.toObject(UserVO::class.java)?.toUserModel(documentId) ?: newUser
         }
     }
 }
