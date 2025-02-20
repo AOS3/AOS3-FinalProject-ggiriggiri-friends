@@ -205,7 +205,9 @@
                 android:src="@drawable/ic_dot"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="#4CAF50" />
+                app:tint="#858282" />
+    <!-- 비활성화 app:tint="#4CAF50" />-->
+
 
             <TextView
                 android:id="@+id/tvHomeRequestTitle"
@@ -227,7 +229,7 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/nanumsquareregular"
                 android:paddingTop="8dp"
-                android:text="야 오늘 월요일인데 뭐하고있냐 난..."
+                android:text="요청이 비어있어요"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="14sp"
@@ -244,7 +246,7 @@
                 android:enabled="true"
                 android:fontFamily="@font/nanumsquarebold"
                 android:stateListAnimator="@null"
-                android:text="응답하기"
+                android:text="요청하기"
                 android:textColor="@drawable/custom_home_btn_text"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"

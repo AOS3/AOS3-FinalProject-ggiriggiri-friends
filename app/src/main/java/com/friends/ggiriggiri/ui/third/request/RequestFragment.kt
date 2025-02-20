@@ -18,7 +18,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.databinding.FragmentRequestBinding
+import com.friends.ggiriggiri.ui.first.register.UserModel
+import com.google.firebase.Firebase
+import com.google.firebase.storage.storage
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.IOException
@@ -83,8 +87,11 @@ class RequestFragment : Fragment() {
         })
 
         binding.btnRequestSubmit.setOnClickListener {
-            Toast.makeText(requireContext(), "요청이 제출되었습니다!", Toast.LENGTH_SHORT).show()
-            navigateToHomeFragment()
+            saveRequestToFirestore { success ->
+                if (success) {
+                    navigateToHomeFragment() // 🔥 Firestore 저장 완료 후 화면 이동
+                }
+            }
         }
 
         binding.etRequestInput.addTextChangedListener(object : TextWatcher {
@@ -112,6 +119,61 @@ class RequestFragment : Fragment() {
                 }
             }
         })
+    }
+
+    // Firestore에 요청 저장
+    private fun saveRequestToFirestore(onComplete: (Boolean) -> Unit) {
+        val loginUser = (requireActivity().application as App).loginUserModel
+        val requestMessage = binding.etRequestInput.text.toString()
+
+        if (requestMessage.isNotEmpty()) {
+            contentUri?.let { uri ->
+                uploadImageToFirebase(uri, { imageUrl ->
+                    saveRequest(requestMessage, imageUrl, loginUser, onComplete)
+                }, {
+                    Toast.makeText(requireContext(), "이미지 업로드 실패!", Toast.LENGTH_SHORT).show()
+                    onComplete(false)
+                })
+            } ?: saveRequest(requestMessage, "", loginUser, onComplete)
+        } else {
+            Toast.makeText(requireContext(), "메시지를 입력해주세요!", Toast.LENGTH_SHORT).show()
+            onComplete(false)
+        }
+    }
+
+    // Firestore에 저장 함수 (이미지 URL 포함)
+    private fun saveRequest(requestMessage: String, imageUrl: String, loginUser: UserModel, onComplete: (Boolean) -> Unit) {
+        viewModel.saveRequest(
+            userDocumentId = loginUser.userDocumentId,
+            requestMessage = requestMessage,
+            requestImage = imageUrl,
+            groupDocumentId = loginUser.userGroupDocumentID,
+            onSuccess = { requestId ->
+                Toast.makeText(requireContext(), "요청이 저장되었습니다! ID: $requestId", Toast.LENGTH_SHORT).show()
+                onComplete(true)
+            },
+            onFailure = {
+                Toast.makeText(requireContext(), "요청 저장 실패!", Toast.LENGTH_SHORT).show()
+                onComplete(false)
+            }
+        )
+    }
+
+    // Firebase Storage에 이미지 업로드 후 다운로드 URL 반환
+    private fun uploadImageToFirebase(imageUri: Uri, onSuccess: (String) -> Unit, onFailure: () -> Unit) {
+        val storageRef = Firebase.storage.reference.child("request_images/${System.currentTimeMillis()}.jpg")
+
+        storageRef.putFile(imageUri)
+            .addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener { uri ->
+                    onSuccess(uri.toString())
+                }.addOnFailureListener {
+                    onFailure()
+                }
+            }
+            .addOnFailureListener {
+                onFailure()
+            }
     }
 
     // 카메라 실행
