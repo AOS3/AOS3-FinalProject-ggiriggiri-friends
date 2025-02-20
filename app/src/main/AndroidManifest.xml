@@ -37,7 +37,7 @@
         <!--GroupActivity-->
         <!--SocialActivity-->
         <activity
-            android:name=".SocialActivity"
+            android:name=".LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
 
@@ -49,7 +49,7 @@
         </activity>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".SocialActivity"
             android:exported="false"/>
 
         <activity
