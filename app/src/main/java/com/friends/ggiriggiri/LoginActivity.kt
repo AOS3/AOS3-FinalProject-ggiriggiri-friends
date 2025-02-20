@@ -22,7 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
-
     lateinit var activityLoginBinding: ActivityLoginBinding
 
     // 다음 Fragment, 현재 Fragment
@@ -46,7 +45,6 @@ class LoginActivity : AppCompatActivity() {
         supportFragmentManager.commit {
             replace(R.id.fcvLoginActivity, LoginFragment())
         }
-
     }
 
     // 프래그먼트 교체 함수

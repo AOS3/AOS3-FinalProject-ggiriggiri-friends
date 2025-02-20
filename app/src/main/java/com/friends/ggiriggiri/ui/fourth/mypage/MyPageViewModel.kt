@@ -1,7 +1,13 @@
 package com.friends.ggiriggiri.ui.fourth.mypage
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MyPageViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+@HiltViewModel
+class MyPageViewModel @Inject constructor(
+
+) : ViewModel() {
+
+    var profileFileName = ""
 }
