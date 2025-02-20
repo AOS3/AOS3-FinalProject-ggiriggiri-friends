@@ -25,7 +25,7 @@
         android:layout_marginVertical="10dp"
         android:hint="비밀번호"
         app:endIconMode="password_toggle"
-        app:errorEnabled="true"
+        app:helperText=" "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbarModifyGroupPw">
@@ -35,8 +35,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:inputType="text|textPassword"
-            android:digits="@string/digit_value"
-            android:fontFamily="@font/nanumsquarelight"/>
+            android:digits="@string/digit_value"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -49,30 +48,28 @@
         android:layout_marginVertical="10dp"
         android:hint="비밀번호 확인"
         app:endIconMode="password_toggle"
-        app:errorEnabled="true"
+        app:helperText=" "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/modifyGroupPwTextField">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/modifyGroupPwCheckEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:inputType="text|textPassword"
-            android:digits="@string/digit_value"
-            android:fontFamily="@font/nanumsquarelight"/>
+            android:digits="@string/digit_value" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        style=""
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/modifyGroupPwButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:backgroundTint="@color/mainColor"
         android:text="변경하기"
-        android:textColor="@color/black"
+        android:background="@drawable/custom_btn_background"
+        android:enabled="true"
+        android:textColor="@drawable/custom_btn_text"
         app:cornerRadius="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

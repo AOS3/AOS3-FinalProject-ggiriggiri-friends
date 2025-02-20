@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
 import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.databinding.FragmentModifyGroupNameBinding
@@ -15,6 +17,7 @@ class ModifyGroupNameFragment : Fragment() {
 
     lateinit var fragmentModifyGroupNameBinding: FragmentModifyGroupNameBinding
     lateinit var socialActivity: SocialActivity
+    private val modifyGroupNameViewModel: ModifyGroupNameViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,6 +28,9 @@ class ModifyGroupNameFragment : Fragment() {
 
         settingToolbar()
 
+        setupObservers()
+        setupTextWatchers()
+
         applyButton()
         return fragmentModifyGroupNameBinding.root
     }
@@ -34,9 +40,30 @@ class ModifyGroupNameFragment : Fragment() {
             toolbarModifyGroupName.setTitle("그룹명 변경")
             toolbarModifyGroupName.setNavigationIcon(R.drawable.ic_arrow_back_ios)
             toolbarModifyGroupName.setNavigationOnClickListener {
-                socialActivity.supportFragmentManager.popBackStack()
+                parentFragmentManager.popBackStack()
             }
         }
+    }
+
+    private fun setupObservers() {
+        // 새 그룹명 에러 메시지 관찰
+        modifyGroupNameViewModel.newGroupNameError.observe(viewLifecycleOwner) { errorMessage ->
+            fragmentModifyGroupNameBinding.modifyGroupNameTextField.error = errorMessage
+        }
+
+        // 버튼 활성화 상태 관찰
+        modifyGroupNameViewModel.isButtonEnabled.observe(viewLifecycleOwner) { isEnabled ->
+            fragmentModifyGroupNameBinding.modifyGroupNameButton.isEnabled = isEnabled
+        }
+    }
+
+    private fun setupTextWatchers() {
+        // 새 그룹명 입력 감지
+        fragmentModifyGroupNameBinding.modifyGroupNameTextField.editText?.addTextChangedListener { text ->
+            modifyGroupNameViewModel.newGroupName.value = text.toString()
+            modifyGroupNameViewModel.validateNewName()
+        }
+
     }
 
     // button

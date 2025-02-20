@@ -37,8 +37,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:inputType="text|textPassword"
-            android:digits="@string/digit_value"
-            android:fontFamily="@font/nanumsquarelight"/>
+            android:digits="@string/digit_value" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -50,6 +49,7 @@
         android:layout_marginVertical="30dp"
         app:endIconMode="password_toggle"
         android:hint="새 비밀번호 입력"
+        app:helperText=" "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/modifyUserPwTextField">
@@ -59,8 +59,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:inputType="text|textPassword"
-            android:digits="@string/digit_value"
-            android:fontFamily="@font/nanumsquarelight"/>
+            android:digits="@string/digit_value" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -70,10 +69,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginVertical="10dp"
         app:endIconMode="password_toggle"
         android:hint="새 비밀번호 재입력"
-        app:errorEnabled="true"
+        app:helperText=" "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/modifyUserNewPwTextField">
@@ -84,19 +82,19 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:inputType="text|textPassword"
-            android:digits="@string/digit_value"
-            android:fontFamily="@font/nanumsquarelight"/>
+            android:digits="@string/digit_value" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        style=""
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/modifyUserPwButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:backgroundTint="@color/mainColor"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/custom_btn_background"
+        android:enabled="true"
         android:text="변경하기"
-        android:textColor="@color/black"
+        android:textColor="@drawable/custom_btn_text"
         app:cornerRadius="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
