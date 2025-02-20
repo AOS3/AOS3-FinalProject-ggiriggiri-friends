@@ -1,5 +1,6 @@
 package com.friends.ggiriggiri.data.repository
 
+import android.util.Log
 import com.friends.ggiriggiri.data.model.RequestModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -34,5 +35,21 @@ class RequestRepository @Inject constructor(
             e.printStackTrace()
             null
         }
+    }
+
+    // Firestore에서 현재 사용자의 그룹 ID와 일치하는 활성화된 요청 가져오기
+    fun getActiveRequests(userGroupId: String, onResult: (List<RequestModel>) -> Unit) {
+        db.collection("Request")
+            .whereEqualTo("requestGroupDocumentID", userGroupId) // 사용자의 그룹 ID와 일치하는 요청 조회
+            .whereEqualTo("requestState", 1) // 활성화된 요청만 가져오기 (1 = 활성화)
+            .get()
+            .addOnSuccessListener { result ->
+                val requestList = result.documents.mapNotNull { it.toObject(RequestModel::class.java) }
+                onResult(requestList)
+            }
+            .addOnFailureListener {
+                Log.e("Firestore", "요청 가져오기 실패: ${it.message}")
+                onResult(emptyList()) // 실패 시 빈 리스트 반환
+            }
     }
 }
