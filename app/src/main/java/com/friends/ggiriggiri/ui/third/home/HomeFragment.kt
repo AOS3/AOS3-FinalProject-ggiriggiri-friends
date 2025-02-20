@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.databinding.FragmentHomeBinding
@@ -38,8 +39,12 @@ class HomeFragment : Fragment() {
 
         socialActivity = activity as SocialActivity
 
-        setupObservers()
+        val loginUser = (requireActivity().application as App).loginUserModel
+        val userGroupId = loginUser.userGroupDocumentID
 
+        homeViewModel.loadActiveRequests(userGroupId)
+
+        setupObservers()
         setupClickListeners()
 
         return binding.root
@@ -67,6 +72,29 @@ class HomeFragment : Fragment() {
                 binding.ivHomeQuestionEmoji.setImageResource(R.drawable.ic_image)
             }
         }
+
+        // 🔥 활성화된 요청 표시
+        homeViewModel.activeRequests.observe(viewLifecycleOwner) { requestList ->
+            if (requestList.isNotEmpty()) {
+                val activeRequest = requestList[0]
+
+                // 요청 활성화 상태 UI 적용
+                binding.tvHomeRequestContent.text = activeRequest.requestMessage
+                binding.ivHomeRequestStatus.setColorFilter(Color.parseColor("#4CAF50")) // 활성화 상태
+                binding.btnHomeRespond.text = "응답하기"
+                binding.btnHomeRespond.setOnClickListener {
+                    socialActivity.replaceFragment(ResponseFragment()) // 응답하기 화면으로 이동
+                }
+            } else {
+                // 요청 없음 UI 적용
+                binding.tvHomeRequestContent.text = "요청이 비어있어요"
+                binding.ivHomeRequestStatus.setColorFilter(Color.parseColor("#858282")) // 비활성화 상태
+                binding.btnHomeRespond.text = "요청하기"
+                binding.btnHomeRespond.setOnClickListener {
+                    socialActivity.replaceFragment(RequestFragment()) // 요청하기 화면으로 이동
+                }
+            }
+        }
     }
 
     private fun setupClickListeners() {
@@ -78,9 +106,6 @@ class HomeFragment : Fragment() {
             socialActivity.replaceFragment(fragment)
         }
 
-        binding.btnHomeRespond.setOnClickListener {
-            socialActivity.replaceFragment(RequestFragment())
-        }
 
         binding.tvHomeProfileSeeAll.setOnClickListener {
             val bottomSheet = ProfileBottomSheetFragment()
