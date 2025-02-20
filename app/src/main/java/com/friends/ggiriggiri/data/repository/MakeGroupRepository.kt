@@ -31,15 +31,18 @@ class MakeGroupRepository @Inject constructor(
     suspend fun createGroup(group: GroupModel): String? {
         return try {
             val groupRef = db.collection("GroupData").document() // 문서 ID 자동 생성
-            val groupId = groupRef.id
+            val groupId = groupRef.id // Firestore 문서 ID
 
-            val updatedGroup = group.copy(groupRequestDocumentID = groupId)
+            val updatedGroup = group.copy(
+                groupCreateTime = System.currentTimeMillis()
+            )
+
             groupRef.set(updatedGroup, SetOptions.merge()).await()
 
-            Log.d("MakeGroupRepository", "✅ 그룹 생성 완료! Firestore 문서 ID: $groupId")
+            Log.d("MakeGroupRepository", "그룹 생성 완료! Firestore 문서 ID: $groupId, 생성 시간: ${updatedGroup.groupCreateTime}")
             return groupId
         } catch (e: Exception) {
-            Log.e("MakeGroupRepository", "❌ 그룹 생성 실패", e)
+            Log.e("MakeGroupRepository", "그룹 생성 실패", e)
             null
         }
     }
