@@ -87,6 +87,9 @@ dependencies {
     // 원형 프로필
     implementation ("de.hdodenhof:circleimageview:3.1.0")
 
+    // 줌아웃 기능
+    implementation ("com.github.chrisbanes:PhotoView:2.3.0")
+
     // 네이버
     implementation(files("libs/oauth-5.10.0.aar"))
 
@@ -109,34 +112,6 @@ dependencies {
     //파이어베이스 functions & messaging
     implementation ("com.google.firebase:firebase-functions:20.4.0")
     implementation ("com.google.firebase:firebase-messaging:23.3.1")
-
-    // Google Play services
-    implementation ("com.google.gms:google-services:4.3.15")
-    implementation ("com.google.firebase:firebase-auth:22.0.0")
-    implementation ("com.google.firebase:firebase-bom:32.0.0")
-    implementation ("com.google.android.gms:play-services-auth:20.5.0")
-
-    // 줌아웃 기능
-    implementation ("com.github.chrisbanes:PhotoView:2.3.0")
-
-    // 네이버
-    implementation(files("libs/oauth-5.10.0.aar"))
-
-    implementation("com.airbnb.android:lottie:3.1.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.21")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
-    implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("androidx.legacy:legacy-support-core-utils:1.0.0")
-    implementation("androidx.browser:browser:1.4.0")
-    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
-    implementation("androidx.core:core-ktx:1.3.0")
-    implementation("androidx.fragment:fragment-ktx:1.3.6")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")
 
     // Google Play services
     implementation ("com.google.gms:google-services:4.3.15")
