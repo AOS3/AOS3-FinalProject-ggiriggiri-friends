@@ -24,4 +24,22 @@
         <!-- 아이콘 색상 상태별로 지정 -->
         <item name="itemIconTint">@color/bottom_nav_color</item>
     </style>
+
+    <style name="Theme.Splash" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- 스플래시 배경색 -->
+        <item name="android:windowBackground">@color/mainColor</item>
+        <!-- 기본 SplashScreen 아이콘 -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_main_launcher</item>
+        <!-- 애니메이션 지속 시간 설정 (1초) -->
+        <item name="windowSplashScreenAnimationDuration">500</item>
+        <!-- 내비게이션 바 색상 설정 -->
+        <item name="android:navigationBarColor">@color/mainColor</item>
+        <!-- 상태 바 색상 설정 -->
+        <item name="android:statusBarColor">@color/mainColor</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+
+
+
 </resources>

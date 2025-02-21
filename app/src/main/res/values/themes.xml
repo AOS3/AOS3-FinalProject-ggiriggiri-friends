@@ -6,8 +6,6 @@
 
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
-
     </style>
-
     <style name="Theme.Finalproject_ggiriggiri_friends" parent="Base.Theme.Finalproject_ggiriggiri_friends" />
 </resources>
