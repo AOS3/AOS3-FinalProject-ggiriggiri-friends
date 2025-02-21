@@ -12,6 +12,15 @@ import com.friends.ggiriggiri.databinding.FragmentLoginBinding
 import com.friends.ggiriggiri.databinding.FragmentNotificationTestBinding
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.messaging.FirebaseMessaging
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import org.json.JSONObject
+import java.io.IOException
 
 class NotificationTestFragment : Fragment() {
 
@@ -48,7 +57,7 @@ class NotificationTestFragment : Fragment() {
 
                             sendPushNotification(
                                 token, // 가져온 FCM 토큰 사용
-                                "테스트 알림",
+                                "끼리끼리",
                                 "Firebase Functions을 통해 전송된 알림 \n ${token}"
                             )
 
@@ -69,23 +78,37 @@ class NotificationTestFragment : Fragment() {
             return
         }
 
-        val data = hashMapOf(
-            "title" to title,
-            "body" to message,
-            "token" to targetToken
-        )
+        val data = JSONObject().apply {
+            put("title", title)
+            put("body", message)
+            put("token", targetToken)
+        }
 
-        FirebaseFunctions.getInstance()
-            .getHttpsCallable("sendNotification")
-            .call(data)
-            .addOnSuccessListener { result ->
-                val responseData = result.getData() as Map<*, *>
-                println("알림 전송 성공: ${responseData["message"]}")
+        val requestBody = data.toString()
+        val request = Request.Builder()
+            .url("https://asia-northeast3-ggiriggiri-c33b2.cloudfunctions.net/sendNotification")
+            .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
+            .addHeader("Content-Type", "application/json") // 🔹 JSON 타입 명시
+            .build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("FCM", "알림 전송 실패: ${e.message}")
             }
-            .addOnFailureListener { e ->
-                println("알림 전송 실패: ${e.message}")
+
+            override fun onResponse(call: Call, response: Response) {
+                val responseBody = response.body?.string()
+                if (response.isSuccessful) {
+                    Log.d("FCM", "알림 전송 성공: $responseBody")
+                } else {
+                    Log.e("FCM", "알림 전송 실패 (서버 응답 오류): $responseBody")
+                }
             }
+        })
     }
+
+
 
 
 }
