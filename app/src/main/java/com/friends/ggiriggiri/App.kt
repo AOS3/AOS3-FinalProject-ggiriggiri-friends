@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit
 @HiltAndroidApp
 class App : Application(){
     lateinit var loginUserModel : UserModel
+
     override fun onCreate() {
         super.onCreate()
 
