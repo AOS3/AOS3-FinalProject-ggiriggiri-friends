@@ -34,7 +34,8 @@ class MakeGroupRepository @Inject constructor(
             val groupId = groupRef.id // Firestore 문서 ID
 
             val updatedGroup = group.copy(
-                groupCreateTime = System.currentTimeMillis()
+                groupCreateTime = System.currentTimeMillis(),
+                groupDayFromCreate = 1
             )
 
             groupRef.set(updatedGroup, SetOptions.merge()).await()

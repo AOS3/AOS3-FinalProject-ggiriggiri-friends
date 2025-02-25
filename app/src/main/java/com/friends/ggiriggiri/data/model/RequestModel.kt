@@ -3,17 +3,19 @@ package com.friends.ggiriggiri.data.model
 import com.friends.ggiriggiri.util.RequestState
 
 data class RequestModel(
-    val requestId: String = "",
+    var requestId: String = "",
     val requestTime: Long = System.currentTimeMillis(),
     val requestState: Int = RequestState.ACTIVE.value,
     val requestUserDocumentID: String = "",
     val requestMessage: String = "",
     val requestImage: String = "",
     val responseList: List<ResponseModel> = emptyList(),
-    val requestGroupDocumentID: String = ""
+    val requestGroupDocumentID: String = "",
+    val requestUserProfileImage: String = "",
+    val scheduledUpdate: Long? = System.currentTimeMillis() + (30 * 60 * 1000)
 ) {
     // Firestore 저장 변환 (객체 → Map)
-    fun toMap(): Map<String, Any> {
+    fun toMap(): Map<String, Any?> {
         return mapOf(
             "requestTime" to requestTime,
             "requestState" to requestState,
@@ -21,7 +23,8 @@ data class RequestModel(
             "requestMessage" to requestMessage,
             "requestImage" to requestImage,
             "responseList" to responseList.map { it.toMap() },
-            "requestGroupDocumentID" to requestGroupDocumentID
+            "requestGroupDocumentID" to requestGroupDocumentID,
+            "scheduledUpdate" to scheduledUpdate
         )
     }
 
@@ -36,7 +39,8 @@ data class RequestModel(
                 requestMessage = data["requestMessage"] as? String ?: "",
                 requestImage = data["requestImage"] as? String ?: "",
                 responseList = (data["responseList"] as? List<Map<String, Any>>)?.map { ResponseModel.fromMap(it) } ?: emptyList(),
-                requestGroupDocumentID = data["requestGroupDocumentID"] as? String ?: ""
+                requestGroupDocumentID = data["requestGroupDocumentID"] as? String ?: "",
+                scheduledUpdate = (data["scheduledUpdate"] as? Number)?.toLong() ?: (data["requestTime"] as? Long)?.plus(30 * 60 * 1000)
             )
         }
     }

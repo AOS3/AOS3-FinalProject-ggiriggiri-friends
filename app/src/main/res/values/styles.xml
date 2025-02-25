@@ -24,4 +24,8 @@
         <!-- 아이콘 색상 상태별로 지정 -->
         <item name="itemIconTint">@color/bottom_nav_color</item>
     </style>
+
+
+
+
 </resources>

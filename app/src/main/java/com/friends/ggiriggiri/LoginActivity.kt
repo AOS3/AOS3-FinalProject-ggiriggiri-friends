@@ -1,9 +1,18 @@
 package com.friends.ggiriggiri
 
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.animation.AnticipateInterpolator
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.doOnEnd
+import androidx.core.splashscreen.SplashScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -14,6 +23,7 @@ import com.friends.ggiriggiri.ui.first.findid.FindIdFragment
 import com.friends.ggiriggiri.ui.first.findpw.FindPwFragment
 import com.friends.ggiriggiri.ui.first.findpw.ResetPwFragment
 import com.friends.ggiriggiri.ui.first.login.LoginFragment
+import com.friends.ggiriggiri.ui.first.login.NotificationTestFragment
 import com.friends.ggiriggiri.ui.first.register.RegisterFragment
 import com.google.android.material.transition.MaterialSharedAxis
 import com.kakao.sdk.common.util.Utility
@@ -30,21 +40,25 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
+        enableEdgeToEdge()
 
         activityLoginBinding = ActivityLoginBinding.inflate(layoutInflater)
 
-
         setContentView(R.layout.activity_login)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+//            insets
+//        }
         //초기화면 세팅
         supportFragmentManager.commit {
             replace(R.id.fcvLoginActivity, LoginFragment())
         }
+        //알림화면 테스트
+//        supportFragmentManager.commit {
+//            replace(R.id.fcvLoginActivity, NotificationTestFragment())
+//        }
     }
 
     // 프래그먼트 교체 함수
@@ -60,6 +74,7 @@ class LoginActivity : AppCompatActivity() {
             LoginFragmentName.FIND_ID_FRAGMENT -> FindIdFragment()
             LoginFragmentName.FIND_PW_FRAGMENT -> FindPwFragment()
             LoginFragmentName.RESET_PW_FRAGMENT -> ResetPwFragment()
+            LoginFragmentName.NOTIFICATION_TEST_FRAGMENT -> NotificationTestFragment()
         }
 
         // bundle 객체가 null이 아니라면
@@ -108,5 +123,7 @@ enum class LoginFragmentName(var number:Int, var str:String){
     // 비밀번호 찾기
     FIND_PW_FRAGMENT(4,"FindPwFragment"),
     // 비밀번호 재설정
-    RESET_PW_FRAGMENT(5,"ResetPwFragment")
+    RESET_PW_FRAGMENT(5,"ResetPwFragment"),
+    // 메세징 테스트
+    NOTIFICATION_TEST_FRAGMENT(6,"NotificationTestFragment")
 }

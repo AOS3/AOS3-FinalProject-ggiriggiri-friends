@@ -39,73 +39,94 @@
             android:layout_height="wrap_content"
             android:padding="15dp">
 
+            <!-- Flow를 위한 Guideline -->
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="346dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.90296495" />
+
+            <!-- Flow 적용할 ImageView들 -->
             <ImageView
                 android:id="@+id/ivHomeProfile1"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="5dp"
                 android:background="@drawable/rounded_image"
                 android:clipToOutline="true"
                 android:outlineProvider="background"
                 android:scaleType="centerCrop"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_default_profile" />
 
             <ImageView
                 android:id="@+id/ivHomeProfile2"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="10dp"
                 android:background="@drawable/rounded_image"
                 android:clipToOutline="true"
                 android:outlineProvider="background"
                 android:scaleType="centerCrop"
-                app:layout_constraintStart_toEndOf="@id/ivHomeProfile1"
-                app:layout_constraintTop_toTopOf="@id/ivHomeProfile1"
                 app:srcCompat="@drawable/ic_default_profile" />
 
             <ImageView
                 android:id="@+id/ivHomeProfile3"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="10dp"
                 android:background="@drawable/rounded_image"
                 android:clipToOutline="true"
                 android:outlineProvider="background"
                 android:scaleType="centerCrop"
-                app:layout_constraintStart_toEndOf="@id/ivHomeProfile2"
-                app:layout_constraintTop_toTopOf="@id/ivHomeProfile1"
                 app:srcCompat="@drawable/ic_default_profile" />
 
             <ImageView
                 android:id="@+id/ivHomeProfile4"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="10dp"
                 android:background="@drawable/rounded_image"
                 android:clipToOutline="true"
                 android:outlineProvider="background"
                 android:scaleType="centerCrop"
-                app:layout_constraintStart_toEndOf="@id/ivHomeProfile3"
-                app:layout_constraintTop_toTopOf="@id/ivHomeProfile1"
                 app:srcCompat="@drawable/ic_default_profile" />
 
+            <!-- Flow 적용 -->
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/profileFlow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="ivHomeProfile1,ivHomeProfile2,ivHomeProfile3,ivHomeProfile4"
+                app:flow_wrapMode="chain"
+                app:flow_horizontalStyle="spread_inside"
+                app:flow_horizontalGap="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tvHomeProfileSeeAll"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <!-- 전체보기 버튼 -->
             <TextView
                 android:id="@+id/tvHomeProfileSeeAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:fontFamily="@font/nanumsquareregular"
                 android:text="전체보기"
-                android:textColor="@color/black"
                 android:textSize="14sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/nanumsquareregular"
                 android:foreground="?attr/selectableItemBackground"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/ivHomeProfile4"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/profileFlow"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView

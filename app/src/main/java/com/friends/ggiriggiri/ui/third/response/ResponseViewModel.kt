@@ -1,13 +1,21 @@
 package com.friends.ggiriggiri.ui.third.response
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.friends.ggiriggiri.data.model.ResponseModel
+import com.friends.ggiriggiri.data.service.RequestService
+import com.friends.ggiriggiri.ui.first.register.UserModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ResponseViewModel  @Inject constructor() : ViewModel() {
+class ResponseViewModel  @Inject constructor(
+    private val requestService: RequestService
+) : ViewModel() {
 
     // 사진 업로드 여부
     private val _isImageUploaded = MutableLiveData(false)
@@ -20,6 +28,9 @@ class ResponseViewModel  @Inject constructor() : ViewModel() {
     // 응답 버튼 활성화 여부
     private val _isSubmitEnabled = MutableLiveData(false)
     val isSubmitEnabled: LiveData<Boolean> = _isSubmitEnabled
+
+    private val _requestUser = MutableLiveData<String?>()
+    val requestUser: LiveData<String?> get() = _requestUser
 
     // 사진 업로드 상태 업데이트
     fun setImageUploaded(isUploaded: Boolean) {
@@ -37,4 +48,32 @@ class ResponseViewModel  @Inject constructor() : ViewModel() {
     private fun updateSubmitButtonState() {
         _isSubmitEnabled.value = _isImageUploaded.value == true && _isTextEntered.value == true
     }
+
+    // 요청한 사람의 정보를 가져오는 함수
+    fun fetchRequestUserInfo(documentId: String) {
+        requestService.fetchRequestUserInfo(documentId) { userName ->
+            _requestUser.value = userName ?: "알 수 없는 사용자"
+        }
+    }
+
+    fun submitResponse(requestId: String, userId: String, responseMessage: String, imageUrl: String?) {
+        viewModelScope.launch {
+            val response = ResponseModel(
+                responseUserDocumentID = userId,
+                responseMessage = responseMessage,
+                responseImage = imageUrl ?: "",
+                responseTime = System.currentTimeMillis()
+            )
+
+            requestService.submitResponse(requestId, response) { success ->
+                if (success) {
+                    _isSubmitEnabled.value = false // UI에서 버튼 비활성화
+                    Log.d("ResponseViewModel", "응답 저장 성공")
+                } else {
+                    Log.e("ResponseViewModel", "응답 저장 실패")
+                }
+            }
+        }
+    }
+
 }
