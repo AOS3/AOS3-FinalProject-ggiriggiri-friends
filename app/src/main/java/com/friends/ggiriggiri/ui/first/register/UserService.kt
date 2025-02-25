@@ -50,6 +50,4 @@ class UserService @Inject constructor() {
     fun resetUserPw(userDocumentId: String, pw: String) {
         UserRepository.resetUserPw(userDocumentId,pw)
     }
-
-
 }

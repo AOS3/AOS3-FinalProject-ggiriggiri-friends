@@ -6,6 +6,12 @@ enum class UserState(val num: Int, val str:String){
     WITHDRAW(2,"탈퇴")
 }
 
+// 그룹 상태값
+enum class GroupState(val num: Int, val str:String){
+    NORMAL(1,"활성화"),
+    WITHDRAW(2,"비활성화")
+}
+
 //유저 소셜 로그인
 enum class UserSocialLoginState(val num: Int, val str:String){
     NOTHING(1,"없음"),
@@ -25,9 +31,5 @@ enum class RequestState(val value: Int) {
     }
 }
 
-// 그룹 상태값
-enum class GroupState(val num: Int, val str:String){
-    NORMAL(1,"활성화"),
-    WITHDRAW(2,"비활성화")
-}
+
 

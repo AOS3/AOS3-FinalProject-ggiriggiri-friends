@@ -30,8 +30,7 @@ import java.nio.ByteBuffer
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentHomeBinding
 
     lateinit var socialActivity: SocialActivity
     private val homeViewModel: HomeViewModel by viewModels()
@@ -41,7 +40,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         socialActivity = activity as SocialActivity
 
@@ -60,30 +59,26 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupObservers() {
-
         viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.question.collectLatest { question ->
                 if (question == null) return@collectLatest
 
-                binding?.let { safeBinding ->
-                    val safeColor = question.questionColor ?: "#FFFFFF"
-                    try {
-                        safeBinding.cvHomeQuestion.setCardBackgroundColor(Color.parseColor(safeColor))
-                    } catch (e: IllegalArgumentException) {
-                        safeBinding.cvHomeQuestion.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
-                    }
+                val safeColor = question.questionColor ?: "#FFFFFF"
+                try {
+                    binding.cvHomeQuestion.setCardBackgroundColor(Color.parseColor(safeColor))
+                } catch (e: IllegalArgumentException) {
+                    binding.cvHomeQuestion.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
+                }
 
-                    safeBinding.tvHomeQuestionContent.text = question.questionContent
+                binding.tvHomeQuestionContent.text = question.questionContent
 
-                    if (!question.questionImg.isNullOrEmpty()) {
-                        loadAnimatedPng(question.questionImg)
-                    } else {
-                        safeBinding.ivHomeQuestionEmoji.setImageResource(R.drawable.ic_image)
-                    }
+                if (!question.questionImg.isNullOrEmpty()) {
+                    loadAnimatedPng(question.questionImg)
+                } else {
+                    binding.ivHomeQuestionEmoji.setImageResource(R.drawable.ic_image)
                 }
             }
         }
-
 
         homeViewModel.groupName.observe(viewLifecycleOwner) { groupName ->
             binding.tbHome.title = groupName
@@ -352,7 +347,6 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         countDownTimer?.cancel()
-        _binding = null
     }
 }
 
