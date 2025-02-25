@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.SocialActivity
-import com.friends.ggiriggiri.data.model.GroupModel
+import com.friends.ggiriggiri.data.model.GroupModel2
 import com.friends.ggiriggiri.databinding.FragmentModifyGroupNameBinding
 import com.friends.ggiriggiri.ui.custom.CustomDialog
 import com.friends.ggiriggiri.ui.first.register.UserModel
@@ -35,7 +35,7 @@ class ModifyGroupNameFragment : Fragment() {
     lateinit var userModel: UserModel
 
     // 그룹 정보를 담을 변수
-    lateinit var groupModel: GroupModel
+    lateinit var groupModel: GroupModel2
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,7 +55,7 @@ class ModifyGroupNameFragment : Fragment() {
             Log.e("ModifyGroupPwFragment", "userDocumentId is null")
         }
 
-        groupModel = GroupModel()
+        groupModel = GroupModel2()
 
         lifecycleScope.launch {
             try {

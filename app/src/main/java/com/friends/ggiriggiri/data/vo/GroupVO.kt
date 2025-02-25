@@ -1,6 +1,6 @@
 package com.friends.ggiriggiri.data.vo
 
-import com.friends.ggiriggiri.data.model.GroupModel
+import com.friends.ggiriggiri.data.model.GroupModel2
 import com.friends.ggiriggiri.util.GroupState
 
 class GroupVO {
@@ -23,8 +23,8 @@ class GroupVO {
     // 그룹 갤러리(이미지들)
     var groupGallery: List<String> = listOf()
 
-    fun toGroupModel(groupDocumentId:String) : GroupModel{
-        val groupModel = GroupModel()
+    fun toGroupModel(groupDocumentId:String) : GroupModel2 {
+        val groupModel = GroupModel2()
 
         groupModel.groupDocumentId = groupDocumentId
         groupModel.groupPw = groupPw

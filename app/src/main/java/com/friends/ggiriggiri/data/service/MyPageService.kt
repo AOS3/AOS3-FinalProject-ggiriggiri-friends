@@ -2,6 +2,7 @@ package com.friends.ggiriggiri.data.service
 
 import android.net.Uri
 import com.friends.ggiriggiri.data.model.GroupModel
+import com.friends.ggiriggiri.data.model.GroupModel2
 import com.friends.ggiriggiri.data.repository.MyPageRepository
 import com.friends.ggiriggiri.ui.first.register.UserModel
 import com.friends.ggiriggiri.ui.first.register.UserRepository
@@ -29,7 +30,7 @@ class MyPageService @Inject constructor(
     }
 
     // 그룹 문서 아이디를 통해 그룹 정보를 가져온다.
-    suspend fun selectGroupDataByGroupDocumentIdOne(groupDocumentId:String) : GroupModel {
+    suspend fun selectGroupDataByGroupDocumentIdOne(groupDocumentId:String) : GroupModel2 {
         val groupVO = repository.selectGroupDataByGroupDocumentIdOne(groupDocumentId)
         val groupModel = groupVO.toGroupModel(groupDocumentId)
         return groupModel
@@ -58,13 +59,13 @@ class MyPageService @Inject constructor(
     }
 
     // 그룹 비밀번호 수정
-    suspend fun updateGroupPw(groupModel: GroupModel){
+    suspend fun updateGroupPw(groupModel: GroupModel2){
         val groupVO = groupModel.toGroupVO()
         repository.updateGroupPw(groupVO, groupModel.groupDocumentId)
     }
 
     // 그룹명 수정
-    suspend fun updateGroupName(groupModel: GroupModel){
+    suspend fun updateGroupName(groupModel: GroupModel2){
         val groupVO = groupModel.toGroupVO()
         repository.updateGroupName(groupVO, groupModel.groupDocumentId)
     }
