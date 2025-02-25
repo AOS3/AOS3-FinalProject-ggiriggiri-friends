@@ -26,7 +26,9 @@ class MakeGroupService @Inject constructor(
                 groupName = groupName,
                 groupCode = groupCode,
                 groupPw = groupPw,
-                groupUserDocumentID = listOf(userId)
+                groupUserDocumentID = listOf(userId),
+                groupCreateTime = System.currentTimeMillis(),
+                groupDayFromCreate = 1 // 기본값 1
             )
 
             val groupDocumentId = repository.createGroup(newGroup)

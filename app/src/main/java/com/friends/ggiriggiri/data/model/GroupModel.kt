@@ -18,5 +18,7 @@ data class GroupModel (
     // 질문() 문서 아이디 리스트
     var groupQuestionDocumentID: List<String> = listOf(),
     // 그룹 갤러리(이미지들)
-    var groupGallery: List<String> = listOf()
+    var groupGallery: List<String> = listOf(),
+    // 그룹이 만들어진지 언제?
+    var groupDayFromCreate: Int = 1
 )

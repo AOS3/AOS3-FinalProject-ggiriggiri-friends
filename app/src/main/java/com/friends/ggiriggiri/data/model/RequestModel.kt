@@ -10,7 +10,8 @@ data class RequestModel(
     val requestMessage: String = "",
     val requestImage: String = "",
     val responseList: List<ResponseModel> = emptyList(),
-    val requestGroupDocumentID: String = ""
+    val requestGroupDocumentID: String = "",
+    val requestUserProfileImage: String = ""
 ) {
     // Firestore 저장 변환 (객체 → Map)
     fun toMap(): Map<String, Any> {
