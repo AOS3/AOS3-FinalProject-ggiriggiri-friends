@@ -2,34 +2,57 @@ package com.friends.ggiriggiri.ui.fourth.modifygroupname
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.friends.ggiriggiri.data.service.MyPageService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ModifyGroupNameViewModel @Inject constructor(
-
+    val service: MyPageService
 ) : ViewModel() {
 
-    // 새 그룹명
-    val newGroupName = MutableLiveData<String>("")
-    // 새 그룹명 에러 메시지
-    val newGroupNameError = MutableLiveData<String?>()
+    // 사용자 문서 ID
+    var userDocumentId: String? = null
+    // 그룹 문서 ID
+    var groupDocumentId: String? = null
+    // 그룹명
+    val groupName = MutableLiveData<String?>("")
+    // 그룹명 에러메시지
+    val groupNameErrorMessage = MutableLiveData<String?>()
     // 버튼 활성화 상태
     val isButtonEnabled = MutableLiveData<Boolean>(false)
 
-    // 새 그룹명 유효성 검사
-    fun validateNewName(){
-        val name = newGroupName.value ?: ""
-        when {
-            name.isEmpty() -> newGroupNameError.value = "그룹명은 1자 이상 입력해주세요."
-            else -> newGroupNameError.value = null
+    // 현재 그룹명 유효성 검사
+    fun validateCurrentName() {
+        val name = groupName.value ?: ""
+
+        groupDocumentId?.let { documentId ->
+            viewModelScope.launch {
+                try {
+                    val group = service.selectGroupDataByGroupDocumentIdOne(documentId)
+
+                    if(group.groupName == name){
+                        groupNameErrorMessage.value = "현재 그룹명입니다."
+                    } else {
+                        groupNameErrorMessage.value = null
+                    }
+                } catch (e: Exception){
+                    groupNameErrorMessage.value = "그룹명 확인중 오류 발생."
+                }
+                updateButtonState()
+            }
+
+        }?: run {
+            groupNameErrorMessage.value = "그룹 정보를 찾을 수 없습니다."
         }
-        updateButtonState()
     }
 
     // 버튼 활성화 상태 업데이트
     private fun updateButtonState() {
         isButtonEnabled.value =
-            newGroupNameError.value == null && !newGroupName.value.isNullOrEmpty()
+            groupNameErrorMessage.value == null &&
+                    !groupName.value.isNullOrEmpty()
     }
 }

@@ -2,22 +2,40 @@ package com.friends.ggiriggiri.ui.fourth.modifygroupname
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.SocialActivity
+import com.friends.ggiriggiri.data.model.GroupModel
 import com.friends.ggiriggiri.databinding.FragmentModifyGroupNameBinding
 import com.friends.ggiriggiri.ui.custom.CustomDialog
+import com.friends.ggiriggiri.ui.first.register.UserModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ModifyGroupNameFragment : Fragment() {
 
     lateinit var fragmentModifyGroupNameBinding: FragmentModifyGroupNameBinding
     lateinit var socialActivity: SocialActivity
+
     private val modifyGroupNameViewModel: ModifyGroupNameViewModel by viewModels()
+
+    // 사용자 정보를 담을 변수
+    lateinit var userModel: UserModel
+
+    // 그룹 정보를 담을 변수
+    lateinit var groupModel: GroupModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,6 +43,28 @@ class ModifyGroupNameFragment : Fragment() {
     ): View {
         fragmentModifyGroupNameBinding = FragmentModifyGroupNameBinding.inflate(layoutInflater)
         socialActivity = activity as SocialActivity
+
+        // SocialActivity에서 로그인 사용자 정보를 가져와 userModel 초기화
+        val loginUser = (socialActivity.application as App).loginUserModel
+        userModel = loginUser // 로그인된 사용자 정보를 기반으로 초기화
+
+        val userDocumentId = socialActivity.getUserDocumentId()
+        if (userDocumentId != null) {
+            modifyGroupNameViewModel.userDocumentId = userDocumentId
+        } else {
+            Log.e("ModifyGroupPwFragment", "userDocumentId is null")
+        }
+
+        groupModel = GroupModel()
+
+        lifecycleScope.launch {
+            try {
+                groupModel = modifyGroupNameViewModel.service.selectGroupDataByGroupDocumentIdOne(userModel.userGroupDocumentID)
+                modifyGroupNameViewModel.groupDocumentId = userModel.userGroupDocumentID
+            } catch (e: Exception) {
+                Log.e("ModifyGroupPwFragment", "그룹 데이터 가져오기 실패: ${e.message}")
+            }
+        }
 
         settingToolbar()
 
@@ -46,8 +86,8 @@ class ModifyGroupNameFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        // 새 그룹명 에러 메시지 관찰
-        modifyGroupNameViewModel.newGroupNameError.observe(viewLifecycleOwner) { errorMessage ->
+        // 그룹명 에러 메시지 관찰
+        modifyGroupNameViewModel.groupNameErrorMessage.observe(viewLifecycleOwner) { errorMessage ->
             fragmentModifyGroupNameBinding.modifyGroupNameTextField.error = errorMessage
         }
 
@@ -58,10 +98,10 @@ class ModifyGroupNameFragment : Fragment() {
     }
 
     private fun setupTextWatchers() {
-        // 새 그룹명 입력 감지
+        //  그룹명 입력 감지
         fragmentModifyGroupNameBinding.modifyGroupNameTextField.editText?.addTextChangedListener { text ->
-            modifyGroupNameViewModel.newGroupName.value = text.toString()
-            modifyGroupNameViewModel.validateNewName()
+            modifyGroupNameViewModel.groupName.value = text.toString()
+            modifyGroupNameViewModel.validateCurrentName()
         }
 
     }
@@ -85,7 +125,20 @@ class ModifyGroupNameFragment : Fragment() {
             icon = R.drawable.ic_edit,
             positiveText = "예",
             onPositiveClick = {
-
+                // 그룹명 변경 로직 실행
+                CoroutineScope(Dispatchers.Main).launch {
+                    val name = modifyGroupNameViewModel.groupName.value!!
+                    if(name.isNotEmpty()){
+                        groupModel.groupName = name
+                    }
+                    try {
+                        modifyGroupNameViewModel.service.updateGroupName(groupModel)
+                        Toast.makeText(requireContext(), "그룹명이 변경 되었습니다.", Toast.LENGTH_SHORT).show()
+                        parentFragmentManager.popBackStack()
+                    } catch (e: Exception){
+                        Log.e("modifyGroupPwDialog", "Error updating password", e)
+                    }
+                }
             },
             negativeText = "아니오",
             onNegativeClick = {
