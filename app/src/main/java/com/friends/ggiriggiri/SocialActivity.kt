@@ -48,6 +48,11 @@ class SocialActivity : AppCompatActivity() {
         }
     }
 
+    fun getUserDocumentId(): String? {
+        val loginUser = (application as App).loginUserModel
+        return loginUser.userDocumentId
+    }
+
     fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerViewSocialMain, fragment)

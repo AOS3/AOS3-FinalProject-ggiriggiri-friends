@@ -9,6 +9,7 @@ import dagger.hilt.android.HiltAndroidApp
 @HiltAndroidApp
 class App : Application(){
     lateinit var loginUserModel : UserModel
+
     override fun onCreate() {
         super.onCreate()
 

@@ -18,26 +18,6 @@ class MyPageBottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        pickImageLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == AppCompatActivity.RESULT_OK) {
-                val imageUri = result.data?.data // 선택된 이미지 URI 가져오기
-
-                if (imageUri != null) {
-                    // 부모 Fragment(MyPageFragment)에 선택한 이미지 전달 및 업데이트 요청
-                    val parentFragment = parentFragment as? MyPageFragment
-                    parentFragment?.updateProfileImage(imageUri)
-                    dismiss() // BottomSheet 닫기
-                }
-            }
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,28 +26,45 @@ class MyPageBottomSheetFragment : BottomSheetDialogFragment() {
 
         fragmentMyPageBottomSheetBinding = FragmentMyPageBottomSheetBinding.inflate(layoutInflater)
 
-        fragmentMyPageBottomSheetBinding.profileModify.setOnClickListener {
-            // 갤러리 Intent 생성 및 실행
-            val intent = Intent(Intent.ACTION_PICK).apply { type = "image/*" }
-            pickImageLauncher.launch(intent)
+        pickImageLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                val imageUri = result.data?.data
+                if (imageUri != null) {
+                    // 영구적 퍼미션 요청 (persistable permission)
+                    val takeFlags = result.data?.flags?.and(
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    ) ?: 0
+                    try {
+                        requireContext().contentResolver.takePersistableUriPermission(imageUri, takeFlags)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                    // 부모 Fragment에 선택한 이미지 전달
+                    (parentFragment as? MyPageFragment)?.updateProfileImage(imageUri)
+                    dismiss()
+                }
+            }
         }
 
-
         profileViewClick()
+        profileModifyClick()
 
         return fragmentMyPageBottomSheetBinding.root
     }
 
-    // 프로필 사진 보기
+
+    // 프로필 사진 보기 버튼 클릭 시 안전한 URI를 이용해 전체화면 다이얼로그 실행
     private fun profileViewClick() {
         fragmentMyPageBottomSheetBinding.apply {
             profileView.setOnClickListener {
                 val parentFragment = parentFragment as? MyPageFragment
-                val imageUri = parentFragment?.getProfileImageUri() // 부모 Fragment에서 URI 가져오기
-
-                if (imageUri != null) {
-                    // FullScreenImageDialogFragment 호출
-                    val dialog = FullScreenImageDialogFragment.newInstance(imageUri)
+                // 부모 Fragment에서 안전한 프로필 이미지 URI 얻기
+                val secureUri = parentFragment?.getSecureProfileImageUri()
+                if (secureUri != null) {
+                    // FullScreenImageDialogFragment 호출 (안전한 URI 전달)
+                    val dialog = FullScreenImageDialogFragment.newInstance(secureUri)
                     dialog.show(parentFragmentManager, "FullScreenImageDialog")
                 } else {
                     Toast.makeText(context, "프로필 이미지를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
@@ -76,4 +73,19 @@ class MyPageBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
+    // 프로필 사진 변경
+    private fun profileModifyClick() {
+        fragmentMyPageBottomSheetBinding.apply {
+            profileModify.setOnClickListener {
+                // 앨범 연결
+                // 갤러리 Intent 생성
+                val intent = Intent(Intent.ACTION_PICK).apply {
+                    type = "image/*"
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                // ActivityResultLauncher로 Intent 실행
+                pickImageLauncher.launch(intent)
+            }
+        }
+    }
 }

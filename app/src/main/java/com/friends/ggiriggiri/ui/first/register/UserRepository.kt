@@ -10,9 +10,9 @@ import javax.inject.Singleton
 
 @Singleton
 class UserRepository() {
-    companion object{
+    companion object {
         // 회원가입(유저추가)
-        suspend fun addUser(userVO: UserVO){
+        suspend fun addUser(userVO: UserVO) {
             val firestore = FirebaseFirestore.getInstance()
             val collectionReference = firestore.collection("UserData")
             collectionReference.add(userVO)
@@ -69,19 +69,19 @@ class UserRepository() {
 
 
         // 아이디 중복체크(true: 사용가능,false: 사용불가능)
-        suspend fun duplicationCheckUserId(userId:String):Boolean{
+        suspend fun duplicationCheckUserId(userId: String): Boolean {
             val firestore = FirebaseFirestore.getInstance()
             val collectionReference = firestore.collection("UserData")
 
             val result = collectionReference
-                .whereEqualTo("userId",userId)
+                .whereEqualTo("userId", userId)
                 .get()
                 .await()
 
             if (result.isEmpty) {
                 // 사용가능
                 return true
-            }else{
+            } else {
                 // 사용 불가능
                 return false
             }
@@ -110,7 +110,10 @@ class UserRepository() {
         }
 
         // 아이디와 전화번호로 해당유저가 있는지 검색하기(FindPwFragment)
-        suspend fun findUserByIdAndPhoneNumber(userId: String, userPhoneNumber: String): Map<String, UserVO?>? {
+        suspend fun findUserByIdAndPhoneNumber(
+            userId: String,
+            userPhoneNumber: String
+        ): Map<String, UserVO?>? {
             val firestore = FirebaseFirestore.getInstance()
             val collectionReference = firestore.collection("UserData")
 
@@ -144,9 +147,5 @@ class UserRepository() {
                     Log.e("ResetPw", "비밀번호 변경 실패: ${e.message}")
                 }
         }
-
-
-
     }
-
 }

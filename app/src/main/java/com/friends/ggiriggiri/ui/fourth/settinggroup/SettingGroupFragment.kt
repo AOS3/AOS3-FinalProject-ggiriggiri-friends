@@ -1,11 +1,15 @@
 package com.friends.ggiriggiri.ui.fourth.settinggroup
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.commit
+import androidx.fragment.app.viewModels
+import com.friends.ggiriggiri.GroupActivity
 import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.databinding.FragmentSettingGroupBinding
@@ -15,11 +19,15 @@ import com.friends.ggiriggiri.ui.fourth.modifygrouppw.ModifyGroupPwFragment
 import com.friends.ggiriggiri.ui.fourth.modifyuserpw.ModifyUserPwFragment
 import com.friends.ggiriggiri.ui.fourth.mypage.MyPageFragment
 import com.google.android.material.transition.MaterialSharedAxis
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingGroupFragment : Fragment() {
 
     lateinit var fragmentSettingGroupBinding: FragmentSettingGroupBinding
     lateinit var socialActivity: SocialActivity
+
+    private val viewModel: SettingGroupViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,9 +37,19 @@ class SettingGroupFragment : Fragment() {
         fragmentSettingGroupBinding = FragmentSettingGroupBinding.inflate(inflater)
         socialActivity = activity as SocialActivity
 
+        val userDocumentId = socialActivity.getUserDocumentId()
+        if (userDocumentId != null) {
+            viewModel.userDocumentId = userDocumentId
+            viewModel.gettingGroupCode()
+        } else {
+            Log.e("SettingGroupFragment", "userDocumentId is null")
+        }
+
         settingToolbar()
 
         setupGroupOptions()
+
+        setupObservers()
 
         return fragmentSettingGroupBinding.root
     }
@@ -44,6 +62,14 @@ class SettingGroupFragment : Fragment() {
             toolbarGroupSetting.setNavigationOnClickListener {
                 parentFragmentManager.popBackStack()
             }
+        }
+    }
+
+    // LiveData 관찰
+    private fun setupObservers() {
+        // 그룹 코드
+        viewModel.groupCode.observe(viewLifecycleOwner) { group ->
+            fragmentSettingGroupBinding.settingGroupCode.text = group
         }
     }
 
@@ -84,9 +110,20 @@ class SettingGroupFragment : Fragment() {
             contentText = "정말 그룹을 나가시겠습니까?",
             icon = R.drawable.ic_group_off,
             positiveText = "예",
-            onPositiveClick = {
-
-            },
+            onPositiveClick =  {
+                viewModel.exitGroup(
+                onSuccess = {
+                    // 그룹 탈퇴 성공 시 GroupActivity로 이동
+                    val intent = Intent(requireContext(), GroupActivity::class.java)
+                    startActivity(intent)
+                    activity?.finish()
+                },
+                onFailure = { e ->
+                    Log.e("SettingGroupFragment", "그룹 나가기 실패: ${e.message}")
+                    // 실패 시 추가 처리 (예: 토스트 메시지 등)
+                }
+            )
+    },
             negativeText = "아니오",
             onNegativeClick = {
 
