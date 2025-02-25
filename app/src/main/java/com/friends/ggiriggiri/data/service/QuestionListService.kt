@@ -2,6 +2,7 @@ package com.friends.ggiriggiri.data.service
 
 import com.friends.ggiriggiri.data.model.QuestionListModel
 import com.friends.ggiriggiri.data.repository.QuestionListRepository
+import com.friends.ggiriggiri.data.vo.QuestionListVO
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -9,15 +10,7 @@ import javax.inject.Singleton
 class QuestionListService @Inject constructor (
     private val repository: QuestionListRepository
 ) {
-    suspend fun getTodayQuestionList(): QuestionListModel? {
-        val questionListVO = repository.getTodayQuestionList()
-        return questionListVO?.let {
-            QuestionListModel(
-                color = it.questionColor,
-                content = it.questionContent,
-                imgUrl = it.questionImg,
-                number = it.questionNumber
-            )
-        }
+    suspend fun getTodayQuestion(groupId: String): QuestionListVO? {
+        return repository.getTodayQuestionList(groupId)
     }
 }

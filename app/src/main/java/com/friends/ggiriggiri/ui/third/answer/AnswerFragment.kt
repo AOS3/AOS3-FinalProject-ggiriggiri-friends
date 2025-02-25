@@ -1,11 +1,14 @@
 package com.friends.ggiriggiri.ui.third.answer
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.friends.ggiriggiri.LoginActivity
+import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.databinding.FragmentAnswerBinding
 import com.github.penfeizhou.animation.apng.APNGDrawable
 import com.github.penfeizhou.animation.loader.ByteBufferLoader

@@ -8,4 +8,15 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
     <style name="Theme.Finalproject_ggiriggiri_friends" parent="Base.Theme.Finalproject_ggiriggiri_friends" />
+
+    <!-- Splash Screen 테마 -->
+    <style name="Theme.Splash" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/mainColor</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_main_launcher</item>
+        <item name="windowSplashScreenAnimationDuration">500</item>
+        <item name="android:navigationBarColor">@color/mainColor</item>
+        <item name="android:statusBarColor">@color/mainColor</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
 </resources>

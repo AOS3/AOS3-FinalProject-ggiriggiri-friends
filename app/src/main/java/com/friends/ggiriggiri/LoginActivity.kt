@@ -52,13 +52,13 @@ class LoginActivity : AppCompatActivity() {
 //            insets
 //        }
         //초기화면 세팅
-//        supportFragmentManager.commit {
-//            replace(R.id.fcvLoginActivity, LoginFragment())
-//        }
-        //알림화면 테스트
         supportFragmentManager.commit {
-            replace(R.id.fcvLoginActivity, NotificationTestFragment())
+            replace(R.id.fcvLoginActivity, LoginFragment())
         }
+        //알림화면 테스트
+//        supportFragmentManager.commit {
+//            replace(R.id.fcvLoginActivity, NotificationTestFragment())
+//        }
     }
 
     // 프래그먼트 교체 함수

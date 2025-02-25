@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.friends.ggiriggiri.App
+import com.friends.ggiriggiri.data.model.ResponseModel
 import com.friends.ggiriggiri.databinding.FragmentResponseBinding
+import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
+import com.google.firebase.Firebase
+import com.google.firebase.storage.storage
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.IOException
@@ -28,6 +34,11 @@ class ResponseFragment : Fragment() {
 
     private lateinit var binding: FragmentResponseBinding
     private val viewModel: ResponseViewModel by viewModels()
+
+    private var requestUserDocumentId: String? = null
+    private var requestMessage: String? = null
+    private var requestId: String? = null
+    private lateinit var progressDialog: CustomDialogProgressbar
 
     // 사진이 저장될 경로
     private lateinit var filePath: String
@@ -41,13 +52,31 @@ class ResponseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentResponseBinding.inflate(inflater, container, false)
+        progressDialog = CustomDialogProgressbar(requireContext())
 
         // 파일 저장 경로 설정
         filePath = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString()
 
+        requestUserDocumentId = arguments?.getString("requestUserDocumentId")
+        requestMessage = arguments?.getString("requestMessage")
+        requestId = arguments?.getString("requestId")
+
+        if (requestId.isNullOrEmpty()) {
+            Log.d("ResponseFragment", "요청 ID가 없음")
+            Toast.makeText(requireContext(), "오류: 요청 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+            navigateToHomeFragment()
+            return binding.root
+        }
+
         setupObservers()
         setupListeners()
         createCameraLauncher()
+
+        // 요청한 사용자 정보 가져오기
+        requestUserDocumentId?.let { viewModel.fetchRequestUserInfo(it) }
+
+        // 요청 메시지 UI 적용
+        binding.tvRespondRequestContent.text = requestMessage ?: "내용 없음"
 
         return binding.root
     }
@@ -62,6 +91,10 @@ class ResponseFragment : Fragment() {
 
         viewModel.isSubmitEnabled.observe(viewLifecycleOwner) { isEnabled ->
             binding.btnRespondSubmit.isEnabled = isEnabled
+        }
+
+        viewModel.requestUser.observe(viewLifecycleOwner) { userName ->
+            binding.tvRespondRequester.text = "$userName 님의 요청"
         }
     }
 
@@ -102,8 +135,54 @@ class ResponseFragment : Fragment() {
         })
 
         binding.btnRespondSubmit.setOnClickListener {
-            navigateToHomeFragment()
+            val responseText = binding.etRespondInput.text.toString()
+            if (requestId != null && requestUserDocumentId != null) {
+                binding.btnRespondSubmit.isEnabled = false
+                progressDialog.show()
+                saveResponse(responseText)
+            } else {
+                Toast.makeText(requireContext(), "요청 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
+    }
+
+    private fun saveResponse(responseMessage: String) {
+        val loginUser = (requireActivity().application as App).loginUserModel
+
+        if (responseMessage.isNotEmpty()) {
+            contentUri?.let { uri ->
+                uploadImageToFirebase(uri) { imageUrl ->
+                    viewModel.submitResponse(requestId!!, loginUser.userDocumentId, responseMessage, imageUrl)
+                    progressDialog.dismiss()
+                    Toast.makeText(requireContext(), "응답이 저장되었습니다!", Toast.LENGTH_SHORT).show()
+                    navigateToHomeFragment()
+                }
+            }
+        } else {
+            progressDialog.dismiss()
+            binding.btnRespondSubmit.isEnabled = true
+            Toast.makeText(requireContext(), "응답 내용을 입력해주세요!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun uploadImageToFirebase(imageUri: Uri, onSuccess: (String) -> Unit) {
+        val storageRef = Firebase.storage.reference.child("response_images/${System.currentTimeMillis()}.jpg")
+
+        storageRef.putFile(imageUri)
+            .addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener { uri ->
+                    onSuccess(uri.toString())
+                }.addOnFailureListener {
+                    progressDialog.dismiss()
+                    binding.btnRespondSubmit.isEnabled = true
+                    Toast.makeText(requireContext(), "이미지 URL 가져오기 실패!", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener {
+                progressDialog.dismiss()
+                binding.btnRespondSubmit.isEnabled = true
+                Toast.makeText(requireContext(), "이미지 업로드 실패!", Toast.LENGTH_SHORT).show()
+            }
     }
 
     // 카메라 실행

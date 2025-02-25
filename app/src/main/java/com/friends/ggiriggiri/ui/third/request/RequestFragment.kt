@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.databinding.FragmentRequestBinding
+import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
 import com.friends.ggiriggiri.ui.first.register.UserModel
 import com.google.firebase.Firebase
 import com.google.firebase.storage.storage
@@ -32,6 +33,7 @@ class RequestFragment : Fragment() {
 
     private lateinit var binding: FragmentRequestBinding
     private val viewModel: RequestViewModel by viewModels()
+    private lateinit var progressDialog: CustomDialogProgressbar
 
     // 사진이 저장될 경로
     private lateinit var filePath: String
@@ -43,6 +45,7 @@ class RequestFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRequestBinding.inflate(inflater, container, false)
+        progressDialog = CustomDialogProgressbar(requireContext())
 
         filePath = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString()
 
@@ -87,9 +90,14 @@ class RequestFragment : Fragment() {
         })
 
         binding.btnRequestSubmit.setOnClickListener {
+            binding.btnRequestSubmit.isEnabled = false
+            progressDialog.show()
             saveRequestToFirestore { success ->
+                progressDialog.dismiss()
                 if (success) {
-                    navigateToHomeFragment() // 🔥 Firestore 저장 완료 후 화면 이동
+                    navigateToHomeFragment()
+                } else {
+                    binding.btnRequestSubmit.isEnabled = true
                 }
             }
         }
@@ -131,11 +139,15 @@ class RequestFragment : Fragment() {
                 uploadImageToFirebase(uri, { imageUrl ->
                     saveRequest(requestMessage, imageUrl, loginUser, onComplete)
                 }, {
+                    progressDialog.dismiss()
+                    binding.btnRequestSubmit.isEnabled = true
                     Toast.makeText(requireContext(), "이미지 업로드 실패!", Toast.LENGTH_SHORT).show()
                     onComplete(false)
                 })
-            } ?: saveRequest(requestMessage, "", loginUser, onComplete)
+            }
         } else {
+            progressDialog.dismiss()
+            binding.btnRequestSubmit.isEnabled = true
             Toast.makeText(requireContext(), "메시지를 입력해주세요!", Toast.LENGTH_SHORT).show()
             onComplete(false)
         }
@@ -153,13 +165,14 @@ class RequestFragment : Fragment() {
                 onComplete(true)
             },
             onFailure = {
+                progressDialog.dismiss()
+                binding.btnRequestSubmit.isEnabled = true
                 Toast.makeText(requireContext(), "요청 저장 실패!", Toast.LENGTH_SHORT).show()
                 onComplete(false)
             }
         )
     }
 
-    // Firebase Storage에 이미지 업로드 후 다운로드 URL 반환
     private fun uploadImageToFirebase(imageUri: Uri, onSuccess: (String) -> Unit, onFailure: () -> Unit) {
         val storageRef = Firebase.storage.reference.child("request_images/${System.currentTimeMillis()}.jpg")
 

@@ -24,3 +24,10 @@ enum class RequestState(val value: Int) {
         }
     }
 }
+
+// 그룹 상태값
+enum class GroupState(val num: Int, val str:String){
+    NORMAL(1,"활성화"),
+    WITHDRAW(2,"비활성화")
+}
+

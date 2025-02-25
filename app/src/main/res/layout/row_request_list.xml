@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvRequestListName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="홍길동"
+            android:textAppearance="@style/CustomTextBold"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="님" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvRequestListSummary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:singleLine="true"
+        android:text="대충 오늘 뭐했는지 요청하는 내용"
+        android:textAppearance="@style/CustomTextRegular"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/tvRequestListTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:text="2025.02.07 12:30"
+        android:textAlignment="viewEnd"
+        android:textAppearance="@style/CustomTextRegular"
+        android:textSize="14dp" />
+</LinearLayout>
