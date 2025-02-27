@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:gravity="end"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvRowQuestionAnswerUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"
+                android:singleLine="true"
+                android:text="이름이름"
+                android:textAlignment="viewEnd"
+                android:textAppearance="@style/CustomTextRegular"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/tvRowQuestionAnswerComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:singleLine="false"
+                android:text="라면라면라면라면라면라면라면라면라면"
+                android:textAlignment="viewEnd"
+                android:textAppearance="@style/CustomTextRegular"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivRowQuestionAnswerProfile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/rounded_image"
+            tools:srcCompat="@drawable/ic_default_profile" />
+
+    </LinearLayout>
+</LinearLayout>

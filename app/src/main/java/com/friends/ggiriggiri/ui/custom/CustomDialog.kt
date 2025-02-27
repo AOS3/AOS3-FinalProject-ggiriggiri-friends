@@ -30,6 +30,9 @@ class CustomDialog(
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(binding.root)
 
+        // 바깥 터치 안되게
+        dialog.setCancelable(false)
+
         // 아이콘 설정
         binding.imageViewDialogIcon.setImageResource(icon)
 

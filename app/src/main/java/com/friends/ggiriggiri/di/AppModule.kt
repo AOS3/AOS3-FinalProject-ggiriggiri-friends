@@ -2,6 +2,7 @@ package com.friends.ggiriggiri.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.data.repository.GoogleLoginRepository
 import com.friends.ggiriggiri.data.repository.RequestDetailRepository
 import com.friends.ggiriggiri.data.repository.RequestListRepository
@@ -72,5 +73,11 @@ object AppModule {
     @Singleton
     fun provideRequestDetailService(repository: RequestDetailRepository): RequestDetailService {
         return RequestDetailService(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideApp(@ApplicationContext context: Context): App {
+        return context.applicationContext as App
     }
 }
