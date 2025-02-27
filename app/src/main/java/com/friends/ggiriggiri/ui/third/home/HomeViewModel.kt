@@ -1,13 +1,17 @@
 package com.friends.ggiriggiri.ui.third.home
 
 import android.util.Log
+import android.util.Printer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.friends.ggiriggiri.App
+import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.data.model.QuestionListModel
 import com.friends.ggiriggiri.data.model.RequestModel
 import com.friends.ggiriggiri.data.repository.RequestRepository
+import com.friends.ggiriggiri.data.service.AnswerService
 import com.friends.ggiriggiri.data.service.HomeService
 import com.friends.ggiriggiri.data.service.QuestionListService
 import com.friends.ggiriggiri.data.service.RequestService
@@ -17,12 +21,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Private
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val questionListService: QuestionListService,
     private val requestService: RequestService,
-    private val homeService: HomeService
+    private val homeService: HomeService,
+    private val answerService: AnswerService,
 ) : ViewModel() {
 
     private val _groupName = MutableLiveData<String?>()
@@ -42,6 +48,9 @@ class HomeViewModel @Inject constructor(
 
     private val _latestRequest = MutableLiveData<RequestModel?>()
     val latestRequest: LiveData<RequestModel?> get() = _latestRequest
+
+    private val _isUserAnswered = MutableLiveData<Boolean>()
+    val isUserAnswered: LiveData<Boolean> get() = _isUserAnswered
 
 //    init {
 //        fetchTodayQuestionList()
@@ -84,6 +93,7 @@ class HomeViewModel @Inject constructor(
     fun loadTodayQuestion(groupId: String) {
         viewModelScope.launch {
             val todayQuestion = questionListService.getTodayQuestion(groupId)
+            Log.d("HomeViewModel", todayQuestion.toString()) // ✅ 로그 추가
             Log.d("HomeViewModel", "📌 Firestore에서 가져온 질문: $todayQuestion") // ✅ 로그 추가
             _question.value = todayQuestion
         }
@@ -91,6 +101,22 @@ class HomeViewModel @Inject constructor(
 
     fun checkUserResponseExists(requestId: String, userId: String, onResult: (Boolean) -> Unit) {
         requestService.checkUserResponseExists(requestId, userId, onResult)
+    }
+
+    fun checkUserAnswerExists(socialActivity: SocialActivity) {
+        viewModelScope.launch {
+            val loginUser = (socialActivity.application as App).loginUserModel
+            val groupDayFromCreate = answerService.gettingGroupDayFromCreate(loginUser.userGroupDocumentID)
+            val questionDataID = answerService.gettingQuestionDocumentIds(loginUser.userGroupDocumentID, groupDayFromCreate)
+
+            Log.d("checkUserAnswerExists","${questionDataID[0]} , ${loginUser.userDocumentId} 홈뷰모델")
+
+
+            answerService.checkUserAnswerExists(questionDataID[0], loginUser.userDocumentId) { exists ->
+                _isUserAnswered.postValue(exists)
+                Log.d("checkUserAnswerExists","${exists} 홈뷰모델")
+            }
+        }
     }
 
     fun loadLatestRequest(userGroupId: String) {

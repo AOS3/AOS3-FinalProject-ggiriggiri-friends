@@ -41,7 +41,7 @@ class RequestListRepository @Inject constructor(private val firestore: FirebaseF
             }
         }
 
-        return requestList
+        return requestList.sortedByDescending { it.requestTime }
     }
 
     private suspend fun fetchResponses(requestId: String): List<ResponseModel> {

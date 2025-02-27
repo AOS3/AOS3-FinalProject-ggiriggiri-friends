@@ -1,15 +1,17 @@
 package com.friends.ggiriggiri.ui.third.answer
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.friends.ggiriggiri.LoginActivity
+import com.friends.ggiriggiri.App
+import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.databinding.FragmentAnswerBinding
+import com.friends.ggiriggiri.ui.custom.CustomDialog
+import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
 import com.github.penfeizhou.animation.apng.APNGDrawable
 import com.github.penfeizhou.animation.loader.ByteBufferLoader
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,15 +24,20 @@ class AnswerFragment : Fragment() {
     private var _binding: FragmentAnswerBinding? = null
     private val binding get() = _binding!!
     private val answerViewModel: AnswerViewModel by viewModels()
+    private lateinit var socialActivity: SocialActivity
+    private lateinit var progressDialog: CustomDialogProgressbar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAnswerBinding.inflate(inflater, container, false)
+        socialActivity = activity as SocialActivity
+        progressDialog = CustomDialogProgressbar(socialActivity)
 
         setupObservers()
         setupUI()
+        settingBtnAnswerSubmit()
 
         // 뒤로가기
         binding.tbAnswer.setNavigationOnClickListener {
@@ -54,6 +61,28 @@ class AnswerFragment : Fragment() {
             }
         }
     }
+    // 저장버튼 클릭
+    private fun settingBtnAnswerSubmit(){
+        binding.btnAnswerSubmit.setOnClickListener {
+            val customDialog = CustomDialog(
+                context = socialActivity,
+                onPositiveClick = {
+                    val answer = binding.etAnswerInput.text.toString()
+                    progressDialog.show() // 프로그래스바 표시
+                    answerViewModel.btnAnswerSubmitOnCLick(socialActivity, answer) {
+                        progressDialog.dismiss() // 네트워크 요청 완료 후 프로그래스바 닫기
+                    }
+                },
+                positiveText = "네",
+                onNegativeClick = {},
+                negativeText = "취소",
+                contentText = "답변을 보내시겠습니까?",
+                icon = R.drawable.ic_edit
+            )
+            customDialog.showCustomDialog()
+        }
+
+    }
 
     // Fragment에 전달된 arguments에서 질문 텍스트와 이미지 URL을 추출하여 ViewModel에 설정
     private fun setupUI() {
@@ -68,7 +97,6 @@ class AnswerFragment : Fragment() {
 
     private fun loadAnimatedPng(imageUrl: String) {
         val imageView = binding.ivAnswerEmoji
-
         Thread {
             try {
                 val inputStream = URL(imageUrl).openStream()

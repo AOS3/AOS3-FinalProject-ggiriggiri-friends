@@ -52,6 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="20dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="100"
         app:boxStrokeColor="@color/black"
         app:cursorColor="@color/mainColor"
         app:hintEnabled="false"
@@ -69,20 +71,6 @@
             android:textColor="@color/black"
             android:textSize="14sp"/>
     </com.google.android.material.textfield.TextInputLayout>
-
-
-    <TextView
-        android:id="@+id/tvAnswerCharCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="30dp"
-        android:text="0/100"
-        android:textColor="@color/gray_500"
-        android:textSize="14sp"
-        android:fontFamily="@font/nanumsquareregular"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tfAnswerInput" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnAnswerSubmit"

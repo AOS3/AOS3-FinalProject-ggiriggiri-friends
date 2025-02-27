@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -52,6 +53,7 @@ class HomeFragment : Fragment() {
         homeViewModel.loadGroupName(userGroupId)
         homeViewModel.loadGroupUserProfiles(userGroupId)
         homeViewModel.loadTodayQuestion(userGroupId)
+        homeViewModel.checkUserAnswerExists(socialActivity)
 
         setupObservers()
         setupClickListeners()
@@ -62,6 +64,30 @@ class HomeFragment : Fragment() {
     private fun setupObservers() {
 
         viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.isUserAnswered.observe(viewLifecycleOwner) { exists ->
+                Log.d("isUserAnswered", exists.toString())
+                binding.apply {
+                    if (exists) {
+                        // 이미 답변을 제출함
+                        // 답변 보는 화면으로감
+                        btnHomeAnswer.text = "다른 친구들의 답변 보기"
+                        btnHomeAnswer.setOnClickListener {
+                        }
+                    } else {
+                        // 답변을 제출하지 않음
+                        btnHomeAnswer.text = "답변 하기"
+                        btnHomeAnswer.setOnClickListener {
+                            val questionContent = binding.tvHomeQuestionContent.text.toString()
+                            val questionImageUrl = homeViewModel.question.value?.questionImg
+
+                            val fragment =
+                                AnswerFragment.newInstance(questionContent, questionImageUrl)
+                            socialActivity.replaceFragment(fragment)
+                        }
+                    }
+                }
+            }
+
             homeViewModel.question.collectLatest { question ->
                 if (question == null) return@collectLatest
 
@@ -143,9 +169,15 @@ class HomeFragment : Fragment() {
             val elapsedMinutes = elapsedTime / 1000 / 60
             val elapsedSeconds = (elapsedTime / 1000) % 60
 
-            Log.d("HomeFragment", "최신 요청 ID: ${latestRequest.requestId}, 요청된 지 ${elapsedMinutes}분 ${elapsedSeconds}초 지남")
+            Log.d(
+                "HomeFragment",
+                "최신 요청 ID: ${latestRequest.requestId}, 요청된 지 ${elapsedMinutes}분 ${elapsedSeconds}초 지남"
+            )
 
-            homeViewModel.checkUserResponseExists(latestRequest.requestId, userId) { hasUserResponded ->
+            homeViewModel.checkUserResponseExists(
+                latestRequest.requestId,
+                userId
+            ) { hasUserResponded ->
                 requireActivity().runOnUiThread {
                     binding.tvHomeRequestContent.text = latestRequest.requestMessage
 
@@ -173,7 +205,10 @@ class HomeFragment : Fragment() {
                                     val responseDetailFragment = AnswerFragment().apply {
                                         arguments = bundle
                                     }
-                                    Log.d("HomeFragment", "응답보기 화면으로 이동: ${latestRequest.requestId}")
+                                    Log.d(
+                                        "HomeFragment",
+                                        "응답보기 화면으로 이동: ${latestRequest.requestId}"
+                                    )
                                     socialActivity.replaceFragment(responseDetailFragment)
                                 }
                             } else {
@@ -185,12 +220,22 @@ class HomeFragment : Fragment() {
                                         override fun onTick(millisUntilFinished: Long) {
                                             val minutes = millisUntilFinished / 1000 / 60
                                             val seconds = (millisUntilFinished / 1000) % 60
-                                            binding.btnHomeRespond.text = "응답하기\n(${String.format("%02d:%02d", minutes, seconds)})"
+                                            binding.btnHomeRespond.text = "응답하기\n(${
+                                                String.format(
+                                                    "%02d:%02d",
+                                                    minutes,
+                                                    seconds
+                                                )
+                                            })"
                                         }
 
                                         override fun onFinish() {
                                             Log.d("HomeFragment", "응답 마감됨 → 요청 대기 상태로 변경")
-                                            binding.ivHomeRequestStatus.setColorFilter(Color.parseColor("#858282"))
+                                            binding.ivHomeRequestStatus.setColorFilter(
+                                                Color.parseColor(
+                                                    "#858282"
+                                                )
+                                            )
                                             binding.btnHomeRespond.text = "응답 마감됨"
                                             binding.btnHomeRespond.isEnabled = false
                                         }
@@ -203,13 +248,19 @@ class HomeFragment : Fragment() {
                                 binding.btnHomeRespond.setOnClickListener {
                                     val bundle = Bundle().apply {
                                         putString("requestId", latestRequest.requestId)
-                                        putString("requestUserDocumentId", latestRequest.requestUserDocumentID)
+                                        putString(
+                                            "requestUserDocumentId",
+                                            latestRequest.requestUserDocumentID
+                                        )
                                         putString("requestMessage", latestRequest.requestMessage)
                                     }
                                     val responseFragment = ResponseFragment().apply {
                                         arguments = bundle
                                     }
-                                    Log.d("HomeFragment", "응답하기 화면으로 이동: ${latestRequest.requestId}")
+                                    Log.d(
+                                        "HomeFragment",
+                                        "응답하기 화면으로 이동: ${latestRequest.requestId}"
+                                    )
                                     socialActivity.replaceFragment(responseFragment)
                                 }
                             }
@@ -224,26 +275,37 @@ class HomeFragment : Fragment() {
                             val cooldownTimeRemaining = nextRequestTime - now
 
                             if (cooldownTimeRemaining > 0) {
-                                countDownTimer = object : CountDownTimer(cooldownTimeRemaining, 1000) {
-                                    override fun onTick(millisUntilFinished: Long) {
-                                        val minutes = millisUntilFinished / 1000 / 60
-                                        val seconds = (millisUntilFinished / 1000) % 60
-                                        binding.tvHomeRequestContent.text = "다음 요청을 기다려주세요"
-                                        binding.btnHomeRespond.text = "요청하기\n(${String.format("%02d:%02d", minutes, seconds)})"
-                                        binding.btnHomeRespond.isEnabled = false
-                                    }
-
-                                    override fun onFinish() {
-                                        binding.ivHomeRequestStatus.setColorFilter(Color.parseColor("#858282"))
-                                        binding.btnHomeRespond.text = "요청하기"
-                                        binding.tvHomeRequestContent.text = "요청이 없습니다!!"
-                                        binding.btnHomeRespond.isEnabled = true
-                                        binding.btnHomeRespond.setOnClickListener {
-                                            Log.d("HomeFragment", "요청하기 화면으로 이동")
-                                            socialActivity.replaceFragment(RequestFragment())
+                                countDownTimer =
+                                    object : CountDownTimer(cooldownTimeRemaining, 1000) {
+                                        override fun onTick(millisUntilFinished: Long) {
+                                            val minutes = millisUntilFinished / 1000 / 60
+                                            val seconds = (millisUntilFinished / 1000) % 60
+                                            binding.tvHomeRequestContent.text = "다음 요청을 기다려주세요"
+                                            binding.btnHomeRespond.text = "요청하기\n(${
+                                                String.format(
+                                                    "%02d:%02d",
+                                                    minutes,
+                                                    seconds
+                                                )
+                                            })"
+                                            binding.btnHomeRespond.isEnabled = false
                                         }
-                                    }
-                                }.start()
+
+                                        override fun onFinish() {
+                                            binding.ivHomeRequestStatus.setColorFilter(
+                                                Color.parseColor(
+                                                    "#858282"
+                                                )
+                                            )
+                                            binding.btnHomeRespond.text = "요청하기"
+                                            binding.tvHomeRequestContent.text = "요청이 없습니다!!"
+                                            binding.btnHomeRespond.isEnabled = true
+                                            binding.btnHomeRespond.setOnClickListener {
+                                                Log.d("HomeFragment", "요청하기 화면으로 이동")
+                                                socialActivity.replaceFragment(RequestFragment())
+                                            }
+                                        }
+                                    }.start()
                             } else {
                                 binding.ivHomeRequestStatus.setColorFilter(Color.parseColor("#858282"))
                                 binding.btnHomeRespond.text = "요청하기"
@@ -285,13 +347,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        binding.btnHomeAnswer.setOnClickListener {
-            val questionContent = binding.tvHomeQuestionContent.text.toString()
-            val questionImageUrl = homeViewModel.question.value?.questionImg
-
-            val fragment = AnswerFragment.newInstance(questionContent, questionImageUrl)
-            socialActivity.replaceFragment(fragment)
-        }
+//        binding.btnHomeAnswer.setOnClickListener {
+//            val questionContent = binding.tvHomeQuestionContent.text.toString()
+//            val questionImageUrl = homeViewModel.question.value?.questionImg
+//
+//            val fragment = AnswerFragment.newInstance(questionContent, questionImageUrl)
+//            socialActivity.replaceFragment(fragment)
+//        }
 
 
         binding.tvHomeProfileSeeAll.setOnClickListener {
@@ -305,6 +367,7 @@ class HomeFragment : Fragment() {
                     socialActivity.replaceFragment(NotificationFragment())
                     true
                 }
+
                 else -> false
             }
         }

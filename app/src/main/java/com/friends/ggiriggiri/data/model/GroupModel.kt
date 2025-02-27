@@ -20,5 +20,5 @@ data class GroupModel (
     // 그룹 갤러리(이미지들)
     var groupGallery: List<String> = listOf(),
     // 그룹이 만들어진지 언제?
-    var groupDayFromCreate: Int = 1
+    var groupDayFromCreate: Int = 2
 )

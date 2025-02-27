@@ -29,7 +29,8 @@ class QuestionListRepository @Inject constructor(
             Log.d("QuestionListRepository", "groupDayFromCreate 값: $groupDayFromCreate")
 
             // 2. 질문 번호 결정 (5개 질문이므로 1~5 반복)
-            val questionNumber = (groupDayFromCreate - 1) % 5 + 1
+            var questionNumber = (groupDayFromCreate - 1) % 50 + 1
+            questionNumber -= 1
             Log.d("QuestionListRepository", "오늘의 질문 번호: $questionNumber")
 
             // 3. 해당 질문을 Firestore에서 가져옴

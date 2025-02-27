@@ -2,6 +2,7 @@ package com.friends.ggiriggiri.data.repository
 
 import android.util.Log
 import com.friends.ggiriggiri.data.model.GroupModel
+import com.friends.ggiriggiri.data.model.QuestionModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
@@ -35,7 +36,7 @@ class MakeGroupRepository @Inject constructor(
 
             val updatedGroup = group.copy(
                 groupCreateTime = System.currentTimeMillis(),
-                groupDayFromCreate = 1
+                groupDayFromCreate = 2
             )
 
             groupRef.set(updatedGroup, SetOptions.merge()).await()
@@ -46,6 +47,26 @@ class MakeGroupRepository @Inject constructor(
             Log.e("MakeGroupRepository", "그룹 생성 실패", e)
             null
         }
+    }
+
+    // 그룹을 처음 만들 때 첫 질문 데이터를 만든다
+    suspend fun addFirstQuestionData(groupID: String) {
+        val questionModel = QuestionModel().apply {
+            questionGroupDocumentID = groupID
+            questionListDocumentID = 1
+            questionCreateTime = System.currentTimeMillis()
+        }
+
+        val questionVO = questionModel.toQuestionVO()
+
+        val groupRef = db.collection("QuestionData").document() // 문서 ID 자동 생성
+        groupRef.set(questionVO)
+            .addOnSuccessListener {
+                Log.d("Firestore", "첫 질문 데이터 추가 성공")
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "첫 질문 데이터 추가 실패", e)
+            }
     }
 
     // UserData에 groupDocumentID 업데이트

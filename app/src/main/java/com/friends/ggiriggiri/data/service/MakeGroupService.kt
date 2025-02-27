@@ -28,10 +28,15 @@ class MakeGroupService @Inject constructor(
                 groupPw = groupPw,
                 groupUserDocumentID = listOf(userId),
                 groupCreateTime = System.currentTimeMillis(),
-                groupDayFromCreate = 1 // 기본값 1
+                groupDayFromCreate = 2 // 기본값 1
             )
 
             val groupDocumentId = repository.createGroup(newGroup)
+
+            //첫날은 질문데이터를 앱에서 만든다
+            if (groupDocumentId != null) {
+                repository.addFirstQuestionData(groupDocumentId)
+            }
 
             if (!groupDocumentId.isNullOrEmpty()) {
                 Log.d("MakeGroupService", "✅ 그룹 생성 성공! 문서 ID: $groupDocumentId")
@@ -50,6 +55,11 @@ class MakeGroupService @Inject constructor(
             Log.e("MakeGroupService", "❌ 그룹 생성 중 오류 발생", e)
             null
         }
+    }
+
+    // 그룹을 처음 만들 때 첫 질문 데이터를 만든다
+    suspend fun addFirstQuestionData(groupID: String) {
+        repository.addFirstQuestionData(groupID)
     }
 
     suspend fun getUserDocumentID(email: String): String? {

@@ -46,19 +46,15 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.videoViewSplashMain)) { v, insets ->
 //            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 //            insets
 //        }
         //초기화면 세팅
-        supportFragmentManager.commit {
-            replace(R.id.fcvLoginActivity, LoginFragment())
-        }
+        supportFragmentManager.commit { replace(R.id.fcvLoginActivity, LoginFragment()) }
         //알림화면 테스트
-//        supportFragmentManager.commit {
-//            replace(R.id.fcvLoginActivity, NotificationTestFragment())
-//        }
+        //supportFragmentManager.commit { replace(R.id.fcvLoginActivity, NotificationTestFragment()) }
     }
 
     // 프래그먼트 교체 함수
