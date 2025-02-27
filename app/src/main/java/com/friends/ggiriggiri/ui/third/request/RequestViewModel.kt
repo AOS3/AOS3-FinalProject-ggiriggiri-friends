@@ -52,9 +52,9 @@ class RequestViewModel @Inject constructor(
         onFailure: () -> Unit
     ) {
         viewModelScope.launch {
-            val requestId = requestService.createRequest(userDocumentId, requestMessage, requestImage, groupDocumentId)
+            val requestId = requestService.saveRequest(userDocumentId, requestMessage, requestImage, groupDocumentId)
             if (requestId != null) {
-                onSuccess(requestId) // 저장된 `requestId` 콜백 전달
+                onSuccess(requestId)
             } else {
                 onFailure()
             }

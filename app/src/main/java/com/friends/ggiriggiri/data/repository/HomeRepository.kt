@@ -2,6 +2,7 @@ package com.friends.ggiriggiri.data.repository
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class HomeRepository @Inject constructor(private val db: FirebaseFirestore) {
@@ -71,6 +72,21 @@ class HomeRepository @Inject constructor(private val db: FirebaseFirestore) {
                         onComplete(userList)
                     }
                 }
+        }
+    }
+
+    suspend fun getRandomGalleryImages(groupId: String, count: Int = 5): List<String> {
+        return try {
+            val document = db.collection("GroupData").document(groupId).get().await()
+            val galleryList = document.get("groupGallery") as? List<String> ?: emptyList()
+
+            Log.d("GroupRepository", "전체 이미지 리스트: $galleryList")
+
+            // 랜덤으로 5개 선택
+            galleryList.shuffled().take(count)
+        } catch (e: Exception) {
+            Log.e("GroupRepository", "이미지 가져오기 실패: ${e.message}")
+            emptyList()
         }
     }
 }

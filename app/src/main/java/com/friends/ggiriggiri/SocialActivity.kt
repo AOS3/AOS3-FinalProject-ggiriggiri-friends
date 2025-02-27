@@ -1,13 +1,11 @@
 package com.friends.ggiriggiri
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.friends.ggiriggiri.databinding.ActivitySocialBinding
-import com.google.firebase.FirebaseApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,6 +44,11 @@ class SocialActivity : AppCompatActivity() {
                 .replace(R.id.fragmentContainerViewSocialMain, SocialFragment())
                 .commit()
         }
+    }
+
+    fun getUserDocumentId(): String? {
+        val loginUser = (application as App).loginUserModel
+        return loginUser.userDocumentId
     }
 
     fun replaceFragment(fragment: Fragment) {

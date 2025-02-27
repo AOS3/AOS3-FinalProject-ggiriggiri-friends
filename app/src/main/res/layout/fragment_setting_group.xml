@@ -31,6 +31,7 @@
             android:textSize="20sp"
             android:fontFamily="@font/nanumsquareregular" />
         <TextView
+            android:id="@+id/settingGroupCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="내 그룹의 그룹 코드"

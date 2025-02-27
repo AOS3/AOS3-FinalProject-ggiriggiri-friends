@@ -20,7 +20,6 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.friends.ggiriggiri.App
-import com.friends.ggiriggiri.data.model.ResponseModel
 import com.friends.ggiriggiri.databinding.FragmentResponseBinding
 import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
 import com.google.firebase.Firebase
@@ -152,10 +151,22 @@ class ResponseFragment : Fragment() {
         if (responseMessage.isNotEmpty()) {
             contentUri?.let { uri ->
                 uploadImageToFirebase(uri) { imageUrl ->
-                    viewModel.submitResponse(requestId!!, loginUser.userDocumentId, responseMessage, imageUrl)
-                    progressDialog.dismiss()
-                    Toast.makeText(requireContext(), "응답이 저장되었습니다!", Toast.LENGTH_SHORT).show()
-                    navigateToHomeFragment()
+                    viewModel.submitResponse(
+                        requestId!!,
+                        loginUser.userDocumentId,
+                        responseMessage,
+                        imageUrl,
+                        loginUser.userGroupDocumentID
+                    ) { success -> // 성공 여부를 콜백으로 받음
+                        progressDialog.dismiss()
+                        if (success) {
+                            Toast.makeText(requireContext(), "응답이 저장되었습니다!", Toast.LENGTH_SHORT).show()
+                            navigateToHomeFragment() // Fragment에서 직접 호출
+                        } else {
+                            binding.btnRespondSubmit.isEnabled = true
+                            Toast.makeText(requireContext(), "응답 저장 실패!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         } else {

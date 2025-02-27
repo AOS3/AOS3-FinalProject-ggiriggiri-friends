@@ -4,8 +4,6 @@ import android.util.Log
 import com.friends.ggiriggiri.data.model.RequestModel
 import com.friends.ggiriggiri.data.model.ResponseModel
 import com.friends.ggiriggiri.data.repository.RequestRepository
-import com.friends.ggiriggiri.ui.first.register.UserModel
-import com.friends.ggiriggiri.util.RequestState
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,7 +13,7 @@ class RequestService @Inject constructor(
 ) {
 
     // Firestore에 요청 저장 후 문서 ID 반환
-    suspend fun createRequest(
+    suspend fun saveRequest(
         userId: String,
         requestMessage: String,
         requestImage: String,
@@ -25,19 +23,24 @@ class RequestService @Inject constructor(
             requestUserDocumentID = userId,
             requestMessage = requestMessage,
             requestImage = requestImage,
-            requestState = RequestState.ACTIVE.value,
             requestGroupDocumentID = groupDocumentId
         )
-        return requestRepository.saveRequest(requestModel) // 저장 후 문서 ID 반환
+        return requestRepository.saveRequest(requestModel, groupDocumentId, requestImage)
+    }
+
+    // Firestore에 응답 저장
+    suspend fun saveResponse(
+        requestId: String,
+        responseModel: ResponseModel,
+        groupDocumentId: String,
+        responseImage: String
+    ): Boolean {
+        return requestRepository.saveResponse(requestId, responseModel, groupDocumentId, responseImage)
     }
 
     // 요청한 사용자의 정보 가져오기
     fun fetchRequestUserInfo(documentId: String, onResult: (String?) -> Unit) {
         requestRepository.getRequestUserInfo(documentId, onResult)
-    }
-
-    fun submitResponse(requestId: String, response: ResponseModel, onComplete: (Boolean) -> Unit) {
-        requestRepository.saveResponse(requestId, response, onComplete)
     }
 
     fun checkUserResponseExists(requestId: String, userId: String, onResult: (Boolean) -> Unit) {
@@ -53,5 +56,9 @@ class RequestService @Inject constructor(
             }
             onResult(request)
         }
+    }
+
+    fun hasUserRequestedToday(userId: String, groupId: String, onResult: (Boolean) -> Unit) {
+        requestRepository.hasUserRequestedToday(userId, groupId, onResult)
     }
 }

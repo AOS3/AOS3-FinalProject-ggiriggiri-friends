@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,9 +23,20 @@ import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.databinding.FragmentRequestBinding
 import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
 import com.friends.ggiriggiri.ui.first.register.UserModel
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.storage
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 
@@ -129,28 +141,25 @@ class RequestFragment : Fragment() {
         })
     }
 
-    // Firestore에 요청 저장
+    // Firestore에 요청 저장 후 그룹원들에게 알림 전송
     private fun saveRequestToFirestore(onComplete: (Boolean) -> Unit) {
         val loginUser = (requireActivity().application as App).loginUserModel
         val requestMessage = binding.etRequestInput.text.toString()
 
-        if (requestMessage.isNotEmpty()) {
-            contentUri?.let { uri ->
-                uploadImageToFirebase(uri, { imageUrl ->
-                    saveRequest(requestMessage, imageUrl, loginUser, onComplete)
-                }, {
-                    progressDialog.dismiss()
-                    binding.btnRequestSubmit.isEnabled = true
-                    Toast.makeText(requireContext(), "이미지 업로드 실패!", Toast.LENGTH_SHORT).show()
-                    onComplete(false)
-                })
+        // 이미지와 메시지가 필수이므로 예외처리 필요 없음
+        uploadImageToFirebase(contentUri, { imageUrl ->
+            saveRequest(requestMessage, imageUrl, loginUser) { success ->
+                if (success) {
+                    sendGroupPushNotification(loginUser.userGroupDocumentID, requestMessage)
+                }
+                onComplete(success)
             }
-        } else {
+        }, {
             progressDialog.dismiss()
             binding.btnRequestSubmit.isEnabled = true
-            Toast.makeText(requireContext(), "메시지를 입력해주세요!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "이미지 업로드 실패!", Toast.LENGTH_SHORT).show()
             onComplete(false)
-        }
+        })
     }
 
     // Firestore에 저장 함수 (이미지 URL 포함)
@@ -272,5 +281,133 @@ class RequestFragment : Fragment() {
     // HomeFragment로 이동
     private fun navigateToHomeFragment() {
         requireActivity().onBackPressedDispatcher.onBackPressed()
+    }
+
+    private fun sendGroupPushNotification(groupDocumentId: String, message: String) {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("GroupData").document(groupDocumentId).get()
+            .addOnSuccessListener { document ->
+                val userDocumentIds = document.get("groupUserDocumentID") as? List<String>
+                if (userDocumentIds.isNullOrEmpty()) return@addOnSuccessListener
+
+                val batchSize = 20
+                userDocumentIds.chunked(batchSize).forEach { batchIds ->
+                    val userFetchTasks = batchIds.map { userId ->
+                        db.collection("UserData").document(userId).get()
+                    }
+
+                    Tasks.whenAllSuccess<DocumentSnapshot>(userFetchTasks)
+                        .addOnSuccessListener { results ->
+                            val fcmTokens = results.filter { it.exists() }
+                                .flatMap { userDoc ->
+                                    val fcmCodeList = userDoc.get("userFcmCode")
+                                    when (fcmCodeList) {
+                                        is List<*> -> fcmCodeList.filterIsInstance<String>()
+                                        is String -> listOf(fcmCodeList)
+                                        else -> emptyList()
+                                    }
+                                }
+
+                            if (fcmTokens.isNotEmpty()) {
+                                sendPushNotification(fcmTokens, "새로운 요청이 도착했습니다!", message)
+                            }
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("FCM", "FCM 토큰 조회 실패: ${e.message}")
+                        }
+                }
+            }
+    }
+
+    private fun sendPushNotification(targetTokens: List<String>, title: String, message: String) {
+        if (targetTokens.isEmpty()) {
+            Log.e("FCM", "알림 전송 실패: targetTokens가 비어 있음!")
+            return
+        }
+
+        val client = OkHttpClient()
+
+        // 중복 제거 후 전송
+        val uniqueTokens = targetTokens.distinct()
+
+        uniqueTokens.forEach { token ->
+            val data = JSONObject().apply {
+                put("title", title)
+                put("body", message)
+                put("token", token)
+            }
+
+            val requestBody = data.toString()
+            Log.d("FCM", "FCM 전송 데이터: $requestBody") // 실제 전송 데이터 확인
+
+            val request = Request.Builder()
+                .url("https://asia-northeast3-ggiriggiri-c33b2.cloudfunctions.net/sendNotification")
+                .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
+                .addHeader("Content-Type", "application/json")
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.e("FCM", "알림 전송 실패 (네트워크 문제): ${e.message}")
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val responseBody = response.body?.string()
+                    Log.d("FCM", "서버 응답 코드: ${response.code}")
+                    Log.d("FCM", "서버 응답 내용: $responseBody")
+
+                    if (response.isSuccessful) {
+                        Log.d("FCM", "알림 전송 성공!")
+                    } else {
+                        Log.e("FCM", "알림 전송 실패 (서버 오류): HTTP ${response.code} - $responseBody")
+
+                        // 무효한 토큰이면 Firestore에서 삭제
+                        if (responseBody?.contains("Requested entity was not found.") == true) {
+                            Log.e("FCM", "유효하지 않은 토큰 발견: $token")
+                            removeInvalidToken(token)
+                        }
+                    }
+                }
+            })
+        }
+    }
+
+    private fun removeInvalidToken(token: String) {
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("UserData")
+            .whereArrayContains("userFcmCode", token)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val userId = document.id
+                    val existingTokens = document.get("userFcmCode") as? List<String> ?: emptyList()
+                    val updatedTokens = existingTokens.filter { it != token }
+
+                    db.collection("UserData").document(userId)
+                        .update("userFcmCode", updatedTokens)
+                        .addOnSuccessListener {
+                            Log.d("FCM", "무효한 토큰 제거 완료: $token")
+
+                            // Firestore 데이터가 반영되었는지 확인
+                            db.collection("UserData").document(userId)
+                                .get()
+                                .addOnSuccessListener { updatedDoc ->
+                                    val refreshedTokens = updatedDoc.get("userFcmCode") as? List<String> ?: emptyList()
+                                    if (!refreshedTokens.contains(token)) {
+                                        Log.d("FCM", "Firestore에서 무효한 토큰 최종 제거 확인 완료: $token")
+                                    } else {
+                                        Log.e("FCM", "Firestore에서 무효한 토큰 제거 실패: $token")
+                                    }
+                                }
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("FCM", "무효한 토큰 제거 실패: ${e.message}")
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("FCM", "무효한 토큰 조회 실패: ${e.message}")
+            }
     }
 }

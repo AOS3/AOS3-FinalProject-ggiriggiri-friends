@@ -7,9 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.friends.ggiriggiri.data.model.ResponseModel
 import com.friends.ggiriggiri.data.service.RequestService
-import com.friends.ggiriggiri.ui.first.register.UserModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,8 +57,21 @@ class ResponseViewModel  @Inject constructor(
         }
     }
 
-    fun submitResponse(requestId: String, userId: String, responseMessage: String, imageUrl: String?) {
-        viewModelScope.launch {
+    fun submitResponse(
+        requestId: String,
+        userId: String,
+        responseMessage: String,
+        imageUrl: String?,
+        groupDocumentId: String,
+        onComplete: (Boolean) -> Unit // 성공 여부 콜백 추가
+    ) {
+        viewModelScope.launch(Dispatchers.IO) { // 네트워크 작업은 IO에서 실행
+            Log.d("ResponseViewModel", "submitResponse 호출됨")
+            Log.d("ResponseViewModel", "requestId: $requestId, userId: $userId")
+            Log.d("ResponseViewModel", "responseMessage: $responseMessage")
+            Log.d("ResponseViewModel", "imageUrl: $imageUrl") // 이미지 URL 확인
+            Log.d("ResponseViewModel", "groupDocumentId: $groupDocumentId")
+
             val response = ResponseModel(
                 responseUserDocumentID = userId,
                 responseMessage = responseMessage,
@@ -65,13 +79,15 @@ class ResponseViewModel  @Inject constructor(
                 responseTime = System.currentTimeMillis()
             )
 
-            requestService.submitResponse(requestId, response) { success ->
+            val success = requestService.saveResponse(requestId, response, groupDocumentId, imageUrl ?: "")
+            withContext(Dispatchers.Main) { // UI 업데이트는 메인 스레드에서 실행
                 if (success) {
                     _isSubmitEnabled.value = false // UI에서 버튼 비활성화
                     Log.d("ResponseViewModel", "응답 저장 성공")
                 } else {
                     Log.e("ResponseViewModel", "응답 저장 실패")
                 }
+                onComplete(success) // Fragment에서 처리하도록 콜백 반환
             }
         }
     }
