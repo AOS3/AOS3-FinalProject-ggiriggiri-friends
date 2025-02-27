@@ -11,10 +11,6 @@ class HomeService @Inject constructor(private val homeRepository: HomeRepository
         }
     }
 
-    suspend fun fetchRandomGalleryImages(groupId: String): List<String> {
-        return homeRepository.getRandomGalleryImages(groupId)
-    }
-
     fun fetchGroupUserProfiles(groupId: String, onComplete: (List<Pair<String, String>>) -> Unit) {
         homeRepository.getGroupUsers(groupId) { userIds ->
             if (userIds.isNotEmpty()) {
@@ -25,5 +21,9 @@ class HomeService @Inject constructor(private val homeRepository: HomeRepository
                 onComplete(emptyList()) // 사용자 없음
             }
         }
+    }
+
+    suspend fun fetchRandomGalleryImages(groupId: String): List<String> {
+        return homeRepository.getRandomGalleryImages(groupId)
     }
 }
