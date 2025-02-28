@@ -204,7 +204,6 @@
                         android:enabled="true"
                         android:fontFamily="@font/nanumsquarebold"
                         android:stateListAnimator="@null"
-                        android:text="답변하기"
                         android:textColor="@drawable/custom_home_btn_text"
                         android:textSize="16sp"
                         app:layout_constraintEnd_toEndOf="parent"
