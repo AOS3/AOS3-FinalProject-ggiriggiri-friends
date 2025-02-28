@@ -1,10 +1,14 @@
 package com.friends.ggiriggiri.ui.third.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.friends.ggiriggiri.App
+import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.data.model.RequestModel
+import com.friends.ggiriggiri.data.service.AnswerService
 import com.friends.ggiriggiri.data.service.HomeService
 import com.friends.ggiriggiri.data.service.QuestionListService
 import com.friends.ggiriggiri.data.service.RequestService
@@ -14,12 +18,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Private
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val questionListService: QuestionListService,
     private val requestService: RequestService,
-    private val homeService: HomeService
+    private val homeService: HomeService,
+    private val answerService: AnswerService
 ) : ViewModel() {
 
     private val _groupName = MutableLiveData<String?>()
@@ -43,8 +49,11 @@ class HomeViewModel @Inject constructor(
     private val _isAllDataLoaded = MutableLiveData(false)
     val isAllDataLoaded: LiveData<Boolean> get() = _isAllDataLoaded
 
+    private val _isUserAnswered = MutableLiveData<Boolean>()
+    val isUserAnswered: LiveData<Boolean> get() = _isUserAnswered
+
     private var loadedDataCount = 0
-    private val totalDataCount = 5
+    private val totalDataCount = 6
 
     private fun checkAllDataLoaded() {
         loadedDataCount++
@@ -109,4 +118,21 @@ class HomeViewModel @Inject constructor(
     fun hasUserRequestedToday(userId: String, groupId: String, onResult: (Boolean) -> Unit) {
         requestService.hasUserRequestedToday(userId, groupId, onResult)
     }
+
+    fun checkUserAnswerExists(userID:String,userGroupID:String) {
+        viewModelScope.launch {
+            val groupDayFromCreate = answerService.gettingGroupDayFromCreate(userGroupID)
+            val questionDataID = answerService.gettingQuestionDocumentIds(userGroupID, groupDayFromCreate)
+
+            Log.d("checkUserAnswerExists","${questionDataID[0]} , ${userID} 홈뷰모델")
+
+
+            answerService.checkUserAnswerExists(questionDataID[0], userID) { exists ->
+                _isUserAnswered.postValue(exists)
+                checkAllDataLoaded()
+                Log.d("checkUserAnswerExists","${exists} 홈뷰모델")
+            }
+        }
+    }
+
 }
