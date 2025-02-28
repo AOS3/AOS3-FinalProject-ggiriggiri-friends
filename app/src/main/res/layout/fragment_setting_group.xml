@@ -39,19 +39,26 @@
             android:fontFamily="@font/nanumsquarelight"/>
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:background="@color/gray_100"/>
+
 
     <TextView
         android:id="@+id/modifyGroupPw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:drawableRight="@drawable/ic_arrow_forward_ios_18"
+        android:drawableTint="@color/gray_500"
+        android:fontFamily="@font/nanumsquareregular"
         android:paddingHorizontal="20dp"
         android:paddingVertical="20dp"
-        android:layout_marginTop="150dp"
         android:text="그룹 비밀번호 변경"
-        android:textSize="20sp"
-        android:fontFamily="@font/nanumsquareregular"
-        android:clickable="true"
-        android:background="?attr/selectableItemBackground"/>
+        android:textSize="20sp" />
+
     <TextView
         android:id="@+id/modifyGroupName"
         android:layout_width="match_parent"
@@ -59,6 +66,8 @@
         android:paddingHorizontal="20dp"
         android:paddingVertical="20dp"
         android:text="그룹명 변경"
+        android:drawableRight="@drawable/ic_arrow_forward_ios_18"
+        android:drawableTint="@color/gray_500"
         android:textSize="20sp"
         android:fontFamily="@font/nanumsquareregular"
         android:clickable="true"
@@ -70,6 +79,8 @@
         android:paddingHorizontal="20dp"
         android:paddingVertical="20dp"
         android:text="그룹나가기"
+        android:drawableRight="@drawable/ic_arrow_forward_ios_18"
+        android:drawableTint="@color/gray_500"
         android:textSize="20sp"
         android:fontFamily="@font/nanumsquareregular"
         android:clickable="true"

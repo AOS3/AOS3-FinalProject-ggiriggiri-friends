@@ -53,7 +53,7 @@ class RequestDetailRepository @Inject constructor(private val firestore: Firebas
             responseList.add(response)
         }
 
-        return responseList
+        return responseList.sortedBy { it.responseTime }
     }
 
     private suspend fun fetchUserName(userDocumentID: String): String {

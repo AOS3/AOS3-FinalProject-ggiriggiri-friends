@@ -51,5 +51,7 @@ class UserService @Inject constructor() {
         UserRepository.resetUserPw(userDocumentId,pw)
     }
 
-
+    suspend fun getUserByAutoLoginToken(token: String): UserModel? {
+        return UserRepository.getUserByAutoLoginToken(token)
+    }
 }

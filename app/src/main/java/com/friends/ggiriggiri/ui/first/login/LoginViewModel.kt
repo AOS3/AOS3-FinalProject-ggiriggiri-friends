@@ -1,6 +1,7 @@
 package com.friends.ggiriggiri.ui.first.login
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -11,6 +12,8 @@ import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.GroupActivity
 import com.friends.ggiriggiri.LoginActivity
 import com.friends.ggiriggiri.data.service.GoogleLoginService
+import com.friends.ggiriggiri.data.service.KakaoLoginService
+import com.friends.ggiriggiri.data.service.NaverLoginService
 import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
 import com.friends.ggiriggiri.ui.first.register.UserModel
 import com.friends.ggiriggiri.ui.first.register.UserService
@@ -25,7 +28,10 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val service: UserService,
-    private val googleLoginService: GoogleLoginService
+    private val googleLoginService: GoogleLoginService,
+    private val naverLoginService: NaverLoginService,
+    private val kakaoLoginService: KakaoLoginService,
+    private val sharedPreferences: SharedPreferences
 ): ViewModel() {
 
     // 아이디 에러 메시지
@@ -85,6 +91,9 @@ class LoginViewModel @Inject constructor(
                             Toast.makeText(loginActivity, "로그인 완료!", Toast.LENGTH_LONG).show()
                             val app = loginActivity.application as App
                             app.loginUserModel = user
+
+                            saveAutoLoginToken(user.userAutoLoginToken)
+
                             val intent = Intent(loginActivity, GroupActivity::class.java)
                             loginActivity.startActivity(intent)
                             loginActivity.finish()
@@ -130,6 +139,38 @@ class LoginViewModel @Inject constructor(
             val userData = googleLoginService.handleGoogleLogin(email, userName, profileImage, googleToken)
             _user_google.postValue(userData) // LiveData에 값 설정
         }
+    }
+
+    // 자동 로그인 토큰 저장
+    private fun saveAutoLoginToken(token: String) {
+        sharedPreferences.edit().putString("autoLoginToken", token).apply()
+    }
+
+    // 자동 로그인 토큰 확인
+    fun validateAutoLoginToken(onSuccess: (UserModel) -> Unit, onFailure: () -> Unit) {
+        val token = sharedPreferences.getString("autoLoginToken", null)
+
+        if (token.isNullOrEmpty()) {
+            onFailure()
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val user = service.getUserByAutoLoginToken(token) ?: googleLoginService.getUserByAutoLoginToken(token)
+
+            withContext(Dispatchers.Main) {
+                if (user != null) {
+                    onSuccess(user)
+                } else {
+                    onFailure()
+                }
+            }
+        }
+    }
+
+    // 로그아웃
+    fun logoutUser() {
+        sharedPreferences.edit().remove("autoLoginToken").apply()
     }
 
 }

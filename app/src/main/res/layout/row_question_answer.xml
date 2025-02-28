@@ -16,7 +16,7 @@
         <LinearLayout
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="10dp"
             android:gravity="end"
             android:orientation="vertical">
 
@@ -29,26 +29,26 @@
                 android:text="이름이름"
                 android:textAlignment="viewEnd"
                 android:textAppearance="@style/CustomTextRegular"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvRowQuestionAnswerComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:singleLine="false"
                 android:text="라면라면라면라면라면라면라면라면라면"
                 android:textAlignment="viewEnd"
                 android:textAppearance="@style/CustomTextRegular"
-                android:textSize="15dp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <ImageView
             android:id="@+id/ivRowQuestionAnswerProfile"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
-            android:layout_marginRight="20dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/rounded_image"
             tools:srcCompat="@drawable/ic_default_profile" />
 

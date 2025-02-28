@@ -147,6 +147,24 @@ class GoogleLoginRepository@Inject constructor(
         }
     }
 
+    suspend fun getUserByAutoLoginToken(token: String): UserModel? {
+        return try {
+            val querySnapshot = db.collection("UserData")
+                .whereEqualTo("userAutoLoginToken", token)
+                .limit(1)
+                .get().await()
 
+            if (!querySnapshot.isEmpty) {
+                val document = querySnapshot.documents[0]
+                val userVO = document.toObject(UserVO::class.java)
+                userVO?.toUserModel(document.id)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("GoogleLoginRepository", "자동 로그인 유저 조회 실패", e)
+            null
+        }
+    }
 
 }
