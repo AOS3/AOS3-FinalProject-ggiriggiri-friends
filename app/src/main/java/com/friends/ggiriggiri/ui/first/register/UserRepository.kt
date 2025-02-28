@@ -145,6 +145,23 @@ class UserRepository() {
                 }
         }
 
+        suspend fun getUserByAutoLoginToken(token: String): UserModel? {
+            val firestore = FirebaseFirestore.getInstance()
+            val querySnapshot = firestore.collection("UserData")
+                .whereEqualTo("userAutoLoginToken", token)
+                .limit(1)
+                .get()
+                .await()
+
+            return if (!querySnapshot.isEmpty) {
+                val document = querySnapshot.documents.first()
+                val user = document.toObject(UserVO::class.java)
+                user?.toUserModel(document.id)
+            } else {
+                null
+            }
+        }
+
 
 
     }

@@ -14,8 +14,12 @@ import com.friends.ggiriggiri.databinding.FragmentGroupBinding
 import com.friends.ggiriggiri.ui.adapter.GroupPagerAdapter
 import com.friends.ggiriggiri.ui.custom.CustomDialog
 import com.friends.ggiriggiri.ui.first.register.UserModel
+import com.friends.ggiriggiri.util.UserSocialLoginState
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.FirebaseAuth
+import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.user.UserApiClient
+import com.navercorp.nid.NaverIdLoginSDK
 
 
 class GroupFragment : Fragment() {
@@ -89,12 +93,43 @@ class GroupFragment : Fragment() {
         // 로그인 정보 초기화
         app.loginUserModel = UserModel()
 
-        // 로그아웃
-        UserApiClient.instance.logout { error ->
-            if (error != null) {
-                Log.e("GroupFragment", "로그아웃 실패", error)
-            } else {
-                Log.d("GroupFragment", "✅ 카카오 로그아웃 성공")
+        // 자동 로그인 토큰 삭제
+        val sharedPreferences = requireActivity().getSharedPreferences("GGiriggiriPrefs", android.content.Context.MODE_PRIVATE)
+        sharedPreferences.edit().remove("autoLoginToken").apply()
+
+        val userSocialLogin = app.loginUserModel.userSocialLogin
+
+        when (userSocialLogin) {
+            UserSocialLoginState.KAKAO -> {
+                // ✅ 카카오 로그아웃
+                try {
+                    KakaoSdk.init(requireContext(), getString(R.string.kakao_native_app_key)) // 카카오 SDK 초기화
+                    UserApiClient.instance.logout { error ->
+                        if (error != null) {
+                            Log.e("GroupFragment", "카카오 로그아웃 실패", error)
+                        } else {
+                            Log.d("GroupFragment", "✅ 카카오 로그아웃 성공")
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e("GroupFragment", "카카오 로그아웃 중 오류 발생", e)
+                }
+            }
+
+            UserSocialLoginState.GOOGLE -> {
+                // ✅ 구글 로그아웃
+                FirebaseAuth.getInstance().signOut()
+                Log.d("GroupFragment", "✅ 구글 로그아웃 성공")
+            }
+
+            UserSocialLoginState.NAVER -> {
+                // ✅ 네이버 로그아웃
+                NaverIdLoginSDK.logout()
+                Log.d("GroupFragment", "✅ 네이버 로그아웃 성공")
+            }
+
+            else -> {
+                Log.d("GroupFragment", "❌ 소셜 로그인 정보를 찾을 수 없음")
             }
         }
 

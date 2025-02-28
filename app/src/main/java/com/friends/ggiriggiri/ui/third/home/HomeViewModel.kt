@@ -1,5 +1,6 @@
 package com.friends.ggiriggiri.ui.third.home
 
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +14,9 @@ import com.friends.ggiriggiri.data.service.HomeService
 import com.friends.ggiriggiri.data.service.QuestionListService
 import com.friends.ggiriggiri.data.service.RequestService
 import com.friends.ggiriggiri.data.vo.QuestionListVO
+import com.friends.ggiriggiri.ui.fifth.questionanswer.QuestionAnswerFragment
+import com.friends.ggiriggiri.ui.fifth.requestdetail.RequestDetailFragment
+import com.friends.ggiriggiri.ui.third.request.RequestFragment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -54,6 +58,9 @@ class HomeViewModel @Inject constructor(
 
     private var loadedDataCount = 0
     private val totalDataCount = 6
+
+    var questionDataIDResult = MutableLiveData<String>()
+    var groupDayFromCreateResult = MutableLiveData<String>()
 
     private fun checkAllDataLoaded() {
         loadedDataCount++
@@ -124,7 +131,10 @@ class HomeViewModel @Inject constructor(
             val groupDayFromCreate = answerService.gettingGroupDayFromCreate(userGroupID)
             val questionDataID = answerService.gettingQuestionDocumentIds(userGroupID, groupDayFromCreate)
 
-            Log.d("checkUserAnswerExists","${questionDataID[0]} , ${userID} 홈뷰모델")
+            questionDataIDResult.value = questionDataID[0]
+            groupDayFromCreateResult.value = groupDayFromCreate
+
+            Log.d("checkUserAnswerExists","${questionDataIDResult.value} , ${groupDayFromCreateResult.value} 홈뷰모델")
 
 
             answerService.checkUserAnswerExists(questionDataID[0], userID) { exists ->
@@ -133,6 +143,10 @@ class HomeViewModel @Inject constructor(
                 Log.d("checkUserAnswerExists","${exists} 홈뷰모델")
             }
         }
+    }
+
+    fun moveToQuestionAndAnswer(socialActivity: SocialActivity,groupDayFromCreateResult:String,questionDataIDResult:String){
+        socialActivity?.replaceFragment(QuestionAnswerFragment.newInstance(groupDayFromCreateResult,questionDataIDResult))
     }
 
 }

@@ -9,6 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
@@ -31,19 +33,21 @@
         android:id="@+id/tvRequestListSummary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:singleLine="true"
         android:text="대충 오늘 뭐했는지 요청하는 내용"
         android:textAppearance="@style/CustomTextRegular"
-        android:textSize="18dp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/tvRequestListTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
         android:singleLine="true"
         android:text="2025.02.07 12:30"
         android:textAlignment="viewEnd"
         android:textAppearance="@style/CustomTextRegular"
-        android:textSize="14dp" />
+        android:textSize="14sp" />
 </LinearLayout>

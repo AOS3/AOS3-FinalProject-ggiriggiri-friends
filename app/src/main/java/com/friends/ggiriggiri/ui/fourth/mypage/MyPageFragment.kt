@@ -26,9 +26,14 @@ import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.databinding.FragmentMyPageBinding
 import com.friends.ggiriggiri.ui.custom.CustomDialog
+import com.friends.ggiriggiri.ui.first.register.UserModel
 import com.friends.ggiriggiri.ui.fourth.modifyuserpw.ModifyUserPwFragment
 import com.friends.ggiriggiri.ui.fourth.settinggroup.SettingGroupFragment
+import com.friends.ggiriggiri.util.UserSocialLoginState
 import com.google.firebase.auth.FirebaseAuth
+import com.kakao.sdk.common.KakaoSdk
+import com.kakao.sdk.user.UserApiClient
+import com.navercorp.nid.NaverIdLoginSDK
 import dagger.hilt.android.AndroidEntryPoint
 
 import java.io.File
@@ -276,13 +281,52 @@ class MyPageFragment : Fragment() {
             icon = R.drawable.ic_group_off,
             positiveText = "예",
             onPositiveClick = {
-                // Firebase를 사용하는 경우 로그아웃 처리 예제
-                FirebaseAuth.getInstance().signOut()
+                val app = requireActivity().application as App
+                app.loginUserModel = UserModel()
 
-                // 기존 액티비티 스택을 모두 제거하고 LoginActivity로 전환
-                val intent = Intent(requireContext(), LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+                val userSocialLogin = app.loginUserModel.userSocialLogin // 현재 로그인된 소셜 플랫폼 확인
+
+                val sharedPreferences = requireActivity().getSharedPreferences("GGiriggiriPrefs", android.content.Context.MODE_PRIVATE)
+                sharedPreferences.edit().remove("autoLoginToken").apply()
+
+                when (userSocialLogin) {
+                    UserSocialLoginState.KAKAO -> {
+                        // ✅ 카카오 로그아웃
+                        try {
+                            KakaoSdk.init(requireContext(), getString(R.string.kakao_native_app_key)) // SDK 초기화
+                            UserApiClient.instance.logout { error ->
+                                if (error != null) {
+                                    Log.e("MyPageFragment", "카카오 로그아웃 실패", error)
+                                } else {
+                                    Log.d("MyPageFragment", "✅ 카카오 로그아웃 성공")
+                                }
+                                navigateToLoginScreen()
+                            }
+                        } catch (e: Exception) {
+                            Log.e("MyPageFragment", "카카오 로그아웃 중 오류 발생", e)
+                            navigateToLoginScreen()
+                        }
+                    }
+
+                    UserSocialLoginState.GOOGLE -> {
+                        // ✅ 구글 로그아웃
+                        FirebaseAuth.getInstance().signOut()
+                        Log.d("MyPageFragment", "✅ 구글 로그아웃 성공")
+                        navigateToLoginScreen()
+                    }
+
+                    UserSocialLoginState.NAVER -> {
+                        // ✅ 네이버 로그아웃
+                        NaverIdLoginSDK.logout()
+                        Log.d("MyPageFragment", "✅ 네이버 로그아웃 성공")
+                        navigateToLoginScreen()
+                    }
+
+                    else -> {
+                        Log.d("MyPageFragment", "❌ 소셜 로그인 정보를 찾을 수 없음")
+                        navigateToLoginScreen()
+                    }
+                }
             },
             negativeText = "아니오",
             onNegativeClick = {
@@ -290,6 +334,13 @@ class MyPageFragment : Fragment() {
             }
         )
         dialog.showCustomDialog()
+    }
+
+    private fun navigateToLoginScreen() {
+        Log.d("MyPageFragment", "🔄 로그인 화면으로 이동")
+        val intent = Intent(requireContext(), LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 }
 

@@ -1,20 +1,8 @@
 package com.friends.ggiriggiri
 
-import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.view.animation.AnticipateInterpolator
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.animation.doOnEnd
-import androidx.core.splashscreen.SplashScreen
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
@@ -26,7 +14,6 @@ import com.friends.ggiriggiri.ui.first.login.LoginFragment
 import com.friends.ggiriggiri.ui.first.login.NotificationTestFragment
 import com.friends.ggiriggiri.ui.first.register.RegisterFragment
 import com.google.android.material.transition.MaterialSharedAxis
-import com.kakao.sdk.common.util.Utility
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

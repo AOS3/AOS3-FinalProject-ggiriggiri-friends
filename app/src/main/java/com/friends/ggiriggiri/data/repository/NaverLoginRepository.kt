@@ -10,8 +10,9 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
+import javax.inject.Inject
 
-class NaverLoginRepository {
+class NaverLoginRepository @Inject constructor(){
     private val db = FirebaseFirestore.getInstance()
 
     // Firestore에서 이메일 기반으로 사용자 데이터 조회
@@ -129,6 +130,26 @@ class NaverLoginRepository {
             }
         } catch (e: Exception) {
             Log.e("GoogleLoginRepository", "FCM 토큰 업데이트 실패", e)
+        }
+    }
+
+    suspend fun getUserByAutoLoginToken(token: String): UserModel? {
+        return try {
+            val querySnapshot = db.collection("UserData")
+                .whereEqualTo("userAutoLoginToken", token)
+                .limit(1)
+                .get().await()
+
+            if (!querySnapshot.isEmpty) {
+                val document = querySnapshot.documents[0]
+                val userVO = document.toObject(UserVO::class.java)
+                userVO?.toUserModel(document.id)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("NaverLoginRepository", "자동 로그인 유저 조회 실패", e)
+            null
         }
     }
 }

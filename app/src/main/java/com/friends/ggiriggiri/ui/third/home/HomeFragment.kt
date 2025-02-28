@@ -82,10 +82,19 @@ class HomeFragment : Fragment() {
             Log.d("isUserAnswered", exists.toString())
             binding.apply {
                 if (exists) {
+                    var groupDayFromCreateResult = ""
+                    homeViewModel.groupDayFromCreateResult.observe(viewLifecycleOwner){
+                        groupDayFromCreateResult = it
+                    }
+                    var questionDataIDResult = ""
+                    homeViewModel.questionDataIDResult.observe(viewLifecycleOwner){
+                        questionDataIDResult = it
+                    }
                     // 이미 답변을 제출함
                     // 답변 보는 화면으로감
                     btnHomeAnswer.text = "다른 친구들의 답변 보기"
                     btnHomeAnswer.setOnClickListener {
+                        homeViewModel.moveToQuestionAndAnswer(socialActivity,groupDayFromCreateResult,questionDataIDResult)
                     }
                 } else {
                     // 답변을 제출하지 않음

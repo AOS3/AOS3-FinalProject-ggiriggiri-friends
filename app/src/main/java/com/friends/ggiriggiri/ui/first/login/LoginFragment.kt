@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,8 +15,6 @@ import com.friends.ggiriggiri.GroupActivity
 import com.friends.ggiriggiri.LoginActivity
 import com.friends.ggiriggiri.LoginFragmentName
 import com.friends.ggiriggiri.R
-import com.friends.ggiriggiri.data.repository.KakaoLoginRepository
-import com.friends.ggiriggiri.data.repository.NaverLoginRepository
 import com.friends.ggiriggiri.data.service.KakaoLoginService
 import com.friends.ggiriggiri.data.service.NaverLoginService
 import com.friends.ggiriggiri.databinding.FragmentLoginBinding
@@ -26,7 +23,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.Scope
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.user.UserApiClient
@@ -38,7 +34,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URLDecoder
-import kotlin.math.log
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -47,6 +43,11 @@ class LoginFragment : Fragment() {
     private lateinit var loginActivity: LoginActivity
     private val loginViewModel: LoginViewModel by viewModels()
     private lateinit var progressDialog: CustomDialogProgressbar
+
+    @Inject
+    lateinit var kakaoLoginService: KakaoLoginService
+    @Inject
+    lateinit var naverLoginService: NaverLoginService
 
     //true면 로그인 진행가능
     private var isLoginSuccessResult: Boolean = false
@@ -262,7 +263,7 @@ class LoginFragment : Fragment() {
 
                     val kakaoToken = tokenInfo?.id.toString() // 카카오 OAuthToken 값 사용
 
-                    val kakaoLoginService = KakaoLoginService(KakaoLoginRepository())
+                    // val kakaoLoginService = KakaoLoginService(KakaoLoginRepository())
                     lifecycleScope.launch(Dispatchers.IO) {
                         val userModel = kakaoLoginService.handleKakaoLogin(
                             email,
@@ -323,7 +324,7 @@ class LoginFragment : Fragment() {
                     // 유니코드(이스케이프된 문자) 디코딩
                     val name = URLDecoder.decode(rawName, "UTF-8")
 
-                    val naverLoginService = NaverLoginService(NaverLoginRepository())
+                    // val naverLoginService = NaverLoginService(NaverLoginRepository())
                     lifecycleScope.launch(Dispatchers.Main) {
                         val userModel = naverLoginService.handleNaverLogin(
                             email,

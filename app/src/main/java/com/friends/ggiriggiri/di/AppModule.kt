@@ -4,9 +4,13 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.data.repository.GoogleLoginRepository
+import com.friends.ggiriggiri.data.repository.KakaoLoginRepository
+import com.friends.ggiriggiri.data.repository.NaverLoginRepository
 import com.friends.ggiriggiri.data.repository.RequestDetailRepository
 import com.friends.ggiriggiri.data.repository.RequestListRepository
 import com.friends.ggiriggiri.data.service.GoogleLoginService
+import com.friends.ggiriggiri.data.service.KakaoLoginService
+import com.friends.ggiriggiri.data.service.NaverLoginService
 import com.friends.ggiriggiri.data.service.RequestDetailService
 import com.friends.ggiriggiri.data.service.RequestListService
 import com.google.firebase.auth.FirebaseAuth
@@ -46,11 +50,11 @@ object AppModule {
         return GoogleLoginRepository(firebaseAuth)
     }
 
-    @Provides
-    @Singleton
-    fun provideGoogleLoginService(googleLoginRepository: GoogleLoginRepository): GoogleLoginService {
-        return GoogleLoginService(googleLoginRepository)
-    }
+//    @Provides
+//    @Singleton
+//    fun provideGoogleLoginService(googleLoginRepository: GoogleLoginRepository): GoogleLoginService {
+//        return GoogleLoginService(googleLoginRepository)
+//    }
     @Provides
     @Singleton
     fun provideRequestListRepository(firestore: FirebaseFirestore): RequestListRepository {
@@ -79,5 +83,41 @@ object AppModule {
     @Singleton
     fun provideApp(@ApplicationContext context: Context): App {
         return context.applicationContext as App
+    }
+
+    @Provides
+    @Singleton
+    fun provideKakaoLoginRepository(): KakaoLoginRepository {
+        return KakaoLoginRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideKakaoLoginService(repository: KakaoLoginRepository, sharedPreferences: SharedPreferences): KakaoLoginService {
+        return KakaoLoginService(repository, sharedPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGoogleLoginService(
+        googleLoginRepository: GoogleLoginRepository,
+        sharedPreferences: SharedPreferences
+    ): GoogleLoginService {
+        return GoogleLoginService(googleLoginRepository, sharedPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNaverLoginService(
+        repository: NaverLoginRepository,
+        sharedPreferences: SharedPreferences
+    ): NaverLoginService {
+        return NaverLoginService(repository, sharedPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNaverLoginRepository(): NaverLoginRepository {
+        return NaverLoginRepository()
     }
 }
