@@ -152,4 +152,17 @@ dependencies {
     implementation ("androidx.work:work-runtime-ktx:2.8.1")
 
     implementation ("androidx.core:core-splashscreen:1.0.1")
+
+    // Room Database
+    val room_version = "2.6.1" // 최신 버전 확인 필요
+
+    implementation("androidx.room:room-runtime:$room_version")
+    kapt("androidx.room:room-compiler:$room_version") // Annotation Processor (KAPT)
+    implementation("androidx.room:room-ktx:$room_version") // Coroutine 지원
+
+    // Optional - Room Paging 지원 (필요 시 추가)
+    implementation("androidx.room:room-paging:$room_version")
+
+    // Optional - Room RxJava 지원 (필요 시 추가)
+    implementation("androidx.room:room-rxjava3:$room_version")
 }

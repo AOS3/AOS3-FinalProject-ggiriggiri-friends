@@ -1,11 +1,15 @@
 package com.friends.ggiriggiri
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.friends.ggiriggiri.databinding.ActivitySocialBinding
+import com.friends.ggiriggiri.ui.notification.UserPreferences
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +31,8 @@ class SocialActivity : AppCompatActivity() {
 //        }
 
         val loginUser = (application as App).loginUserModel
+        // 로그인 성공 시 userDocumentID 저장
+        UserPreferences.saveUserID(this, loginUser.userDocumentId)
 
         Log.d("SocialActivity", "로그인한 유저 정보")
         Log.d("SocialActivity", "이메일: ${loginUser.userId}")
@@ -56,5 +62,27 @@ class SocialActivity : AppCompatActivity() {
             .replace(R.id.fragmentContainerViewSocialMain, fragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    fun AppCompatActivity.hideKeyboard() {
+        val view = currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            val view = currentFocus
+            if (view is android.widget.EditText) {
+                val outRect = android.graphics.Rect()
+                view.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    hideKeyboard()
+                    view.clearFocus()
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 }

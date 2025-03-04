@@ -1,13 +1,17 @@
 package com.friends.ggiriggiri
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.friends.ggiriggiri.databinding.ActivityGroupBinding
+import com.friends.ggiriggiri.ui.notification.UserPreferences
 import com.friends.ggiriggiri.ui.second.group.GroupFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,6 +37,10 @@ class GroupActivity : AppCompatActivity() {
 
         // ✅ App에서 로그인한 유저 정보 가져오기
         val loginUser = (application as App).loginUserModel
+
+        // 로그인 성공 시 userDocumentID 저장
+        UserPreferences.saveUserID(this, loginUser.userDocumentId)
+
 
         Log.d("GroupActivity", "로그인한 유저 정보")
         Log.d("GroupActivity", "이메일: ${loginUser.userId}")
@@ -87,5 +95,26 @@ class GroupActivity : AppCompatActivity() {
                 .replace(R.id.fragmentGroupActivity, GroupFragment())
                 .commit()
         }
+    }
+    fun AppCompatActivity.hideKeyboard() {
+        val view = currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            val view = currentFocus
+            if (view is android.widget.EditText) {
+                val outRect = android.graphics.Rect()
+                view.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    hideKeyboard()
+                    view.clearFocus()
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 }

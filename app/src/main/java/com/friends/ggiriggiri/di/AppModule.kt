@@ -2,6 +2,7 @@ package com.friends.ggiriggiri.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.Room
 import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.data.repository.GoogleLoginRepository
 import com.friends.ggiriggiri.data.repository.KakaoLoginRepository
@@ -13,6 +14,8 @@ import com.friends.ggiriggiri.data.service.KakaoLoginService
 import com.friends.ggiriggiri.data.service.NaverLoginService
 import com.friends.ggiriggiri.data.service.RequestDetailService
 import com.friends.ggiriggiri.data.service.RequestListService
+import com.friends.ggiriggiri.ui.notification.NotificationDao
+import com.friends.ggiriggiri.ui.notification.NotificationDatabase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -119,5 +122,20 @@ object AppModule {
     @Singleton
     fun provideNaverLoginRepository(): NaverLoginRepository {
         return NaverLoginRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabase(@dagger.hilt.android.qualifiers.ApplicationContext context: Context): NotificationDatabase {
+        return Room.databaseBuilder(
+            context,
+            NotificationDatabase::class.java,
+            "notification_database"
+        ).build()
+    }
+
+    @Provides
+    fun provideNotificationDao(database: NotificationDatabase): NotificationDao {
+        return database.notificationDao()
     }
 }

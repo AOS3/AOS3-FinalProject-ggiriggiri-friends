@@ -8,44 +8,61 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.LoginActivity
 import com.friends.ggiriggiri.R
-import com.google.firebase.firestore.FirebaseFirestore
+import com.friends.ggiriggiri.ui.notification.NotificationDatabase
+import com.friends.ggiriggiri.ui.notification.NotificationEntity
+import com.friends.ggiriggiri.ui.notification.NotificationRepository
+import com.friends.ggiriggiri.ui.notification.UserPreferences
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FirebaseMessagingService : FirebaseMessagingService() {
-
+class FirebaseNotificationService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        // 메시지가 정상적으로 수신되었는지 확인
         Log.d("FCM", "알림 수신: ${remoteMessage.notification?.title} - ${remoteMessage.notification?.body}")
 
-        // 알림 데이터 처리
-        remoteMessage.notification?.let {
-            sendNotification(it.title ?: "알림", it.body ?: "새로운 메시지가 도착했습니다.")
-        }
+        // 알림 데이터
+        val title = remoteMessage.notification?.title ?: "알림"
+        val message = remoteMessage.notification?.body ?: "새로운 메시지가 도착했습니다."
+        val timestamp = System.currentTimeMillis()
 
+        // Firebase 메시지 데이터에서 userID 가져오기
+        // 앱이 실행 중이 아닐 경우, SharedPreferences에서 userID 가져오기
+        val userDocumentId = UserPreferences.getUserID(applicationContext) ?: return // userID가 없으면 저장하지 않음
+
+        // 알림을 RoomDB에 저장
+        saveNotificationToDB(title, message, timestamp, userDocumentId)
+
+        // 알림 보내기
+        sendNotification(title, message)
     }
 
-    override fun onNewToken(token: String) {
-        super.onNewToken(token)
-        Log.d("FCM", "새로운 FCM 토큰: $token")
+    private fun saveNotificationToDB(title: String, message: String, timestamp: Long, userDocumentId: String) {
+        val notification = NotificationEntity(
+            title = title,
+            message = message,
+            timestamp = timestamp,
+            userDocumentID = userDocumentId
+        )
 
-        // Firestore에 새로운 FCM 토큰 업데이트 (사용자의 ID 필요)
-        val userId = "사용자_ID_여기에_넣기" // 여기에 현재 로그인한 사용자 ID를 가져와야 함
-        val db = FirebaseFirestore.getInstance()
-        db.collection("users").document(userId)
-            .update("fcmToken", token)
-            .addOnSuccessListener { Log.d("FCM", "토큰 업데이트 성공") }
-            .addOnFailureListener { e -> Log.e("FCM", "토큰 업데이트 실패: ${e.message}") }
+        CoroutineScope(Dispatchers.IO).launch {
+            val database = NotificationDatabase.getDatabase(applicationContext)
+            val repository = NotificationRepository(database.notificationDao())
+            repository.insert(notification)
+        }
     }
 
     private fun sendNotification(title: String, messageBody: String) {
         val channelId = "fcm_default_channel"
 
-        // 알림 클릭 시 LoginActivity 실행
         val intent = Intent(this, LoginActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
@@ -62,7 +79,6 @@ class FirebaseMessagingService : FirebaseMessagingService() {
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // Android 8.0 이상에서 알림 채널 필요함
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
