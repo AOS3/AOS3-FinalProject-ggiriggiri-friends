@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:transitionGroup="true"
+    android:background="@color/white"
+    tools:context=".ui.first.findpw.ResetPwFragment">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/tbResetPwFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/screen_background_light_transparent"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:subtitleCentered="false"
+        app:titleTextAppearance="@style/CustomToolbarTitle"
+        tools:navigationIcon="@drawable/ic_arrow_back_ios"
+        tools:navigationIconTint="@color/black"
+        tools:title="비밀번호 재설정"
+        tools:titleCentered="true" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilResetPwFragmentNewPw1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:hint="새 비밀번호"
+        android:textColorHint="@color/material_dynamic_neutral60"
+        app:cursorColor="@color/black"
+        app:endIconMode="password_toggle"
+        app:hintTextColor="@color/material_dynamic_neutral60"
+        app:boxStrokeColor="@color/material_dynamic_neutral60"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tbResetPwFragment">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etResetPwFragmentNewPw1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilResetPwFragmentNewPw2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:hint="새 비밀번호 재입력"
+        android:textColorHint="@color/material_dynamic_neutral60"
+        app:boxStrokeColor="@color/material_dynamic_neutral60"
+        app:cursorColor="@color/black"
+        app:endIconMode="password_toggle"
+        app:hintTextColor="@color/material_dynamic_neutral60"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilResetPwFragmentNewPw1">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etResetPwFragmentNewPw2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <android.widget.Button
+        android:id="@+id/btnResetPwFragmentResetPw"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/background_radius_10_fdf497"
+        android:fontFamily="@font/nanumsquarebold"
+        android:text="비밀번호 재설정하기"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

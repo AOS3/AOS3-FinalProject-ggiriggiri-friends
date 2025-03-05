@@ -17,10 +17,11 @@
 
         <ImageView
             android:id="@+id/imageView_dialog_icon"
+            android:tint="@color/black"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginTop="25dp"
-            android:src="@drawable/main_logo_small_size"
+            android:src="@drawable/ic_error"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,18 +32,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:gravity="center"
+            android:textAppearance="@font/nanumsquarebold"
             android:text="텍스트 입니다"
             android:textSize="18dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView_dialog_icon" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1.6dp"
-            android:background="#0064C8"
-            app:layout_constraintBottom_toTopOf="@+id/layout_dialog_buttons"
-            app:layout_constraintStart_toStartOf="parent" />
 
         <LinearLayout
             android:id="@+id/layout_dialog_buttons"
@@ -61,12 +56,14 @@
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="10dp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/gray_color"
+                android:backgroundTint="@color/mainColor"
+                android:fontFamily="@font/nanumsquarebold"
                 android:gravity="center"
                 android:text="버튼 취소"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                app:cornerRadius="15dp" />
 
             <Button
                 android:id="@+id/button_dialog_positive"
@@ -74,14 +71,15 @@
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="10dp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/main_color"
+                android:backgroundTint="@color/mainColor"
+                android:fontFamily="@font/nanumsquarebold"
                 android:gravity="center"
                 android:text="버튼 확인"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                app:cornerRadius="15dp" />
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
-

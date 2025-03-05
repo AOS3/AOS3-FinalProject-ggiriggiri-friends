@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:transitionGroup="true"
+    tools:context=".ui.first.login.LoginFragment">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/tbRegisterFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/screen_background_light_transparent"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:subtitleCentered="false"
+        app:titleTextAppearance="@style/CustomToolbarTitle"
+        tools:navigationIcon="@drawable/ic_arrow_back_ios"
+        tools:navigationIconTint="@color/black"
+        tools:title="회원가입"
+        tools:titleCentered="true" />
+
+    <ScrollView
+        android:id="@+id/scrollViewRegisterFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tbRegisterFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilRegisterFragmentName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:hint="이름"
+                android:textColorHint="@color/material_dynamic_neutral60"
+                app:boxStrokeColor="@color/material_dynamic_neutral60"
+                app:cursorColor="@color/black"
+                app:errorEnabled="true"
+                app:hintTextColor="@color/material_dynamic_neutral60"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etRegisterFragmentName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tilRegisterFragmentName">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilRegisterFragmentId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="아이디"
+                    app:boxStrokeColor="@color/material_dynamic_neutral60"
+                    android:textColorHint="@color/material_dynamic_neutral60"
+                    app:cursorColor="@color/black"
+                    app:errorEnabled="true"
+                    app:hintTextColor="@color/material_dynamic_neutral60">
+
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etRegisterFragmentId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:digits="@string/digit_value"
+                        android:singleLine="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <android.widget.Button
+                    android:id="@+id/btnRegisterFragmentDuplicationCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_radius_10_fdf497"
+                    android:fontFamily="@font/nanumsquarebold"
+                    android:text="중복 확인" />
+
+                <TextView
+                    tools:text = "중복확인 완료"
+                    android:layout_marginTop="10dp"
+                    android:textSize="20sp"
+                    android:id="@+id/tvRegisterFragmentIdValid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nanumsquarebold" />
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilRegisterFragmentPw1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="20dp"
+                android:hint="비밀번호"
+                android:textColorHint="@color/material_dynamic_neutral60"
+                app:boxStrokeColor="@color/material_dynamic_neutral60"
+                app:cursorColor="@color/black"
+                app:endIconMode="password_toggle"
+                app:hintTextColor="@color/material_dynamic_neutral60"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etRegisterFragmentPw1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits="@string/digit_value"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilRegisterFragmentPw2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:hint="비밀번호 재입력"
+                android:textColorHint="@color/material_dynamic_neutral60"
+                app:boxStrokeColor="@color/material_dynamic_neutral60"
+                app:cursorColor="@color/black"
+                app:endIconMode="password_toggle"
+                app:errorEnabled="true"
+                app:hintTextColor="@color/material_dynamic_neutral60"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tilRegisterFragmentPw1">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etRegisterFragmentPw2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits="@string/digit_value"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tilRegisterFragmentPw2">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilRegisterFragmentPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="휴대폰 번호"
+                    android:textColorHint="@color/material_dynamic_neutral60"
+                    app:boxStrokeColor="@color/material_dynamic_neutral60"
+                    app:cursorColor="@color/black"
+                    app:errorEnabled="true"
+                    app:hintTextColor="@color/material_dynamic_neutral60">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etRegisterFragmentPhoneNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <android.widget.Button
+                    android:id="@+id/btnRegisterFragmentGetCertificationNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_radius_10_fdf497"
+                    android:fontFamily="@font/nanumsquarebold"
+                    android:text="인증 요청"
+                    tools:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tvFormattedTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nanumsquarebold"
+                    android:textSize="16sp"
+                    tools:text="04:54" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llRegisterFragmentConfirmCertification"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilRegisterFragmentCertificationNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="인증번호"
+                    android:textColorHint="@color/material_dynamic_neutral60"
+                    app:boxStrokeColor="@color/material_dynamic_neutral60"
+                    app:cursorColor="@color/black"
+                    app:errorEnabled="true"
+                    app:hintTextColor="@color/material_dynamic_neutral60">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etRegisterFragmentCertificationNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:singleLine="true"
+                        android:textColorHint="@color/material_dynamic_neutral60"
+                        app:boxStrokeColor="@color/material_dynamic_neutral60"
+                        app:cursorColor="@color/black"
+                        app:hintTextColor="@color/material_dynamic_neutral60" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <android.widget.Button
+                    android:id="@+id/btnRegisterFragmentConfirmCertificationNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_radius_10_fdf497"
+                    android:fontFamily="@font/nanumsquarebold"
+                    android:text="인증 확인" />
+
+                <TextView
+                    android:id="@+id/tvRegisterFragmentCertificationNumberValid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nanumsquarebold"
+                    android:textSize="20sp"
+                    tools:text="인증완료" />
+            </LinearLayout>
+
+            <android.widget.Button
+                android:id="@+id/btnRegisterFragmentSignup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/background_radius_10_fdf497"
+                android:fontFamily="@font/nanumsquarebold"
+                android:text="가입하기"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llRegisterFragmentConfirmCertification" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
