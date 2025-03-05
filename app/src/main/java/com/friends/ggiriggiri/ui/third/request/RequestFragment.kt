@@ -151,7 +151,7 @@ class RequestFragment : Fragment() {
         uploadImageToFirebase(contentUri, { imageUrl ->
             saveRequest(requestMessage, imageUrl, loginUser) { success ->
                 if (success) {
-                    sendGroupPushNotification(loginUser.userGroupDocumentID, requestMessage)
+                    sendGroupPushNotification(loginUser.userGroupDocumentID, requestMessage,loginUser.userDocumentId)
                 }
                 onComplete(success)
             }
@@ -284,11 +284,14 @@ class RequestFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 
-    private fun sendGroupPushNotification(groupDocumentId: String, message: String) {
+    private fun sendGroupPushNotification(groupDocumentId: String, message: String,sendUserID:String) {
         val db = FirebaseFirestore.getInstance()
         db.collection("GroupData").document(groupDocumentId).get()
             .addOnSuccessListener { document ->
-                val userDocumentIds = document.get("groupUserDocumentID") as? List<String>
+                //val userDocumentIds = document.get("groupUserDocumentID") as? List<String>
+                val userDocumentIds = (document.get("groupUserDocumentID") as? List<String>)?.toMutableList()
+                userDocumentIds?.remove(sendUserID)
+
                 if (userDocumentIds.isNullOrEmpty()) return@addOnSuccessListener
 
                 val batchSize = 20

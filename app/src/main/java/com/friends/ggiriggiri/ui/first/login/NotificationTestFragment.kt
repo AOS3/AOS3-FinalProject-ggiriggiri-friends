@@ -62,7 +62,7 @@ class NotificationTestFragment : Fragment() {
                             Log.d("FCM", "현재 FCM 토큰: $token")
 
                             sendPushNotification(
-                                token, // 가져온 FCM 토큰 사용
+                                "fTMS_AzXRdqGcoyPYyjF2b:APA91bHbPvIElXTWGXIAbktVTZDsWXYnBsU3hJLuegjazYdRthgifle_axUzSAnvbg7ogPRjwQ4u4PX-AqE85v3_5Dpy_Tv2d_yDnETJryLZ7S-KZtyS4xo", // 가져온 FCM 토큰 사용
                                 "끼리끼리",
                                 "Firebase Functions을 통해 전송된 알림 \n $token"
                             )

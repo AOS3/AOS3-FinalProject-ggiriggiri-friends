@@ -10,38 +10,55 @@ import javax.inject.Inject
 class RequestListRepository @Inject constructor(private val firestore: FirebaseFirestore){
 
     suspend fun fetchRequests(userGroupDocumentID: String): List<RequestModel> {
-        val requestList = mutableListOf<RequestModel>()
         val requestCollection = firestore.collection("Request")
 
-        val requestDocs = requestCollection.get().await()
+        // 🔥 Firestore에서 requestGroupDocumentID가 userGroupDocumentID와 같은 데이터만 가져옴
+        val requestDocs = requestCollection
+            .whereEqualTo("requestGroupDocumentID", userGroupDocumentID)
+            .get()
+            .await()
 
-        for (document in requestDocs.documents) {
-            val data = document.data ?: continue
+        // 🔥 사용자 ID 리스트 수집 (중복 제거)
+        val userIds = requestDocs.documents.mapNotNull { it["requestUserDocumentID"] as? String }.distinct()
+        val userNames = fetchUserNames(userIds) // 🔥 여러 사용자 이름을 한 번에 가져오기
+
+        return requestDocs.documents.mapNotNull { document ->
+            val data = document.data ?: return@mapNotNull null
             val requestId = document.id
 
-            val requestGroupDocumentID = data["requestGroupDocumentID"] as? String ?: ""
+            RequestModel(
+                requestId = requestId,
+                requestTime = data["requestTime"] as? Long ?: System.currentTimeMillis(),
+                requestState = 0, // 필요 없는 데이터라 기본값 0 설정
+                requestUserDocumentID = userNames[data["requestUserDocumentID"] as? String] ?: "Unknown",
+                requestMessage = data["requestMessage"] as? String ?: "",
+                requestImage = "", // 필요 없는 데이터라 빈 값 설정
+                responseList = emptyList(), // 필요 없는 데이터라 빈 리스트 설정
+                requestGroupDocumentID = userGroupDocumentID
+            )
+        }.sortedByDescending { it.requestTime }
+    }
 
-            // 🔥 로그인한 유저의 그룹 ID와 요청의 그룹 ID가 같은 경우만 추가
-            if (requestGroupDocumentID == userGroupDocumentID) {
-                val responseList = fetchResponses(requestId)
-                val userName = fetchUserName(data["requestUserDocumentID"] as String)
+    private suspend fun fetchUserNames(userIds: List<String>): Map<String, String> {
+        if (userIds.isEmpty()) return emptyMap()
 
-                val request = RequestModel(
-                    requestId = requestId,
-                    requestTime = data["requestTime"] as? Long ?: System.currentTimeMillis(),
-                    requestState = (data["requestState"] as? Long)?.toInt() ?: 0,
-                    requestUserDocumentID = userName,
-                    requestMessage = data["requestMessage"] as? String ?: "",
-                    requestImage = data["requestImage"] as? String ?: "",
-                    responseList = responseList,
-                    requestGroupDocumentID = requestGroupDocumentID
-                )
+        Log.d("fetchUserNames", "🔥 Fetching names for userIds: $userIds")
 
-                requestList.add(request)
+        val userCollection = firestore.collection("UserData")
+        val userDocs = userCollection.get().await() // 🔥 전체 문서를 한 번에 가져옴
+
+        val userNames = mutableMapOf<String, String>()
+
+        for (userDoc in userDocs.documents) {
+            val userId = userDoc.id
+            if (userId in userIds) {
+                val userName = userDoc.getString("userName") ?: "알 수 없음"
+                userNames[userId] = userName
+                Log.d("fetchUserNames", "🔥 Retrieved userName: $userName for userID: $userId")
             }
         }
 
-        return requestList.sortedByDescending { it.requestTime }
+        return userNames
     }
 
     private suspend fun fetchResponses(requestId: String): List<ResponseModel> {

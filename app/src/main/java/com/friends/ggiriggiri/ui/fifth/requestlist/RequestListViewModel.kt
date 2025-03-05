@@ -8,15 +8,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.data.model.RequestModel
+import com.friends.ggiriggiri.data.repository.RequestListRepository
 import com.friends.ggiriggiri.data.service.RequestListService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Private
 
 @HiltViewModel
 class RequestListViewModel @Inject constructor(
     application: Application,
-    private val service: RequestListService
+    private val service: RequestListService,
+    private val repo: RequestListRepository
 ) : AndroidViewModel(application) {
 
     private val _isLoading = MutableLiveData<Boolean>()

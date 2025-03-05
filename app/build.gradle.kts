@@ -165,4 +165,6 @@ dependencies {
 
     // Optional - Room RxJava 지원 (필요 시 추가)
     implementation("androidx.room:room-rxjava3:$room_version")
+
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
 }

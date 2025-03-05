@@ -277,7 +277,7 @@ class MyPageFragment : Fragment() {
     private fun myPageLogoutDialog() {
         val dialog = CustomDialog(
             context = requireContext(),
-            contentText = "정말 로그아웃 하시곘습니까?",
+            contentText = "정말 로그아웃 하시겠습니까?",
             icon = R.drawable.ic_group_off,
             positiveText = "예",
             onPositiveClick = {

@@ -8,6 +8,11 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.friends.ggiriggiri.App
 import com.friends.ggiriggiri.LoginActivity
 import com.friends.ggiriggiri.R
@@ -25,23 +30,24 @@ import javax.inject.Inject
 
 class FirebaseNotificationService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        super.onMessageReceived(remoteMessage)
-
-        Log.d("FCM", "알림 수신: ${remoteMessage.notification?.title} - ${remoteMessage.notification?.body}")
-
-        // 알림 데이터
         val title = remoteMessage.notification?.title ?: "알림"
         val message = remoteMessage.notification?.body ?: "새로운 메시지가 도착했습니다."
         val timestamp = System.currentTimeMillis()
+        val userDocumentId = UserPreferences.getUserID(applicationContext) ?: return
 
-        // Firebase 메시지 데이터에서 userID 가져오기
-        // 앱이 실행 중이 아닐 경우, SharedPreferences에서 userID 가져오기
-        val userDocumentId = UserPreferences.getUserID(applicationContext) ?: return // userID가 없으면 저장하지 않음
+        val intent = Intent(this, NotificationSaveService::class.java).apply {
+            putExtra("title", title)
+            putExtra("message", message)
+            putExtra("timestamp", timestamp)
+            putExtra("userDocumentId", userDocumentId)
+        }
 
-        // 알림을 RoomDB에 저장
-        saveNotificationToDB(title, message, timestamp, userDocumentId)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        } else {
+            startService(intent)
+        }
 
-        // 알림 보내기
         sendNotification(title, message)
     }
 

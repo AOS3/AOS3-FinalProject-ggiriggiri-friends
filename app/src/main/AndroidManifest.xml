@@ -7,6 +7,9 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
 
     <application
         android:name=".App"
@@ -20,6 +23,7 @@
         android:theme="@style/Theme.Finalproject_ggiriggiri_friends"
         tools:targetApi="31">
 
+        <!-- Firebase Messaging Service -->
         <service
             android:name=".data.service.FirebaseNotificationService"
             android:exported="false">
@@ -28,6 +32,14 @@
             </intent-filter>
         </service>
 
+        <!-- Foreground Service for Notification Saving -->
+        <service
+            android:name=".data.service.NotificationSaveService"
+            android:foregroundServiceType="dataSync"
+            android:permission="android.permission.FOREGROUND_SERVICE"
+            android:exported="false"/>
+
+        <!-- FileProvider for Sharing Files -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.friends.ggiriggiri.fileprovider"
@@ -38,10 +50,12 @@
                 android:resource="@xml/file_path" />
         </provider>
 
+        <!-- Activities -->
         <activity
             android:name=".GroupActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -57,23 +71,24 @@
         <activity
             android:name=".LoginActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".SocialActivity"
             android:exported="false" />
+
+        <!-- Kakao Auth Activity -->
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="kakao9b56cf2a46f31844633c56522029525c" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

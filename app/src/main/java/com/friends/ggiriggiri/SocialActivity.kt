@@ -1,12 +1,18 @@
 package com.friends.ggiriggiri
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.friends.ggiriggiri.databinding.ActivitySocialBinding
 import com.friends.ggiriggiri.ui.notification.UserPreferences
@@ -16,6 +22,18 @@ import dagger.hilt.android.AndroidEntryPoint
 class SocialActivity : AppCompatActivity() {
 
     private lateinit var activitySocialBinding: ActivitySocialBinding
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // 권한이 허용됨
+            Toast.makeText(this, "알림 권한이 허용되었습니다.", Toast.LENGTH_SHORT).show()
+        } else {
+            // 권한이 거부됨
+            Toast.makeText(this, "알림 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +68,27 @@ class SocialActivity : AppCompatActivity() {
                 .replace(R.id.fragmentContainerViewSocialMain, SocialFragment())
                 .commit()
         }
+
+        // Android 13 이상에서만 권한 요청
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // 권한 요청
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+
+//        // android 13  버전
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+//            // 권한 목록
+//            val permissionList = arrayOf(
+//                Manifest.permission.POST_NOTIFICATIONS
+//            )
+//            requestPermissions(permissionList, 0)
+//        }
     }
 
     fun getUserDocumentId(): String? {
