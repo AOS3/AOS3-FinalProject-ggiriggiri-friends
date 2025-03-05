@@ -24,9 +24,15 @@
 
 ## 🔍 프로젝트 소개
 
-> 끼리끼리는 친한 친구들끼리 비공개 그룹을 만들어 소통하는 일상 공유 플랫폼입니다.
-   기존 SNS는 피드나 스토리를 통해 다수와 소통하는 데 초점을 맞추다 보니, 불필요한 관계가 형성되거나 과도한 정보로 인한 피로감을 느끼는 사람들이 많아지고 있습니다. 이러한 문제를 해결하기 위해, 우리는 제한된 관계와 시간 속에서 가볍지만 의미 있는 소통을 할 수 있는 SNS를 기획했습니다.
-   끼리끼리에서는 그룹원들끼리 요청과 응답을 주고받으며 실시간으로 소통할 수 있으며, 30분의 제한 시간을 두어 빠르고 즉각적인 대화를 유도합니다. 또한, 하루에 한 개의 질문을 모든 사용자에게 제공하여 더욱 능동적이고 깊이 있는 대화를 나눌 수 있도록 설계했습니다.
+> **"친한 친구들과 편하게 소통하고 싶지 않나요?"**
+> 
+> 
+> 끼리끼리는 소중한 사람들과 비공개 그룹을 만들어 가볍고 의미 있는 대화를 나누는 일상 공유 플랫폼입니다.
+> 
+> 기존 SNS는 다수와의 소통을 강조해 불필요한 관계와 정보 피로감을 초래합니다. 이를 해결하기 위해, 우리는 제한된 관계와 시간 속에서 깊이 있는 대화를 유도하는 SNS를 기획했습니다.
+> 
+> 끼리끼리에서는 그룹원들끼리 실시간으로 요청하고 응답하며, 30분 제한을 통해 즉각적인 소통을 유도합니다. 또한, 하루 한 개의 질문을 제공해 더욱 능동적인 대화를 나눌 수 있도록 설계했습니다.
+>
 > 
 
 ## 🐈기술 스택
@@ -43,7 +49,7 @@
 
 ### Development
 
-<img src="https://img.shields.io/badge/android-34A853?style=for-the-badge&logo=android&logoColor=white"> <img src="https://img.shields.io/badge/kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white"> <img src="https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=white"> <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
+<img src="https://img.shields.io/badge/android-34A853?style=for-the-badge&logo=android&logoColor=white"> <img src="https://img.shields.io/badge/kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white"> <img src="https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=white"> <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white"> <img src="https://img.shields.io/badge/Hilt-36474F?style=for-the-badge"> <img src="https://img.shields.io/badge/MVVM-2D50A5?style=for-the-badge">
 
 
 ### Communication
@@ -53,34 +59,16 @@
 ## 📺 화면 구성
 
 | 로그인 화면 | 그룹 화면 | 홈 화면 |
-|---|---|---|
-
+| --- | --- | --- |
 | ![image1](app/src/main/res/drawable/image1.png) | ![image2](app/src/main/res/drawable/image2.png) | ![image3](app/src/main/res/drawable/image3.png) |
-|---|---|---|
 
-1. 오늘의 질문 화면
+| 오늘의 질문 화면 | 요청하기 화면 | 요청 보기 화면 |
+| --- | --- | --- |
+| ![image1](app/src/main/res/drawable/image4.png) | ![image2](app/src/main/res/drawable/image5.png) | ![image3](app/src/main/res/drawable/image6.png) |
 
-1. 요청하기 화면
-
-1. 요청 보기 화면
-
-![image.png](image%203.png)
-
-![image.png](image%204.png)
-
-![image.png](image%205.png)
-
-1. 추억들 화면
-
-1. 질문 답변하기 화면
-
-1. 마이페이지 화면
-
-![image.png](image%206.png)
-
-![image.png](image%207.png)
-
-![image.png](image%208.png)
+| 추억들 화면 | 질문 답변하기 화면 | 마이페이지 화면 |
+| --- | --- | --- |
+| ![image1](app/src/main/res/drawable/image7.png) | ![image2](app/src/main/res/drawable/image8.png) | ![image3](app/src/main/res/drawable/image9.png) |
 
 ## 🔔 주요 기능
 
@@ -101,6 +89,7 @@
 - 질문에 답변한 사용자는 다른 그룹원들이 작성한 답변을 볼 수 있음
 
 ## 🏗️ **아키텍처**
+
 
 📁 패키지 구조
 
@@ -157,6 +146,12 @@
 │   │   │   └── requestlist
 ```
 
+
 ❗흐름
 
-![Architecture_ggiriggiri.png](Architecture_ggiriggiri.png)
+![image1](app/src/main/res/drawable/architecture_ggiriggiri.png)
+
+
+
+
+
