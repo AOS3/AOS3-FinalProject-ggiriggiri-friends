@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.data.model.RequestModel
 import com.friends.ggiriggiri.databinding.RowRequestListBinding
-import com.friends.ggiriggiri.ui.fifth.requestdetail.RequestDetailFragment
+import com.friends.ggiriggiri.ui.memories.requestdetail.RequestDetailFragment
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

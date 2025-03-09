@@ -7,7 +7,7 @@
     android:paddingStart="10dp"
     android:paddingEnd="10dp"
     android:background="@color/white"
-    tools:context=".ui.fourth.mypage.MyPageBottomSheetFragment">
+    tools:context=".ui.mypages.mypage.MyPageBottomSheetFragment">
 
     <com.google.android.material.bottomsheet.BottomSheetDragHandleView
         android:id="@+id/profileBottomSheet"

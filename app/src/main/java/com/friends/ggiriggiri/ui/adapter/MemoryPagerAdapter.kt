@@ -2,8 +2,8 @@ package com.friends.ggiriggiri.ui.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.friends.ggiriggiri.ui.fifth.questionlist.QuestionListFragment
-import com.friends.ggiriggiri.ui.fifth.requestlist.RequestListFragment
+import com.friends.ggiriggiri.ui.memories.questionlist.QuestionListFragment
+import com.friends.ggiriggiri.ui.memories.requestlist.RequestListFragment
 
 class MemoryPagerAdapter(activity:Fragment) : FragmentStateAdapter(activity) {
     override fun getItemCount(): Int = 2

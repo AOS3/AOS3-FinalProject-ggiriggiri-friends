@@ -1,15 +1,14 @@
 package com.friends.ggiriggiri
 
 import android.os.Bundle
-import android.text.TextUtils.replace
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.friends.ggiriggiri.databinding.FragmentSocialBinding
-import com.friends.ggiriggiri.ui.fifth.memory.MemoryFragment
-import com.friends.ggiriggiri.ui.fourth.mypage.MyPageFragment
-import com.friends.ggiriggiri.ui.third.home.HomeFragment
+import com.friends.ggiriggiri.ui.memories.memory.MemoryFragment
+import com.friends.ggiriggiri.ui.mypages.mypage.MyPageFragment
+import com.friends.ggiriggiri.ui.main.home.HomeFragment
 
 
 class SocialFragment : Fragment() {

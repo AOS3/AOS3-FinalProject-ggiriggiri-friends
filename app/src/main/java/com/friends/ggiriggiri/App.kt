@@ -3,15 +3,8 @@ package com.friends.ggiriggiri
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import com.friends.ggiriggiri.ui.first.register.UserModel
+import com.friends.ggiriggiri.ui.start.register.UserModel
 import dagger.hilt.android.HiltAndroidApp
-import java.util.Calendar
-import java.util.concurrent.TimeUnit
 
 @HiltAndroidApp
 class App : Application(){

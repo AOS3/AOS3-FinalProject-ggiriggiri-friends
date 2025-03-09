@@ -1,7 +1,7 @@
 package com.friends.ggiriggiri.data.repository
 
 import com.friends.ggiriggiri.data.vo.GroupVO
-import com.friends.ggiriggiri.ui.first.register.UserVO
+import com.friends.ggiriggiri.ui.start.register.UserVO
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await

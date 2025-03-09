@@ -4,8 +4,6 @@ import android.util.Log
 import com.friends.ggiriggiri.data.model.RequestModel
 import com.friends.ggiriggiri.data.model.ResponseModel
 import com.friends.ggiriggiri.data.repository.RequestRepository
-import com.friends.ggiriggiri.ui.first.register.UserModel
-import com.friends.ggiriggiri.util.RequestState
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -8,11 +8,9 @@ import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.friends.ggiriggiri.databinding.ActivityGroupBinding
 import com.friends.ggiriggiri.ui.notification.UserPreferences
-import com.friends.ggiriggiri.ui.second.group.GroupFragment
+import com.friends.ggiriggiri.ui.settinggroup.group.GroupFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@android:color/black"
-    tools:context=".ui.fourth.mypage.FullScreenImageDialogFragment">
+    tools:context=".ui.mypages.mypage.FullScreenImageDialogFragment">
 
 
     <!-- 툴바 영역 -->

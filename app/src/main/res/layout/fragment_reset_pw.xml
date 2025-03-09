@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:transitionGroup="true"
     android:background="@color/white"
-    tools:context=".ui.first.findpw.ResetPwFragment">
+    tools:context=".ui.start.findpw.ResetPwFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/tbResetPwFragment"

@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".ui.second.group.GroupFragment">
+    tools:context=".ui.settinggroup.group.GroupFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarGroup"

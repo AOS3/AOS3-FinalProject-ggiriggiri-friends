@@ -10,12 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.friends.ggiriggiri.databinding.ActivityLoginBinding
-import com.friends.ggiriggiri.ui.first.findid.FindIdFragment
-import com.friends.ggiriggiri.ui.first.findpw.FindPwFragment
-import com.friends.ggiriggiri.ui.first.findpw.ResetPwFragment
-import com.friends.ggiriggiri.ui.first.login.LoginFragment
-import com.friends.ggiriggiri.ui.first.login.NotificationTestFragment
-import com.friends.ggiriggiri.ui.first.register.RegisterFragment
+import com.friends.ggiriggiri.ui.start.findid.FindIdFragment
+import com.friends.ggiriggiri.ui.start.findpw.FindPwFragment
+import com.friends.ggiriggiri.ui.start.findpw.ResetPwFragment
+import com.friends.ggiriggiri.ui.start.login.LoginFragment
+import com.friends.ggiriggiri.ui.start.login.NotificationTestFragment
+import com.friends.ggiriggiri.ui.start.register.RegisterFragment
 import com.google.android.material.transition.MaterialSharedAxis
 import dagger.hilt.android.AndroidEntryPoint
 

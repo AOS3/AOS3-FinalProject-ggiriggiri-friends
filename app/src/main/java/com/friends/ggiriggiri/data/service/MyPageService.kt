@@ -4,7 +4,7 @@ package com.friends.ggiriggiri.data.service
 import android.util.Log
 import com.friends.ggiriggiri.data.model.GroupModel2
 import com.friends.ggiriggiri.data.repository.MyPageRepository
-import com.friends.ggiriggiri.ui.first.register.UserModel
+import com.friends.ggiriggiri.ui.start.register.UserModel
 import javax.inject.Inject
 
 class MyPageService @Inject constructor(

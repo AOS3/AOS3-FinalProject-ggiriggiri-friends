@@ -3,7 +3,7 @@ package com.friends.ggiriggiri.data.service
 import android.content.SharedPreferences
 import android.util.Log
 import com.friends.ggiriggiri.data.repository.KakaoLoginRepository
-import com.friends.ggiriggiri.ui.first.register.UserModel
+import com.friends.ggiriggiri.ui.start.register.UserModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

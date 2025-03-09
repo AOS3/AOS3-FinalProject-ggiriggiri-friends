@@ -9,7 +9,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcvLoginActivity"
-        android:name="com.friends.ggiriggiri.ui.first.login.LoginFragment"
+        android:name="com.friends.ggiriggiri.ui.start.login.LoginFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

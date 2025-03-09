@@ -1,8 +1,8 @@
 package com.friends.ggiriggiri.data.repository
 
 import android.util.Log
-import com.friends.ggiriggiri.ui.first.register.UserModel
-import com.friends.ggiriggiri.ui.first.register.UserVO
+import com.friends.ggiriggiri.ui.start.register.UserModel
+import com.friends.ggiriggiri.ui.start.register.UserVO
 import com.friends.ggiriggiri.util.UserSocialLoginState
 import com.friends.ggiriggiri.util.UserState
 import com.google.firebase.firestore.FirebaseFirestore

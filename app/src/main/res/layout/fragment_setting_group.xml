@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:transitionGroup="true"
     android:fitsSystemWindows="true"
-    tools:context=".ui.fourth.settinggroup.SettingGroupFragment">
+    tools:context=".ui.mypages.settinggroup.SettingGroupFragment">
 
     <!-- Toolbar -->
     <com.google.android.material.appbar.MaterialToolbar

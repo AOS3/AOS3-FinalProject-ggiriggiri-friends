@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:transitionGroup="true"
     android:fitsSystemWindows="true"
-    tools:context=".ui.fourth.modifygroupname.ModifyGroupNameFragment">
+    tools:context=".ui.mypages.modifygroupname.ModifyGroupNameFragment">
 
 
     <!-- Toolbar -->

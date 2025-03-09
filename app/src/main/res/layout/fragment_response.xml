@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.third.response.ResponseFragment">
+    tools:context=".ui.main.response.ResponseFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/tbResponse"
