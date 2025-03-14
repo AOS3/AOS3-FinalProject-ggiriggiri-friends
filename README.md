@@ -20,7 +20,7 @@
 | 안성용 | 차승환 | 정지은 | 채수범 |
 | --- | --- | --- | --- |
 | ![image1](app/src/main/res/drawable/exploding_head.png) | ![image1](app/src/main/res/drawable/catwithwrysmile.png) | ![image1](app/src/main/res/drawable/clownface.png) | ![image1](app/src/main/res/drawable/ghost.png) |
-| [네이버 바로가기](http://www.naver.com/) | [네이버 바로가기](http://www.naver.com/) | [네이버 바로가기](http://www.naver.com/) | [chaesoobum](https://github.com/chaesoobum) |
+| [universeYong](https://github.com/universeYong) | [Seung Hwan](https://github.com/cha1111) | [jieuni0112](https://github.com/jieuni0112) | [chaesoobum](https://github.com/chaesoobum) |
 
 ## 🔍 프로젝트 소개
 
