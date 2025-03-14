@@ -123,31 +123,31 @@
 │   │   ├── adapter // RecyclerView 어댑터
 │   │   ├── custom  // customProgressbar,customDialog
 │   │   │
-│   │   ├── first // 로그인 화면
+│   │   ├── start // 로그인 화면
 │   │   │   ├── findid
 │   │   │   ├── findpw
 │   │   │   ├── login
 │   │   │   └── register
 │   │   │
-│   │   ├── second // 그룹만들기, 그룹들어가기 화면
+│   │   ├── settinggroup // 그룹만들기, 그룹들어가기 화면
 │   │   │   ├── group
 │   │   │   ├── joingroup
 │   │   │   └── makegroup
 │   │   │
-│   │   ├── third // 메인화면, 요청하기, 요청에답하기, 질문에답하기 화면
+│   │   ├── main // 메인화면, 요청하기, 요청에답하기, 질문에답하기 화면
 │   │   │   ├── answer
 │   │   │   ├── home
 │   │   │   ├── request
 │   │   │   └── response
 │   │   │
-│   │   ├── fourth // 마이페이지 화면
+│   │   ├── mypages // 마이페이지 화면
 │   │   │   ├── modifygroupname
 │   │   │   ├── modifygrouppw
 │   │   │   ├── modifyuserpw
 │   │   │   ├── mypage
 │   │   │   └── settinggroup
 │   │   │
-│   │   ├── fifth // 추억들 화면
+│   │   ├── memories // 추억들 화면
 │   │   │   ├── memory
 │   │   │   ├── questionanswer
 │   │   │   ├── questionlist
