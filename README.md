@@ -5,7 +5,7 @@
 > 개발 기간 : 2025.02.06 ~ 2025.03.05
 > 
 
-## 🌟 배포 주소
+## 🌟 개발단계
 
 > 요구사항 명세서                                                 
 > https://docs.google.com/spreadsheets/d/1x4YWIlUO0vx7K2CE0nvun3ryrkuAntxt/edit?gid=1388090367#gid=1388090367
