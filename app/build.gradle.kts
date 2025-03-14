@@ -24,6 +24,15 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("keystore.jks") // Keystore 파일 경로
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "990602"
+            keyAlias = System.getenv("KEY_ALIAS") ?: "my-key-alias"
+            keyPassword = System.getenv("KEY_PASSWORD") ?: "990602"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -31,12 +40,15 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release") // 서명 설정 추가
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -45,6 +57,7 @@ android {
         enable = true
     }
 }
+
 
 dependencies {
     implementation(libs.androidx.core.ktx)
