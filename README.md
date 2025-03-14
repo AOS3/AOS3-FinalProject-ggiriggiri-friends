@@ -68,7 +68,7 @@
 
 | 추억들 화면 | 질문 답변하기 화면 | 마이페이지 화면 |
 | --- | --- | --- |
-| ![image1](app/src/main/res/drawable/image7.png) | ![image2](app/src/main/res/drawable/image8.png) | ![image3](app/src/main/res/drawable/image9.png) |
+| ![image1](app/src/main/res/drawable/memories.jpg) | ![image2](app/src/main/res/drawable/image8.png) | ![image3](app/src/main/res/drawable/image9.png) |
 
 ## 🔔 주요 기능
 
