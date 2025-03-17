@@ -7,7 +7,6 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
 
@@ -33,11 +32,6 @@
         </service>
 
         <!-- Foreground Service for Notification Saving -->
-        <service
-            android:name=".data.service.NotificationSaveService"
-            android:foregroundServiceType="dataSync"
-            android:permission="android.permission.FOREGROUND_SERVICE"
-            android:exported="false"/>
 
         <!-- FileProvider for Sharing Files -->
         <provider

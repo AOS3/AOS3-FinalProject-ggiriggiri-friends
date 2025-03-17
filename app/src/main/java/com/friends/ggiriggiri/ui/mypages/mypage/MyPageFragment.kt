@@ -21,11 +21,13 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.friends.ggiriggiri.App
+import com.friends.ggiriggiri.GroupActivity
 import com.friends.ggiriggiri.LoginActivity
 import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.SocialActivity
 import com.friends.ggiriggiri.databinding.FragmentMyPageBinding
 import com.friends.ggiriggiri.ui.custom.CustomDialog
+import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
 import com.friends.ggiriggiri.ui.start.register.UserModel
 import com.friends.ggiriggiri.ui.mypages.modifyuserpw.ModifyUserPwFragment
 import com.friends.ggiriggiri.ui.mypages.settinggroup.SettingGroupFragment
@@ -44,6 +46,7 @@ class MyPageFragment : Fragment() {
 
     private lateinit var fragmentMyPageBinding: FragmentMyPageBinding
     private lateinit var socialActivity: SocialActivity
+    private lateinit var customDialogProgressbar:CustomDialogProgressbar
 
     private val myPageViewModel: MyPageViewModel by viewModels()
 
@@ -76,6 +79,14 @@ class MyPageFragment : Fragment() {
     ): View {
         fragmentMyPageBinding = FragmentMyPageBinding.inflate(inflater)
         socialActivity = activity as SocialActivity
+        customDialogProgressbar = CustomDialogProgressbar(socialActivity)
+
+        val userDocumentId = socialActivity.getUserDocumentId()
+        if (userDocumentId != null) {
+            myPageViewModel.userDocumentId = userDocumentId
+        } else {
+            Log.e("SettingGroupFragment", "userDocumentId is null")
+        }
 
         settingToolbar()
 
@@ -219,12 +230,18 @@ class MyPageFragment : Fragment() {
                     R.id.myPageLogoutButton -> {
                         myPageLogoutDialog()
                     }
+
+                    //회원탈퇴
+                    R.id.myPageCancelMembershipButton ->{
+                        myPageCancelMembershipDialog()
+                    }
                 }
             }
             myPageGroupName.setOnClickListener(myPageItemClickListener)
             myPageNotificationSettingButton.setOnClickListener(myPageItemClickListener)
             myPageChangePasswordButton.setOnClickListener(myPageItemClickListener)
             myPageLogoutButton.setOnClickListener(myPageItemClickListener)
+            myPageCancelMembershipButton.setOnClickListener(myPageItemClickListener)
         }
     }
 
@@ -327,6 +344,85 @@ class MyPageFragment : Fragment() {
                         navigateToLoginScreen()
                     }
                 }
+            },
+            negativeText = "아니오",
+            onNegativeClick = {
+
+            }
+        )
+        dialog.showCustomDialog()
+    }
+
+    private fun myPageCancelMembershipDialog(){
+        val dialog = CustomDialog(
+            context = requireContext(),
+            contentText = "정말 탈퇴 하시겠습니까?",
+            icon = R.drawable.ic_group_off,
+            positiveText = "예",
+            onPositiveClick = {
+                customDialogProgressbar.show()
+                val app = requireActivity().application as App
+                app.loginUserModel = UserModel()
+
+                val userSocialLogin = app.loginUserModel.userSocialLogin // 현재 로그인된 소셜 플랫폼 확인
+
+                val sharedPreferences = requireActivity().getSharedPreferences("GGiriggiriPrefs", android.content.Context.MODE_PRIVATE)
+                sharedPreferences.edit().remove("autoLoginToken").apply()
+
+                //그룹에서 나가기
+                myPageViewModel.exitGroup(
+                    onSuccess = {
+                        //그룹탈퇴 성공시 회원상태변경
+                        myPageViewModel.cancelMembership()
+                        //로그아웃
+                        when (userSocialLogin) {
+                            UserSocialLoginState.KAKAO -> {
+                                // ✅ 카카오 로그아웃
+                                try {
+                                    KakaoSdk.init(requireContext(), getString(R.string.kakao_native_app_key)) // SDK 초기화
+                                    UserApiClient.instance.logout { error ->
+                                        if (error != null) {
+                                            Log.e("MyPageFragment", "카카오 로그아웃 실패", error)
+                                        } else {
+                                            Log.d("MyPageFragment", "✅ 카카오 로그아웃 성공")
+                                        }
+                                        navigateToLoginScreen()
+                                        customDialogProgressbar.dismiss()
+                                    }
+                                } catch (e: Exception) {
+                                    Log.e("MyPageFragment", "카카오 로그아웃 중 오류 발생", e)
+                                    navigateToLoginScreen()
+                                    customDialogProgressbar.dismiss()
+                                }
+                            }
+
+                            UserSocialLoginState.GOOGLE -> {
+                                // ✅ 구글 로그아웃
+                                FirebaseAuth.getInstance().signOut()
+                                Log.d("MyPageFragment", "✅ 구글 로그아웃 성공")
+                                navigateToLoginScreen()
+                                customDialogProgressbar.dismiss()
+                            }
+
+                            UserSocialLoginState.NAVER -> {
+                                // ✅ 네이버 로그아웃
+                                NaverIdLoginSDK.logout()
+                                Log.d("MyPageFragment", "✅ 네이버 로그아웃 성공")
+                                navigateToLoginScreen()
+                                customDialogProgressbar.dismiss()
+                            }
+
+                            else -> {
+                                Log.d("MyPageFragment", "❌ 소셜 로그인 정보를 찾을 수 없음")
+                                navigateToLoginScreen()
+                                customDialogProgressbar.dismiss()
+                            }
+                        }
+                    },
+                    onFailure = { e ->
+                        Log.e("SettingGroupFragment", "그룹 나가기 실패: ${e.message}")
+                    }
+                )
             },
             negativeText = "아니오",
             onNegativeClick = {

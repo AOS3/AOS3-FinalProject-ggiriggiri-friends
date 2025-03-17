@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:fitsSystemWindows="true"
     android:transitionGroup="true"
     tools:context=".ui.start.login.LoginFragment">
 
@@ -85,8 +85,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="아이디"
-                    app:boxStrokeColor="@color/material_dynamic_neutral60"
                     android:textColorHint="@color/material_dynamic_neutral60"
+                    app:boxStrokeColor="@color/material_dynamic_neutral60"
                     app:cursorColor="@color/black"
                     app:errorEnabled="true"
                     app:hintTextColor="@color/material_dynamic_neutral60">
@@ -113,14 +113,14 @@
                     android:text="중복 확인" />
 
                 <TextView
-                    tools:text = "중복확인 완료"
-                    android:layout_marginTop="10dp"
-                    android:textSize="20sp"
                     android:id="@+id/tvRegisterFragmentIdValid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:fontFamily="@font/nanumsquarebold" />
+                    android:fontFamily="@font/nanumsquarebold"
+                    android:textSize="20sp"
+                    tools:text="중복확인 완료" />
 
             </LinearLayout>
 
@@ -291,6 +291,42 @@
                     tools:text="인증완료" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/llPrivacyPolicy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/llRegisterFragmentConfirmCertification">
+
+                <TextView
+                    android:id="@+id/tvPrivacyPolicy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/nanumsquarebold"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:linksClickable="false"
+                    android:text="개인정보처리방침"
+                    android:textColor="@color/black"
+                    android:textColorLink="@color/black"
+                    android:textSize="13sp" />
+
+                <android.widget.CheckBox
+                    android:id="@+id/cbPrivacyPolicyCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+            </LinearLayout>
+
             <android.widget.Button
                 android:id="@+id/btnRegisterFragmentSignup"
                 android:layout_width="0dp"
@@ -305,7 +341,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/llRegisterFragmentConfirmCertification" />
+                app:layout_constraintTop_toBottomOf="@id/llPrivacyPolicy" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

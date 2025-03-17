@@ -53,4 +53,12 @@ class UserService @Inject constructor() {
     suspend fun getUserByAutoLoginToken(token: String): UserModel? {
         return UserRepository.getUserByAutoLoginToken(token)
     }
+
+    suspend fun addAuthLoginToken(id: String, pw: String, userAutoLoginToken: String){
+        return UserRepository.addAuthLoginToken(id, pw, userAutoLoginToken)
+    }
+
+    suspend fun cancelMembership(userDocumentID:String){
+        return UserRepository.cancelMembership(userDocumentID)
+    }
 }

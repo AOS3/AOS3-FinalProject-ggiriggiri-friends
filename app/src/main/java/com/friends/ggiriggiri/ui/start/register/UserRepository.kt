@@ -1,7 +1,9 @@
 package com.friends.ggiriggiri.ui.start.register
 
 import android.util.Log
+import com.friends.ggiriggiri.util.UserState
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.model.Values
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.tasks.await
 import javax.inject.Singleton
@@ -159,6 +161,41 @@ class UserRepository() {
                 null
             }
         }
+
+        suspend fun addAuthLoginToken(id: String, pw: String, userAutoLoginToken: String) {
+            val firestore = FirebaseFirestore.getInstance()
+
+            try {
+                val querySnapshot = firestore.collection("UserData")
+                    .whereEqualTo("userId", id)
+                    .whereEqualTo("userPw", pw)
+                    .get()
+                    .await()
+
+                for (document in querySnapshot.documents) {
+                    document.reference.update("userAutoLoginToken", userAutoLoginToken).await()
+                }
+            } catch (e: Exception) {
+                Log.e("Firestore", "Error updating userAutoLoginToken: ${e.message}")
+            }
+        }
+
+        suspend fun cancelMembership(userDocumentID: String) {
+            val firestore = FirebaseFirestore.getInstance()
+
+            try {
+                firestore.collection("UserData")
+                    .document(userDocumentID)
+                    .update("userState", UserState.WITHDRAW.num)
+                    .await()
+
+                Log.d("Firestore", "User state updated successfully")
+            } catch (e: Exception) {
+                Log.e("Firestore", "Error updating userState: ${e.message}")
+            }
+        }
+
+
 
 
 

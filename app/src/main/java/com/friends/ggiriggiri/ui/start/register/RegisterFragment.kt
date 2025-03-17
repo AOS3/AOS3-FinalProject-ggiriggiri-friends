@@ -35,6 +35,9 @@ class RegisterFragment : Fragment() {
     // 휴대폰 번호 인증 통과 여부
     var isCertificationNumberValidResult = false
 
+    // 개인정보처리방침 확인여부
+    var isPrivacyPolicyCheckResult = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,6 +64,9 @@ class RegisterFragment : Fragment() {
 
         //전화번호 입력
         settingTilRegisterFragmentPhoneNumber()
+
+        // 개인정보 처리방침
+        settingCbPrivacyPolicyCheck()
 
 
 
@@ -237,6 +243,20 @@ class RegisterFragment : Fragment() {
                 registerViewModel.etRegisterFragmentNameWatcher(s.toString())
             }
         })
+    }
+
+    // 개인정보 처리방침
+    private fun settingCbPrivacyPolicyCheck(){
+        // CheckBox 클릭 시 ViewModel 값 변경
+        binding.apply {
+            cbPrivacyPolicyCheck.setOnCheckedChangeListener { _, isChecked ->
+                registerViewModel.isPrivacyPolicyCheck.value = isChecked
+            }
+            tvPrivacyPolicy.setOnClickListener {
+                loginActivity.replaceFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT,true,true,null)
+            }
+        }
+
     }
 
     //아이디 중복확인 유지

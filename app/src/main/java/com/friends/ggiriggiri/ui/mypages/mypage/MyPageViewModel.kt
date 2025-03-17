@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.airbnb.lottie.BuildConfig
 import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.data.service.MyPageService
+import com.friends.ggiriggiri.ui.start.register.UserService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     val service: MyPageService,
+    val userService: UserService
 ) : ViewModel() {
     // 사용자 문서 ID
     var userDocumentId: String? = null
@@ -89,5 +91,28 @@ class MyPageViewModel @Inject constructor(
     // 기본 프로필 이미지 URI 반환 함수
     private fun getDefaultProfileImageUri(): Uri {
         return Uri.parse("android.resource://${BuildConfig.APPLICATION_ID}/${R.drawable.ic_default_profile}")
+    }
+
+    fun exitGroup(onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        val documentId = userDocumentId ?: return
+        viewModelScope.launch {
+            try {
+                service.exitGroup(documentId)
+                onSuccess()
+            } catch (e: Exception) {
+                onFailure(e)
+            }
+        }
+    }
+
+    fun cancelMembership(){
+        val documentId = userDocumentId ?: return
+        viewModelScope.launch {
+            try {
+                userService.cancelMembership(documentId)
+            }catch (e: Exception){
+                Log.d("회원탈퇴 실패",e.toString())
+            }
+        }
     }
 }

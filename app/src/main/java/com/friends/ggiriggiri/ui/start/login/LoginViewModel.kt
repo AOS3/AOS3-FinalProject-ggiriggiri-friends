@@ -22,6 +22,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.UUID
 import javax.inject.Inject
 
 
@@ -92,7 +93,14 @@ class LoginViewModel @Inject constructor(
                             val app = loginActivity.application as App
                             app.loginUserModel = user
 
-                            saveAutoLoginToken(user.userAutoLoginToken)
+                            if (user.userAutoLoginToken != null){
+                                Log.d("userAutoLoginToken","비어있음")
+                            }
+
+                            //일반로그인시 userAutoLoginToken 로그인값 저장
+                            val authLoginToken = UUID.randomUUID().toString()
+                            service.addAuthLoginToken(id,pw,authLoginToken)
+                            saveAutoLoginToken(authLoginToken)
 
                             val intent = Intent(loginActivity, GroupActivity::class.java)
                             loginActivity.startActivity(intent)
