@@ -27,11 +27,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="그룹 명"
-                app:boxStrokeColor="@color/black"
-                app:cursorColor="#FDF497"
-                app:endIconMode="clear_text"
+
+                android:textColorHint="@color/material_dynamic_neutral60"
+                app:boxStrokeColor="@color/material_dynamic_neutral60"
+                app:cursorColor="@color/black"
+                app:endIconMode="password_toggle"
                 app:helperText=" "
-                app:hintTextColor="@color/black">
+                app:hintTextColor="@color/material_dynamic_neutral60">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -52,11 +54,13 @@
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:hint="그룹 코드"
-                    app:boxStrokeColor="@color/black"
-                    app:cursorColor="#FDF497"
-                    app:endIconMode="clear_text"
+
+                    android:textColorHint="@color/material_dynamic_neutral60"
+                    app:boxStrokeColor="@color/material_dynamic_neutral60"
+                    app:cursorColor="@color/black"
+                    app:endIconMode="password_toggle"
                     app:helperText=" "
-                    app:hintTextColor="@color/black">
+                    app:hintTextColor="@color/material_dynamic_neutral60">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -81,11 +85,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="그룹 비밀번호"
-                app:boxStrokeColor="@color/black"
-                app:cursorColor="#FDF497"
+
+                android:textColorHint="@color/material_dynamic_neutral60"
+                app:boxStrokeColor="@color/material_dynamic_neutral60"
+                app:cursorColor="@color/black"
                 app:endIconMode="password_toggle"
                 app:helperText=" "
-                app:hintTextColor="@color/black">
+                app:hintTextColor="@color/material_dynamic_neutral60">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -100,11 +106,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="그룹 비밀번호 확인"
-                app:boxStrokeColor="@color/black"
-                app:cursorColor="#FDF497"
+
+                android:textColorHint="@color/material_dynamic_neutral60"
+                app:boxStrokeColor="@color/material_dynamic_neutral60"
+                app:cursorColor="@color/black"
                 app:endIconMode="password_toggle"
                 app:helperText=" "
-                app:hintTextColor="@color/black">
+                app:hintTextColor="@color/material_dynamic_neutral60">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"

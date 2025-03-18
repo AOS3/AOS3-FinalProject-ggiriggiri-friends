@@ -40,4 +40,9 @@ class GoogleLoginService @Inject constructor(
     suspend fun getUserByAutoLoginToken(token: String): UserModel? {
         return googleLoginRepository.getUserByAutoLoginToken(token)
     }
+
+    //Firestore에서 사용자 조회 후 탈퇴한 회원이면 로그인x
+    suspend fun userCancelMembershipCheck(email: String): Boolean {
+        return googleLoginRepository.userCancelMembershipCheck(email)
+    }
 }

@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,7 +19,9 @@ import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.data.service.KakaoLoginService
 import com.friends.ggiriggiri.data.service.NaverLoginService
 import com.friends.ggiriggiri.databinding.FragmentLoginBinding
+import com.friends.ggiriggiri.ui.custom.CustomDialog
 import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
+import com.friends.ggiriggiri.ui.custom.CustomLoginDialog
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -30,6 +33,7 @@ import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.OAuthLoginCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -164,15 +168,52 @@ class LoginFragment : Fragment() {
         binding.apply {
             // 카카오 로그인
             ivLoginFragmentKakaoLogin.setOnClickListener {
-                loginWithKakao()
+                val dialog = CustomLoginDialog(
+                    context = requireContext(),
+                    onPositiveClick = { loginWithKakao() },
+                    positiveText = "네",
+                    onNegativeClick = {},
+                    negativeText = "아니요",
+                    contentText = "개인정보처리방침을 확인하셨나요?",
+                    icon = R.drawable.ic_check_circle,
+                    onViewPrivacyPolicy = {
+                        loginActivity.replaceFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT,true,true,null)
+                    }
+                )
+                dialog.showCustomDialog()
+
             }
             // 네이버 로그인
             ivLoginFragmentNaverLogin.setOnClickListener {
-                loginWithNaver()
+                val dialog = CustomLoginDialog(
+                    context = requireContext(),
+                    onPositiveClick = { loginWithNaver() },
+                    positiveText = "네",
+                    onNegativeClick = {},
+                    negativeText = "아니요",
+                    contentText = "개인정보처리방침을 확인하셨나요?",
+                    icon = R.drawable.ic_check_circle,
+                    onViewPrivacyPolicy = {
+                        loginActivity.replaceFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT,true,true,null)
+                    }
+                )
+                dialog.showCustomDialog()
             }
             // 구글 로그인
             ivLoginFragmentGoogleLogin.setOnClickListener {
-                requestGoogleLogin()
+                val dialog = CustomLoginDialog(
+                    context = requireContext(),
+                    onPositiveClick = { requestGoogleLogin() },
+                    positiveText = "네",
+                    onNegativeClick = {},
+                    negativeText = "아니요",
+                    contentText = "개인정보처리방침을 확인하셨나요?",
+                    icon = R.drawable.ic_check_circle,
+                    onViewPrivacyPolicy = {
+                        loginActivity.replaceFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT,true,true,null)
+                    }
+                )
+                dialog.showCustomDialog()
             }
 
         }
@@ -253,39 +294,50 @@ class LoginFragment : Fragment() {
                 val nickname = user.kakaoAccount?.profile?.nickname ?: "닉네임 없음"
                 val profileImage = user.kakaoAccount?.profile?.thumbnailImageUrl ?: ""
 
-                // OAuthToken 가져오기
-                UserApiClient.instance.accessTokenInfo { tokenInfo, tokenError ->
-                    if (tokenError != null) {
-                        Log.e("KakaoToken", "OAuthToken 가져오기 실패", tokenError)
+                lifecycleScope.launch {
+                    val cancelMembershipCheckResult = async {
+                        kakaoLoginService.userCancelMembershipCheck(email)
+                    }.await()
+
+                    if (!cancelMembershipCheckResult) {
                         progressDialog.dismiss()
-                        return@accessTokenInfo
+                        Toast.makeText(loginActivity, "탈퇴한 회원입니다", Toast.LENGTH_LONG).show()
+                        return@launch
                     }
+                    // OAuthToken 가져오기
+                    UserApiClient.instance.accessTokenInfo { tokenInfo, tokenError ->
+                        if (tokenError != null) {
+                            Log.e("KakaoToken", "OAuthToken 가져오기 실패", tokenError)
+                            progressDialog.dismiss()
+                            return@accessTokenInfo
+                        }
 
-                    val kakaoToken = tokenInfo?.id.toString() // 카카오 OAuthToken 값 사용
+                        val kakaoToken = tokenInfo?.id.toString() // 카카오 OAuthToken 값 사용
 
-                    // val kakaoLoginService = KakaoLoginService(KakaoLoginRepository())
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        val userModel = kakaoLoginService.handleKakaoLogin(
-                            email,
-                            nickname,
-                            profileImage,
-                            kakaoToken
-                        )
+                        // val kakaoLoginService = KakaoLoginService(KakaoLoginRepository())
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            val userModel = kakaoLoginService.handleKakaoLogin(
+                                email,
+                                nickname,
+                                profileImage,
+                                kakaoToken
+                            )
 
-                        withContext(Dispatchers.Main) {
-                            if (userModel != null) {
-                                progressDialog.dismiss()
-                                Log.d("KakaoUserInfo", "Firestore에서 가져온 유저: ${userModel.userId}")
+                            withContext(Dispatchers.Main) {
+                                if (userModel != null) {
+                                    progressDialog.dismiss()
+                                    Log.d("KakaoUserInfo", "Firestore에서 가져온 유저: ${userModel.userId}")
 
-                                // App 클래스에 로그인 유저 정보 저장
-                                (requireActivity().application as App).loginUserModel = userModel
+                                    // App 클래스에 로그인 유저 정보 저장
+                                    (requireActivity().application as App).loginUserModel = userModel
 
-                                // GroupActivity로 이동
-                                val intent = Intent(requireContext(), GroupActivity::class.java)
-                                startActivity(intent)
-                                requireActivity().finish()
-                            } else {
-                                Log.e("KakaoUserInfo", "Firestore 유저 정보를 가져오는 데 실패했음")
+                                    // GroupActivity로 이동
+                                    val intent = Intent(requireContext(), GroupActivity::class.java)
+                                    startActivity(intent)
+                                    requireActivity().finish()
+                                } else {
+                                    Log.e("KakaoUserInfo", "Firestore 유저 정보를 가져오는 데 실패했음")
+                                }
                             }
                         }
                     }
@@ -332,6 +384,15 @@ class LoginFragment : Fragment() {
                             profileImage,
                             userId
                         )
+                        val cancelMembershipCheckResult = async {
+                            naverLoginService.userCancelMembershipCheck(email)
+                        }.await()
+
+                        if (!cancelMembershipCheckResult) {
+                            progressDialog.dismiss()
+                            Toast.makeText(loginActivity, "탈퇴한 회원입니다", Toast.LENGTH_LONG).show()
+                            return@launch
+                        }
                         withContext(Dispatchers.Main) {
                             if (userModel != null) {
                                 progressDialog.dismiss()
@@ -376,12 +437,25 @@ class LoginFragment : Fragment() {
             }
             progressDialog.show()
 
-            loginViewModel.requestGiverSignIn(
-                idToken = idToken,
-                email = account.email ?: "",
-                userName = account.displayName ?: "",
-                profileImage = account.photoUrl?.toString() ?: ""
-            )
+            lifecycleScope.launch {
+                val cancelMembershipCheckResult = async {
+                    naverLoginService.userCancelMembershipCheck(account.email!!)
+                }.await()
+
+                if (!cancelMembershipCheckResult) {
+                    progressDialog.dismiss()
+                    Toast.makeText(loginActivity, "탈퇴한 회원입니다", Toast.LENGTH_LONG).show()
+                    return@launch
+                    progressDialog.dismiss()
+                }
+                loginViewModel.requestGiverSignIn(
+                    idToken = idToken,
+                    email = account.email ?: "",
+                    userName = account.displayName ?: "",
+                    profileImage = account.photoUrl?.toString() ?: ""
+                )
+            }
+
 
         } catch (e: ApiException) {
             Log.e("GoogleLogin", "Google 로그인 실패: ${e.statusCode}", e)

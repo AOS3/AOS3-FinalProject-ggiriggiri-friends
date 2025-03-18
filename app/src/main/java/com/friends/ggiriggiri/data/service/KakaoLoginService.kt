@@ -36,4 +36,9 @@ class KakaoLoginService @Inject constructor(
     private fun saveAutoLoginToken(token: String) {
         sharedPreferences.edit().putString("autoLoginToken", token).apply()
     }
+
+    //Firestore에서 사용자 조회 후 탈퇴한 회원이면 로그인x
+    suspend fun userCancelMembershipCheck(email: String): Boolean {
+        return repository.userCancelMembershipCheck(email)
+    }
 }

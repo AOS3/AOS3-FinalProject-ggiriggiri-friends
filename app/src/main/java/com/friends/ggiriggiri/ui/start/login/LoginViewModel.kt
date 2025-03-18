@@ -20,6 +20,7 @@ import com.friends.ggiriggiri.ui.start.register.UserService
 import com.friends.ggiriggiri.util.UserState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.UUID

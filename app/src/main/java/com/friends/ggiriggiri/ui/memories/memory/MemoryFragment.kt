@@ -30,9 +30,9 @@ class MemoryFragment : Fragment() {
     private fun settingToolbarMemory(){
         fragmentMemoryBinding.apply {
             toolbarMemory.title = "추억들"
-            toolbarMemory.menu.add(0,1,0,"알림")
-                .setIcon(R.drawable.ic_notifications)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+//            toolbarMemory.menu.add(0,1,0,"알림")
+//                .setIcon(R.drawable.ic_notifications)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         }
     }
 

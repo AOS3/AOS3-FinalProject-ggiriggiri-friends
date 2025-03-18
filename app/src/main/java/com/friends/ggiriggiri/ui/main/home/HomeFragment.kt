@@ -394,16 +394,16 @@ class HomeFragment : Fragment() {
             bottomSheet.show(parentFragmentManager, "ProfileBottomSheet")
         }
 
-        binding.tbHome.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.menu_notification -> {
-                    socialActivity.replaceFragment(NotificationFragment())
-                    true
-                }
-
-                else -> false
-            }
-        }
+//        binding.tbHome.setOnMenuItemClickListener { menuItem ->
+//            when (menuItem.itemId) {
+//                R.id.menu_notification -> {
+//                    socialActivity.replaceFragment(NotificationFragment())
+//                    true
+//                }
+//
+//                else -> false
+//            }
+//        }
 
         binding.tvHomeProfileSeeAll.setOnClickListener {
             val bottomSheet = ProfileBottomSheetFragment.newInstance()

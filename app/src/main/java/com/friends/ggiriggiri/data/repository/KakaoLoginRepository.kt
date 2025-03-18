@@ -65,6 +65,32 @@ class KakaoLoginRepository {
         }
     }
 
+    //Firestore에서 사용자 조회 후 탈퇴한 회원이면 로그인x
+    suspend fun userCancelMembershipCheck(
+        email: String,
+    ): Boolean {
+        val existingUserVO = getUserByEmail(email)
+        return if (existingUserVO != null) {
+            Log.d("KaKaoLoginRepository", "기존 사용자 Firestore에서 불러옴: ${existingUserVO.userId}")
+
+            val document = db.collection("UserData")
+                .whereEqualTo("userId", email)
+                .limit(1)
+                .get()
+                .await()
+                .documents
+                .firstOrNull()
+
+            val userState = document?.getLong("userState") ?: -1L
+
+            userState.toInt() != UserState.WITHDRAW.num
+        } else {
+            true
+        }
+    }
+
+
+
 
 
 
