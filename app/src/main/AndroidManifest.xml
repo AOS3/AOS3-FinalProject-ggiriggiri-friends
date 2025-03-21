@@ -83,6 +83,10 @@
             </intent-filter>
         </activity>
 
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="kakao9b56cf2a46f31844633c56522029525c" />
+
     </application>
 
 </manifest>

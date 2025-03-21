@@ -22,11 +22,27 @@
           }
         },
         {
+          "client_id": "124835773021-f66egdeumae3kr4gvbncr2in98k6co9s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.friends.ggiriggiri",
+            "certificate_hash": "124b3809e95166ade12099a713999c601a3d1352"
+          }
+        },
+        {
           "client_id": "124835773021-n9g000ujlgo2bkd7ms40gqqo9smrfrec.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.friends.ggiriggiri",
             "certificate_hash": "e9177fd42b5de3b4add630e671c06fbcc04f8e8c"
+          }
+        },
+        {
+          "client_id": "124835773021-t3kghqi90ipc9v63q9b1fr8ntglk83k4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.friends.ggiriggiri",
+            "certificate_hash": "3be0d0d553176f48796cc0bd00135249b962786f"
           }
         },
         {

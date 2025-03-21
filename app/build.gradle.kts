@@ -18,8 +18,8 @@ android {
         applicationId = "com.friends.ggiriggiri"
         minSdk = 24
         targetSdk = 35
-        versionCode = 5
-        versionName = "1.5"
+        versionCode = 13
+        versionName = "1.13"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
