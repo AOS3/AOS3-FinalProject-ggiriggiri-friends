@@ -253,7 +253,8 @@ class RegisterFragment : Fragment() {
                 registerViewModel.isPrivacyPolicyCheck.value = isChecked
             }
             tvPrivacyPolicy.setOnClickListener {
-                loginActivity.replaceFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT,true,true,null)
+                loginActivity.showFragment(PrivacyPolicyFragment())
+                //loginActivity.replaceFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT,true,true,null)
             }
         }
 

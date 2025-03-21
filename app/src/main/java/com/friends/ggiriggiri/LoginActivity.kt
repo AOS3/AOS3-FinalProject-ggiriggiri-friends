@@ -2,6 +2,8 @@ package com.friends.ggiriggiri
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Base64
+import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
@@ -46,6 +48,8 @@ class LoginActivity : AppCompatActivity() {
         supportFragmentManager.commit { replace(R.id.fcvLoginActivity, LoginFragment()) }
         //알림화면 테스트
         //supportFragmentManager.commit { replace(R.id.fcvLoginActivity, NotificationTestFragment()) }
+
+//        getKeyHash("12:4B:38:09:E9:51:66:AD:E1:20:99:A7:13:99:9C:60:1A:3D:13:52")
     }
 
     // 프래그먼트 교체 함수
@@ -99,6 +103,7 @@ class LoginActivity : AppCompatActivity() {
         supportFragmentManager.popBackStack(fragmentName.str, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
+
     fun AppCompatActivity.hideKeyboard() {
         val view = currentFocus
         if (view != null) {
@@ -120,6 +125,48 @@ class LoginActivity : AppCompatActivity() {
         }
         return super.dispatchTouchEvent(event)
     }
+
+    fun showFragment(fragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+
+        val currentFragment = fragmentManager.findFragmentById(R.id.fcvLoginActivity)
+
+        if (currentFragment != null) {
+            transaction.hide(currentFragment) // 현재 프래그먼트 숨기기
+        }
+
+        val existingFragment = fragmentManager.findFragmentByTag(fragment::class.java.simpleName)
+
+        if (existingFragment == null) {
+            transaction.add(R.id.fcvLoginActivity, fragment, fragment::class.java.simpleName)
+        } else {
+            transaction.show(existingFragment) // 기존 프래그먼트 다시 보이기
+        }
+
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
+    fun hideFragment(fragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+
+        if (fragment.isAdded) {
+            transaction.hide(fragment)
+
+            // 백스택에서 이전 프래그먼트 가져오기
+            val previousFragment = fragmentManager.fragments.lastOrNull { it.isVisible.not() }
+            if (previousFragment != null) {
+                transaction.show(previousFragment) // 이전 프래그먼트 다시 보이게 하기
+            }
+
+            transaction.commit()
+        }
+    }
+
+
+
 }
 
 // 프래그먼트들을 나타내는 값들

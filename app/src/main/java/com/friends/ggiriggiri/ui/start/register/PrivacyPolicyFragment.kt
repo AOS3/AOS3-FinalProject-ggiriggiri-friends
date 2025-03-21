@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
+import androidx.activity.addCallback
 import com.friends.ggiriggiri.LoginActivity
 import com.friends.ggiriggiri.LoginFragmentName
 import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.databinding.FragmentPrivacyPolicyBinding
 import com.friends.ggiriggiri.databinding.FragmentRegisterBinding
+import kotlin.math.log
 
 class PrivacyPolicyFragment : Fragment() {
     private var _binding: FragmentPrivacyPolicyBinding? = null
@@ -36,11 +38,10 @@ class PrivacyPolicyFragment : Fragment() {
             isTitleCentered = true
             setNavigationIcon(R.drawable.ic_arrow_back_ios)
             setNavigationOnClickListener {
-                loginActivity.removeFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT)
+                loginActivity.hideFragment(this@PrivacyPolicyFragment)
             }
+
         }
-
-
         return binding.root
     }
 

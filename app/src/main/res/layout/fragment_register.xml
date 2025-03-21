@@ -308,16 +308,18 @@
                     android:id="@+id/tvPrivacyPolicy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
                     android:autoLink="none"
                     android:clickable="true"
                     android:focusable="true"
-                    android:fontFamily="@font/nanumsquarebold"
                     android:foreground="?attr/selectableItemBackground"
+                    android:fontFamily="@font/nanumsquarebold"
                     android:linksClickable="false"
-                    android:text="개인정보처리방침"
+                    android:text="@string/underlined_tvprivacypolicy"
                     android:textColor="@color/black"
                     android:textColorLink="@color/black"
-                    android:textSize="13sp" />
+                    android:textSize="20sp" />
 
                 <android.widget.CheckBox
                     android:id="@+id/cbPrivacyPolicyCheck"
