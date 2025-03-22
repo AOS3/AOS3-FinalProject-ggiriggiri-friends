@@ -173,7 +173,7 @@ class LoginFragment : Fragment() {
                     onPositiveClick = { loginWithKakao() },
                     positiveText = "네",
                     onNegativeClick = {},
-                    negativeText = "아니요",
+                    negativeText = "취소",
                     contentText = "개인정보처리방침을 확인하셨나요?",
                     icon = R.drawable.ic_check_circle,
                     onViewPrivacyPolicy = {
@@ -190,7 +190,7 @@ class LoginFragment : Fragment() {
                     onPositiveClick = { loginWithNaver() },
                     positiveText = "네",
                     onNegativeClick = {},
-                    negativeText = "아니요",
+                    negativeText = "취소",
                     contentText = "개인정보처리방침을 확인하셨나요?",
                     icon = R.drawable.ic_check_circle,
                     onViewPrivacyPolicy = {
@@ -206,7 +206,7 @@ class LoginFragment : Fragment() {
                     onPositiveClick = { requestGoogleLogin() },
                     positiveText = "네",
                     onNegativeClick = {},
-                    negativeText = "아니요",
+                    negativeText = "취소",
                     contentText = "개인정보처리방침을 확인하셨나요?",
                     icon = R.drawable.ic_check_circle,
                     onViewPrivacyPolicy = {

@@ -170,19 +170,25 @@ class LoginActivity : AppCompatActivity() {
 }
 
 // 프래그먼트들을 나타내는 값들
-enum class LoginFragmentName(var number:Int, var str:String){
+enum class LoginFragmentName(var number:Int, var str:String) {
     // 로그인 화면
     LOGIN_FRAGMENT(1, "LoginFragment"),
+
     // 회원 가입 화면
     REGISTER_FRAGMENT(2, "RegisterStep1Fragment"),
+
     // 아이디 찾기
-    FIND_ID_FRAGMENT(3,"FindIdFragment"),
+    FIND_ID_FRAGMENT(3, "FindIdFragment"),
+
     // 비밀번호 찾기
-    FIND_PW_FRAGMENT(4,"FindPwFragment"),
+    FIND_PW_FRAGMENT(4, "FindPwFragment"),
+
     // 비밀번호 재설정
-    RESET_PW_FRAGMENT(5,"ResetPwFragment"),
+    RESET_PW_FRAGMENT(5, "ResetPwFragment"),
+
     // 메세징 테스트
-    NOTIFICATION_TEST_FRAGMENT(6,"NotificationTestFragment"),
+    NOTIFICATION_TEST_FRAGMENT(6, "NotificationTestFragment"),
+
     // 개인정보 처리방침 화면
-    PRIVACY_POLICY_FRAGMENT(7,"PrivacyPolicyFragment")
+    PRIVACY_POLICY_FRAGMENT(7, "PrivacyPolicyFragment"),
 }

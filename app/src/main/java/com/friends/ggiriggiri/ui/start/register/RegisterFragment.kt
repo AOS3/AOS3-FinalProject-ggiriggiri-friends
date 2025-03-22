@@ -35,9 +35,6 @@ class RegisterFragment : Fragment() {
     // 휴대폰 번호 인증 통과 여부
     var isCertificationNumberValidResult = false
 
-    // 개인정보처리방침 확인여부
-    var isPrivacyPolicyCheckResult = false
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
