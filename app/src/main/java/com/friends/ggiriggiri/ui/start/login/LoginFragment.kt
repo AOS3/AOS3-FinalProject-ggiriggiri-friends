@@ -22,6 +22,8 @@ import com.friends.ggiriggiri.databinding.FragmentLoginBinding
 import com.friends.ggiriggiri.ui.custom.CustomDialog
 import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
 import com.friends.ggiriggiri.ui.custom.CustomLoginDialog
+import com.friends.ggiriggiri.ui.custom.CustomLoginDialog2
+import com.friends.ggiriggiri.ui.start.register.PrivacyPolicyFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -50,6 +52,7 @@ class LoginFragment : Fragment() {
 
     @Inject
     lateinit var kakaoLoginService: KakaoLoginService
+
     @Inject
     lateinit var naverLoginService: NaverLoginService
 
@@ -164,56 +167,53 @@ class LoginFragment : Fragment() {
         }
     }
 
+    private fun agreeProcess(
+        login: () -> Unit
+    ) {
+        val dialog1 = CustomLoginDialog2(
+            context = requireContext(),
+            onPositiveClick = {
+                val dialog2 = CustomLoginDialog2(
+                    context = requireContext(),
+                    onPositiveClick = { login() },
+                    positiveText = "계속",
+                    onNegativeClick = {},
+                    negativeText = "취소",
+                    contentText = "이용약관",
+                    agreeTypeText = "이용약관에 동의합니다",
+                    loadUrl = "https://sites.google.com/view/ggiriggiri-terms-of-use"
+                )
+                dialog2.showCustomDialog()
+            },
+            positiveText = "계속",
+            onNegativeClick = {},
+            negativeText = "취소",
+            contentText = "개인정보처리방침",
+            agreeTypeText = "개인정보처리방침에 동의합니다",
+            loadUrl = "https://sites.google.com/view/ggiriggiri-privacy-policy"
+        )
+        dialog1.showCustomDialog()
+    }
+
     private fun socialLoginButtons() {
         binding.apply {
             // 카카오 로그인
             ivLoginFragmentKakaoLogin.setOnClickListener {
-                val dialog = CustomLoginDialog(
-                    context = requireContext(),
-                    onPositiveClick = { loginWithKakao() },
-                    positiveText = "네",
-                    onNegativeClick = {},
-                    negativeText = "취소",
-                    contentText = "개인정보처리방침을 확인하셨나요?",
-                    icon = R.drawable.ic_check_circle,
-                    onViewPrivacyPolicy = {
-                        loginActivity.replaceFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT,true,true,null)
-                    }
-                )
-                dialog.showCustomDialog()
-
+                agreeProcess {
+                    loginWithKakao()
+                }
             }
             // 네이버 로그인
             ivLoginFragmentNaverLogin.setOnClickListener {
-                val dialog = CustomLoginDialog(
-                    context = requireContext(),
-                    onPositiveClick = { loginWithNaver() },
-                    positiveText = "네",
-                    onNegativeClick = {},
-                    negativeText = "취소",
-                    contentText = "개인정보처리방침을 확인하셨나요?",
-                    icon = R.drawable.ic_check_circle,
-                    onViewPrivacyPolicy = {
-                        loginActivity.replaceFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT,true,true,null)
-                    }
-                )
-                dialog.showCustomDialog()
+                agreeProcess {
+                    loginWithNaver()
+                }
             }
             // 구글 로그인
             ivLoginFragmentGoogleLogin.setOnClickListener {
-                val dialog = CustomLoginDialog(
-                    context = requireContext(),
-                    onPositiveClick = { requestGoogleLogin() },
-                    positiveText = "네",
-                    onNegativeClick = {},
-                    negativeText = "취소",
-                    contentText = "개인정보처리방침을 확인하셨나요?",
-                    icon = R.drawable.ic_check_circle,
-                    onViewPrivacyPolicy = {
-                        loginActivity.replaceFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT,true,true,null)
-                    }
-                )
-                dialog.showCustomDialog()
+                agreeProcess {
+                    requestGoogleLogin()
+                }
             }
 
         }
@@ -326,10 +326,14 @@ class LoginFragment : Fragment() {
                             withContext(Dispatchers.Main) {
                                 if (userModel != null) {
                                     progressDialog.dismiss()
-                                    Log.d("KakaoUserInfo", "Firestore에서 가져온 유저: ${userModel.userId}")
+                                    Log.d(
+                                        "KakaoUserInfo",
+                                        "Firestore에서 가져온 유저: ${userModel.userId}"
+                                    )
 
                                     // App 클래스에 로그인 유저 정보 저장
-                                    (requireActivity().application as App).loginUserModel = userModel
+                                    (requireActivity().application as App).loginUserModel =
+                                        userModel
 
                                     // GroupActivity로 이동
                                     val intent = Intent(requireContext(), GroupActivity::class.java)
@@ -424,45 +428,45 @@ class LoginFragment : Fragment() {
 
 
     private val googleSignInClient: GoogleSignInClient by lazy { getGoogleClient() }
-    private val googleAuthLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+    private val googleAuthLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
 
-        try {
-            val account = task.getResult(ApiException::class.java)
-            val idToken = account.idToken
+            try {
+                val account = task.getResult(ApiException::class.java)
+                val idToken = account.idToken
 
-            if (idToken.isNullOrEmpty()) {
-                progressDialog.dismiss()
-                return@registerForActivityResult
-            }
-            progressDialog.show()
-
-            lifecycleScope.launch {
-                val cancelMembershipCheckResult = async {
-                    naverLoginService.userCancelMembershipCheck(account.email!!)
-                }.await()
-
-                if (!cancelMembershipCheckResult) {
+                if (idToken.isNullOrEmpty()) {
                     progressDialog.dismiss()
-                    Toast.makeText(loginActivity, "탈퇴한 회원입니다", Toast.LENGTH_LONG).show()
-                    return@launch
-                    progressDialog.dismiss()
+                    return@registerForActivityResult
                 }
-                loginViewModel.requestGiverSignIn(
-                    idToken = idToken,
-                    email = account.email ?: "",
-                    userName = account.displayName ?: "",
-                    profileImage = account.photoUrl?.toString() ?: ""
-                )
+                progressDialog.show()
+
+                lifecycleScope.launch {
+                    val cancelMembershipCheckResult = async {
+                        naverLoginService.userCancelMembershipCheck(account.email!!)
+                    }.await()
+
+                    if (!cancelMembershipCheckResult) {
+                        progressDialog.dismiss()
+                        Toast.makeText(loginActivity, "탈퇴한 회원입니다", Toast.LENGTH_LONG).show()
+                        return@launch
+                        progressDialog.dismiss()
+                    }
+                    loginViewModel.requestGiverSignIn(
+                        idToken = idToken,
+                        email = account.email ?: "",
+                        userName = account.displayName ?: "",
+                        profileImage = account.photoUrl?.toString() ?: ""
+                    )
+                }
+
+
+            } catch (e: ApiException) {
+                Log.e("GoogleLogin", "Google 로그인 실패: ${e.statusCode}", e)
+                progressDialog.dismiss()
             }
-
-
-        } catch (e: ApiException) {
-            Log.e("GoogleLogin", "Google 로그인 실패: ${e.statusCode}", e)
-            progressDialog.dismiss()
         }
-    }
-
 
 
     private fun getGoogleClient(): GoogleSignInClient {
@@ -479,6 +483,7 @@ class LoginFragment : Fragment() {
         val signInIntent = googleSignInClient.signInIntent
         googleAuthLauncher.launch(signInIntent)
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
