@@ -19,6 +19,7 @@ import com.friends.ggiriggiri.ui.start.login.LoginFragment
 import com.friends.ggiriggiri.ui.start.login.NotificationTestFragment
 import com.friends.ggiriggiri.ui.start.register.PrivacyPolicyFragment
 import com.friends.ggiriggiri.ui.start.register.RegisterFragment
+import com.friends.ggiriggiri.ui.start.register.TermsOfUseFragment
 import com.google.android.material.transition.MaterialSharedAxis
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -67,6 +68,7 @@ class LoginActivity : AppCompatActivity() {
             LoginFragmentName.RESET_PW_FRAGMENT -> ResetPwFragment()
             LoginFragmentName.NOTIFICATION_TEST_FRAGMENT -> NotificationTestFragment()
             LoginFragmentName.PRIVACY_POLICY_FRAGMENT -> PrivacyPolicyFragment()
+            LoginFragmentName.TERMS_OF_USE -> TermsOfUseFragment()
         }
 
         // bundle 객체가 null이 아니라면
@@ -191,4 +193,7 @@ enum class LoginFragmentName(var number:Int, var str:String) {
 
     // 개인정보 처리방침 화면
     PRIVACY_POLICY_FRAGMENT(7, "PrivacyPolicyFragment"),
+
+    //이용약관
+    TERMS_OF_USE(8,"TermsOfUseFragment")
 }

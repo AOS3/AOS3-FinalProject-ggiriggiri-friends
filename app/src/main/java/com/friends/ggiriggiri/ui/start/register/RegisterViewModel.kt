@@ -100,11 +100,14 @@ class RegisterViewModel @Inject constructor(
     //개인정보처리방침 동의 결과
     val isPrivacyPolicyCheck = MutableLiveData<Boolean>()
 
+    //이용약관 동의 결과
+    val isTermsOfUseCheck = MutableLiveData<Boolean>()
+
     // 가입하기 버튼 클릭
     fun btnRegisterFragmentSignupLoginOnClick(): Boolean {
 
         // 이름, 아이디, 비밀번호, 인증통과, 개인정보 처리방침 중 하나라도 false일때
-        if (!isNameValid || isIdValid.value != true || !isPwValid || isCertificationNumberValid.value != true || isPrivacyPolicyCheck.value != true) {
+        if (!isNameValid || isIdValid.value != true || !isPwValid || isCertificationNumberValid.value != true || isPrivacyPolicyCheck.value != true || isTermsOfUseCheck.value != true) {
             return false
         }// 모두통과
         else {

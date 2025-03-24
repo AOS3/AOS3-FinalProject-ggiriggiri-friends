@@ -65,6 +65,9 @@ class RegisterFragment : Fragment() {
         // 개인정보 처리방침
         settingCbPrivacyPolicyCheck()
 
+        // 이용약관
+        settingCbTermsOfUseCheck()
+
 
 
         return binding.root
@@ -250,8 +253,23 @@ class RegisterFragment : Fragment() {
                 registerViewModel.isPrivacyPolicyCheck.value = isChecked
             }
             tvPrivacyPolicy.setOnClickListener {
-                loginActivity.showFragment(PrivacyPolicyFragment())
-                //loginActivity.replaceFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT,true,true,null)
+                //loginActivity.showFragment(PrivacyPolicyFragment())
+                loginActivity.replaceFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT,true,true,null)
+            }
+        }
+
+    }
+
+    // 이용약관
+    private fun settingCbTermsOfUseCheck(){
+        // CheckBox 클릭 시 ViewModel 값 변경
+        binding.apply {
+            cbTermasOfUseCheck.setOnCheckedChangeListener { _, isChecked ->
+                registerViewModel.isTermsOfUseCheck.value = isChecked
+            }
+            tvTermasOfUse.setOnClickListener {
+                //loginActivity.showFragment(TermsOfUseFragment())
+                loginActivity.replaceFragment(LoginFragmentName.TERMS_OF_USE,true,true,null)
             }
         }
 

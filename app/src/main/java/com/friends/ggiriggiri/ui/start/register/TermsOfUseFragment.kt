@@ -14,7 +14,7 @@ import com.friends.ggiriggiri.databinding.FragmentPrivacyPolicyBinding
 import com.friends.ggiriggiri.databinding.FragmentRegisterBinding
 import kotlin.math.log
 
-class PrivacyPolicyFragment : Fragment() {
+class TermsOfUseFragment : Fragment() {
     private var _binding: FragmentPrivacyPolicyBinding? = null
     private val binding get() = _binding!!
     private lateinit var loginActivity: LoginActivity
@@ -29,17 +29,17 @@ class PrivacyPolicyFragment : Fragment() {
         binding.wbPrivacyPolicy.apply {
             webViewClient = WebViewClient()
             settings.javaScriptEnabled = true
-            loadUrl("https://sites.google.com/view/ggiriggiri-privacy-policy")
+            loadUrl("https://sites.google.com/view/ggiriggiri-terms-of-use")
         }
 
         //툴바세팅
         binding.tbPrivacyPolicyFragment.apply {
-            title = "개인정보처리방침"
+            title = "이용약관"
             isTitleCentered = true
             setNavigationIcon(R.drawable.ic_arrow_back_ios)
             setNavigationOnClickListener {
-                //loginActivity.showFragment(this@PrivacyPolicyFragment)
-                loginActivity.removeFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT)
+                //loginActivity.showFragment(this@TermsOfUseFragment)
+                loginActivity.removeFragment(LoginFragmentName.TERMS_OF_USE)
             }
 
         }
