@@ -231,6 +231,7 @@
                     tools:text="04:54" />
             </LinearLayout>
 
+
             <LinearLayout
                 android:id="@+id/llRegisterFragmentConfirmCertification"
                 android:layout_width="0dp"
@@ -241,6 +242,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
@@ -291,80 +293,6 @@
                     tools:text="인증완료" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/llPrivacyPolicy"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/llRegisterFragmentConfirmCertification">
-
-                <TextView
-                    android:id="@+id/tvPrivacyPolicy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:autoLink="none"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:fontFamily="@font/nanumsquarebold"
-                    android:linksClickable="false"
-                    android:text="@string/underlined_tvprivacypolicy"
-                    android:textColor="@color/black"
-                    android:textColorLink="@color/black"
-                    android:textSize="20sp" />
-
-                <android.widget.CheckBox
-                    android:id="@+id/cbPrivacyPolicyCheck"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/llTermasOfUse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/llPrivacyPolicy"
-                app:layout_constraintBottom_toTopOf="@+id/btnRegisterFragmentSignup">
-
-                <TextView
-                    android:id="@+id/tvTermasOfUse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:autoLink="none"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:fontFamily="@font/nanumsquarebold"
-                    android:linksClickable="false"
-                    android:text="@string/underlined_tvTermsOfUse"
-                    android:textColor="@color/black"
-                    android:textColorLink="@color/black"
-                    android:textSize="20sp" />
-
-                <android.widget.CheckBox
-                    android:id="@+id/cbTermasOfUseCheck"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-
-            </LinearLayout>
-
             <android.widget.Button
                 android:id="@+id/btnRegisterFragmentSignup"
                 android:layout_width="0dp"
@@ -379,7 +307,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/llPrivacyPolicy" />
+                app:layout_constraintTop_toBottomOf="@+id/llRegisterFragmentConfirmCertification"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

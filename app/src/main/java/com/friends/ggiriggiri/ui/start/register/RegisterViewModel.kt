@@ -107,7 +107,8 @@ class RegisterViewModel @Inject constructor(
     fun btnRegisterFragmentSignupLoginOnClick(): Boolean {
 
         // 이름, 아이디, 비밀번호, 인증통과, 개인정보 처리방침 중 하나라도 false일때
-        if (!isNameValid || isIdValid.value != true || !isPwValid || isCertificationNumberValid.value != true || isPrivacyPolicyCheck.value != true || isTermsOfUseCheck.value != true) {
+        // || isPrivacyPolicyCheck.value != true || isTermsOfUseCheck.value != true
+        if (!isNameValid || isIdValid.value != true || !isPwValid || isCertificationNumberValid.value != true) {
             return false
         }// 모두통과
         else {

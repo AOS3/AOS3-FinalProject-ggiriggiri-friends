@@ -265,7 +265,51 @@
         android:background="#CAC4D0"
         app:layout_constraintTop_toBottomOf="@+id/myPageCancelMembershipButton"/>
 
+    <LinearLayout
+        android:id="@+id/myPageInformationButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="12dp"
+        android:transitionGroup="true"
+        app:layout_constraintTop_toBottomOf="@id/myPageCancelMembershipButton"
+        tools:layout_editor_absoluteX="0dp">
 
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="40dp"
+            android:src="@drawable/info_24px" />
+
+        <TextView
+            android:id="@+id/myPageInformationText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="12dp"
+            android:text="개인정보처리방침/이용약관"
+            android:fontFamily="@font/nanumsquareregular"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/myPageInformationArrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_forward_ios"
+            app:tint="@color/gray_500"
+            android:layout_marginEnd="40dp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CAC4D0"
+        app:layout_constraintTop_toBottomOf="@+id/myPageInformationButton"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

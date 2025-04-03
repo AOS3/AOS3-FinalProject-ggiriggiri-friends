@@ -18,6 +18,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.friends.ggiriggiri.App
@@ -31,6 +33,7 @@ import com.friends.ggiriggiri.ui.custom.CustomDialogProgressbar
 import com.friends.ggiriggiri.ui.start.register.UserModel
 import com.friends.ggiriggiri.ui.mypages.modifyuserpw.ModifyUserPwFragment
 import com.friends.ggiriggiri.ui.mypages.settinggroup.SettingGroupFragment
+import com.friends.ggiriggiri.ui.start.register.PrivacyPolicyFragment
 import com.friends.ggiriggiri.util.UserSocialLoginState
 import com.google.firebase.auth.FirebaseAuth
 import com.kakao.sdk.common.KakaoSdk
@@ -235,6 +238,14 @@ class MyPageFragment : Fragment() {
                     R.id.myPageCancelMembershipButton ->{
                         myPageCancelMembershipDialog()
                     }
+
+                    //개인정보처리방침/이용약관 클릭
+                    R.id.myPageInformationButton ->{
+                        socialActivity.supportFragmentManager.commit {
+                            replace(R.id.fragmentContainerViewSocialMain,PrivacyPolicyFragment())
+                            addToBackStack("PrivacyPolicyFragment")
+                        }
+                    }
                 }
             }
             myPageGroupName.setOnClickListener(myPageItemClickListener)
@@ -242,6 +253,7 @@ class MyPageFragment : Fragment() {
             myPageChangePasswordButton.setOnClickListener(myPageItemClickListener)
             myPageLogoutButton.setOnClickListener(myPageItemClickListener)
             myPageCancelMembershipButton.setOnClickListener(myPageItemClickListener)
+            myPageInformationButton.setOnClickListener(myPageItemClickListener)
         }
     }
 

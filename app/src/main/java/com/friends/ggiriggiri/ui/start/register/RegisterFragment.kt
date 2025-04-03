@@ -15,6 +15,7 @@ import com.friends.ggiriggiri.LoginFragmentName
 import com.friends.ggiriggiri.R
 import com.friends.ggiriggiri.databinding.FragmentRegisterBinding
 import com.friends.ggiriggiri.ui.custom.CustomDialog
+import com.friends.ggiriggiri.ui.custom.CustomLoginDialog2
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -62,13 +63,6 @@ class RegisterFragment : Fragment() {
         //전화번호 입력
         settingTilRegisterFragmentPhoneNumber()
 
-        // 개인정보 처리방침
-        settingCbPrivacyPolicyCheck()
-
-        // 이용약관
-        settingCbTermsOfUseCheck()
-
-
 
         return binding.root
     }
@@ -115,7 +109,7 @@ class RegisterFragment : Fragment() {
                                 requireContext(),
                                 R.color.material_dynamic_neutral60
                             )
-                    }else{
+                    } else {
                         tvRegisterFragmentIdValid.visibility = View.INVISIBLE
                     }
                 }
@@ -183,10 +177,10 @@ class RegisterFragment : Fragment() {
             }
 
             //인증 결과
-            isCertificationNumberValid.observe(viewLifecycleOwner){ isValid->
+            isCertificationNumberValid.observe(viewLifecycleOwner) { isValid ->
                 isCertificationNumberValidResult = isValid
                 binding.apply {
-                    if (isValid){
+                    if (isValid) {
                         tilRegisterFragmentCertificationNumber.error = null
                         tvRegisterFragmentCertificationNumberValid.text = "인증 완료"
                         tvRegisterFragmentCertificationNumberValid.setTextColor(
@@ -201,19 +195,19 @@ class RegisterFragment : Fragment() {
                                 requireContext(),
                                 R.color.material_dynamic_neutral60
                             )
-                    }else{
+                    } else {
                         tvRegisterFragmentCertificationNumberValid.visibility = View.INVISIBLE
                     }
                 }
             }
 
             // 인증 성공시 인증 입력창 막히게하는 변수
-            etRegisterFragmentCertificationNumberIsEnabled.observe(viewLifecycleOwner){ boolean ->
+            etRegisterFragmentCertificationNumberIsEnabled.observe(viewLifecycleOwner) { boolean ->
                 binding.etRegisterFragmentCertificationNumber.isEnabled = boolean
             }
 
             // 인증 성공시 인증확인버튼 비활성화
-            btnRegisterFragmentConfirmCertificationNumberEnabled.observe(viewLifecycleOwner){ boolean ->
+            btnRegisterFragmentConfirmCertificationNumberEnabled.observe(viewLifecycleOwner) { boolean ->
                 binding.btnRegisterFragmentConfirmCertificationNumber.isEnabled = boolean
             }
         }
@@ -243,36 +237,6 @@ class RegisterFragment : Fragment() {
                 registerViewModel.etRegisterFragmentNameWatcher(s.toString())
             }
         })
-    }
-
-    // 개인정보 처리방침
-    private fun settingCbPrivacyPolicyCheck(){
-        // CheckBox 클릭 시 ViewModel 값 변경
-        binding.apply {
-            cbPrivacyPolicyCheck.setOnCheckedChangeListener { _, isChecked ->
-                registerViewModel.isPrivacyPolicyCheck.value = isChecked
-            }
-            tvPrivacyPolicy.setOnClickListener {
-                //loginActivity.showFragment(PrivacyPolicyFragment())
-                loginActivity.replaceFragment(LoginFragmentName.PRIVACY_POLICY_FRAGMENT,true,true,null)
-            }
-        }
-
-    }
-
-    // 이용약관
-    private fun settingCbTermsOfUseCheck(){
-        // CheckBox 클릭 시 ViewModel 값 변경
-        binding.apply {
-            cbTermasOfUseCheck.setOnCheckedChangeListener { _, isChecked ->
-                registerViewModel.isTermsOfUseCheck.value = isChecked
-            }
-            tvTermasOfUse.setOnClickListener {
-                //loginActivity.showFragment(TermsOfUseFragment())
-                loginActivity.replaceFragment(LoginFragmentName.TERMS_OF_USE,true,true,null)
-            }
-        }
-
     }
 
     //아이디 중복확인 유지
@@ -346,21 +310,50 @@ class RegisterFragment : Fragment() {
         binding.apply {
             val result = registerViewModel.btnRegisterFragmentSignupLoginOnClick()
             if (result) {
-                val name = etRegisterFragmentName.text?.toString() ?: ""
-                val id = etRegisterFragmentId.text?.toString() ?: ""
-                val pw2 = etRegisterFragmentPw2.text?.toString() ?: ""
-                val phoneNumber = etRegisterFragmentPhoneNumber.text?.toString() ?: ""
 
-                val userModel = UserModel().apply {
-                    userId = id
-                    userName = name
-                    userPw = pw2
-                    userPhoneNumber = phoneNumber
-                    userJoinTime = System.currentTimeMillis()
-                }
+                val dialog1 = CustomLoginDialog2(
+                    context = requireContext(),
+                    onPositiveClick = {
+                        val dialog2 = CustomLoginDialog2(
+                            context = requireContext(),
+                            onPositiveClick = {
+                                val name = etRegisterFragmentName.text?.toString() ?: ""
+                                val id = etRegisterFragmentId.text?.toString() ?: ""
+                                val pw2 = etRegisterFragmentPw2.text?.toString() ?: ""
+                                val phoneNumber =
+                                    etRegisterFragmentPhoneNumber.text?.toString() ?: ""
 
-                // ViewModel에서 회원가입 실행
-                registerViewModel.registerUser(requireActivity() as LoginActivity, userModel)
+                                val userModel = UserModel().apply {
+                                    userId = id
+                                    userName = name
+                                    userPw = pw2
+                                    userPhoneNumber = phoneNumber
+                                    userJoinTime = System.currentTimeMillis()
+                                }
+
+                                // ViewModel에서 회원가입 실행
+                                registerViewModel.registerUser(
+                                    requireActivity() as LoginActivity,
+                                    userModel
+                                )
+                            },
+                            positiveText = "계속",
+                            onNegativeClick = {},
+                            negativeText = "취소",
+                            contentText = "이용약관",
+                            agreeTypeText = "이용약관에 동의합니다",
+                            loadUrl = "https://sites.google.com/view/ggiriggiri-terms-of-use"
+                        )
+                        dialog2.showCustomDialog()
+                    },
+                    positiveText = "계속",
+                    onNegativeClick = {},
+                    negativeText = "취소",
+                    contentText = "개인정보처리방침",
+                    agreeTypeText = "개인정보처리방침에 동의합니다",
+                    loadUrl = "https://sites.google.com/view/ggiriggiri-privacy-policy"
+                )
+                dialog1.showCustomDialog()
             } else {
                 val dialog = CustomDialog(
                     context = requireContext(),
@@ -404,22 +397,25 @@ class RegisterFragment : Fragment() {
 
                 val id = etRegisterFragmentId.text?.toString() ?: ""
 
-                registerViewModel.btnRegisterFragmentDuplicationCheckOnClick(loginActivity,id)
+                registerViewModel.btnRegisterFragmentDuplicationCheckOnClick(loginActivity, id)
             }
 
             //인증번호 요청
             btnRegisterFragmentGetCertificationNumber.setOnClickListener {
-                if (isPhoneNumberValidResult){
+                if (isPhoneNumberValidResult) {
                     val phoneNumber = etRegisterFragmentPhoneNumber.text?.toString() ?: ""
 
-                    val first = phoneNumber.substring(0,3)
-                    val second = phoneNumber.substring(3,7)
+                    val first = phoneNumber.substring(0, 3)
+                    val second = phoneNumber.substring(3, 7)
                     val third = phoneNumber.substring(7)
 
                     val dialog = CustomDialog(
                         context = requireContext(),
                         onPositiveClick = {
-                            registerViewModel.btnRegisterFragmentGetCertificationNumberOnClick(loginActivity,phoneNumber)
+                            registerViewModel.btnRegisterFragmentGetCertificationNumberOnClick(
+                                loginActivity,
+                                phoneNumber
+                            )
                         },
                         positiveText = "확인",
                         onNegativeClick = {
@@ -438,9 +434,12 @@ class RegisterFragment : Fragment() {
 
             //인증번호 확인
             btnRegisterFragmentConfirmCertificationNumber.setOnClickListener {
-                if(etRegisterFragmentCertificationNumber.text?.isNotEmpty() == true){
-                    val certificationNumber = etRegisterFragmentCertificationNumber.text?.toString() ?: ""
-                    registerViewModel.btnRegisterFragmentConfirmCertificationNumberOnclick(certificationNumber)
+                if (etRegisterFragmentCertificationNumber.text?.isNotEmpty() == true) {
+                    val certificationNumber =
+                        etRegisterFragmentCertificationNumber.text?.toString() ?: ""
+                    registerViewModel.btnRegisterFragmentConfirmCertificationNumberOnclick(
+                        certificationNumber
+                    )
                 }
             }
         }
